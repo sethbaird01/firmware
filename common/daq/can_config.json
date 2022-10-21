@@ -66,7 +66,11 @@
                         {"msg_name": "max_cell_temp"},
                         {"msg_name": "front_wheel_data"},
                         {"msg_name": "rear_wheel_data"},
-                        {"msg_name": "LWS_Standard"}
+                        {"msg_name": "LWS_Standard"},
+                        {"msg_name": "orion_currents_volts"},
+                        {"msg_name": "orion_info"},
+                        {"msg_name": "gyro_data"},
+                        {"msg_name": "accel_data"}
                     ]
                 },
                 {

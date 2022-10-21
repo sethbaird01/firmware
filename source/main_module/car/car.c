@@ -1,4 +1,6 @@
 #include "car.h"
+#include "Electronics.h" 
+#include "TV_pp.h"
 
 uint16_t mot_left_req;  // 0 - 4095 value
 uint16_t mot_right_req; // 0 - 4095 value
@@ -152,11 +154,15 @@ void carPeriodic()
 
         // t_temp = (t_temp > 469) ? 0 : t_temp + 1;
 
+        // TVS
+        TV_pp(&rtU);
+        rt_OneStep(rtM);
+
         // E-diff
         //eDiff(t_req, &torque_r);
         // TODO: fix steering for ediff
-        torque_r.torque_left = t_req;
-        torque_r.torque_right = t_req;
+        torque_r.torque_left = rtY.Tx[3];
+        torque_r.torque_right = rtY.Tx[4];
 
         // check torque request (FSAE rule)
         if(torque_r.torque_left > t_req)

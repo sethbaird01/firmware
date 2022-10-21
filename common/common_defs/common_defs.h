@@ -35,8 +35,4 @@
 	(typeof(a)) (ROUNDDOWN((uint32_t) (a) + __n - 1, __n));	\
 })
 
-/* Unit Conversions */
-
-/* Constants */
-
 #endif /* COMMON_DEFS_H_ */

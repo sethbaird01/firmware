@@ -15,6 +15,8 @@
 #include "cooling.h"
 #include "daq.h"
 #include "main.h"
+#include "Electronics_types.h"
+//#include "main_linker.h" 
 
 GPIOInitConfig_t gpio_config[] = {
     // CAN
@@ -120,6 +122,12 @@ int main (void)
     {
         HardFault_Handler();
     }
+
+    /* Pack model data into RTM */
+    rtM->dwork = &rtDW;
+
+    /* Initialize model */
+    Electronics_initialize(rtM);
 
     /* Task Creation */
     schedInit(SystemCoreClock);

@@ -36,6 +36,10 @@
 #define ID_FRONT_WHEEL_DATA 0x4000003
 #define ID_REAR_WHEEL_DATA 0x4000043
 #define ID_LWS_STANDARD 0x2b0
+#define ID_ORION_CURRENTS_VOLTS 0x140006f8
+#define ID_ORION_INFO 0x140006b8
+#define ID_GYRO_DATA 0x4008004
+#define ID_ACCEL_DATA 0x4008044
 #define ID_DAQ_COMMAND_MAIN_MODULE 0x14000072
 /* END AUTO ID DEFS */
 
@@ -57,6 +61,10 @@
 #define DLC_FRONT_WHEEL_DATA 8
 #define DLC_REAR_WHEEL_DATA 8
 #define DLC_LWS_STANDARD 5
+#define DLC_ORION_CURRENTS_VOLTS 4
+#define DLC_ORION_INFO 7
+#define DLC_GYRO_DATA 6
+#define DLC_ACCEL_DATA 6
 #define DLC_DAQ_COMMAND_MAIN_MODULE 8
 /* END AUTO DLC DEFS */
 
@@ -113,6 +121,10 @@
 #define UP_FRONT_WHEEL_DATA 10
 #define UP_REAR_WHEEL_DATA 10
 #define UP_LWS_STANDARD 10
+#define UP_ORION_CURRENTS_VOLTS 32
+#define UP_ORION_INFO 32
+#define UP_GYRO_DATA 15
+#define UP_ACCEL_DATA 15
 /* END AUTO UP DEFS */
 
 #define CHECK_STALE(stale, curr, last, period) if(!stale && \
@@ -315,6 +327,41 @@ typedef union { __attribute__((packed))
         uint64_t Reserved_2: 8;
     } LWS_Standard;
     struct {
+        uint64_t pack_current: 16;
+        uint64_t pack_voltage: 16;
+    } orion_currents_volts;
+    struct {
+        uint64_t discharge_enable: 1;
+        uint64_t charge_enable: 1;
+        uint64_t charger_safety: 1;
+        uint64_t dtc_status: 1;
+        uint64_t multi_input: 1;
+        uint64_t always_on: 1;
+        uint64_t is_ready: 1;
+        uint64_t is_charging: 1;
+        uint64_t multi_input_2: 1;
+        uint64_t multi_input_3: 1;
+        uint64_t reserved: 1;
+        uint64_t multi_output_2: 1;
+        uint64_t multi_output_3: 1;
+        uint64_t multi_output_4: 1;
+        uint64_t multi_enable: 1;
+        uint64_t multi_output_1: 1;
+        uint64_t pack_dcl: 16;
+        uint64_t pack_ccl: 16;
+        uint64_t pack_soc: 8;
+    } orion_info;
+    struct {
+        uint64_t gx: 16;
+        uint64_t gy: 16;
+        uint64_t gz: 16;
+    } gyro_data;
+    struct {
+        uint64_t ax: 16;
+        uint64_t ay: 16;
+        uint64_t az: 16;
+    } accel_data;
+    struct {
         uint64_t daq_command: 64;
     } daq_command_MAIN_MODULE;
     uint8_t raw_data[8];
@@ -409,6 +456,49 @@ typedef struct {
         uint8_t stale;
         uint32_t last_rx;
     } LWS_Standard;
+    struct {
+        int16_t pack_current;
+        uint16_t pack_voltage;
+        uint8_t stale;
+        uint32_t last_rx;
+    } orion_currents_volts;
+    struct {
+        uint8_t discharge_enable;
+        uint8_t charge_enable;
+        uint8_t charger_safety;
+        uint8_t dtc_status;
+        uint8_t multi_input;
+        uint8_t always_on;
+        uint8_t is_ready;
+        uint8_t is_charging;
+        uint8_t multi_input_2;
+        uint8_t multi_input_3;
+        uint8_t reserved;
+        uint8_t multi_output_2;
+        uint8_t multi_output_3;
+        uint8_t multi_output_4;
+        uint8_t multi_enable;
+        uint8_t multi_output_1;
+        uint16_t pack_dcl;
+        uint16_t pack_ccl;
+        uint8_t pack_soc;
+        uint8_t stale;
+        uint32_t last_rx;
+    } orion_info;
+    struct {
+        int16_t gx;
+        int16_t gy;
+        int16_t gz;
+        uint8_t stale;
+        uint32_t last_rx;
+    } gyro_data;
+    struct {
+        int16_t ax;
+        int16_t ay;
+        int16_t az;
+        uint8_t stale;
+        uint32_t last_rx;
+    } accel_data;
     struct {
         uint64_t daq_command;
     } daq_command_MAIN_MODULE;
