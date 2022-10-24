@@ -4,6 +4,8 @@
 
 void TV_pp(ExtU* rtU)
 {
+rtU->r_ref = 0;
+
 rtU->driver_input = can_data.raw_throttle_brake.throttle * DRIVER_INPUT_CALIBRATION;
 
 rtU->steering_angle = can_data.LWS_Standard.LWS_ANGLE * STEERING_ANGLE_CALIBRATION;
