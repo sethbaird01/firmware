@@ -1385,7 +1385,7 @@ static void Electronics_j(const real_T rtu_TVS_Information[2], const real_T
                     localDW->rack_displacement) + localDW->SA_rl;
 
   /* Sum: '<S13>/Sum' incorporates:
-   *  UnitDelay: '<S13>/Unit Delay1'
+   *  UnitDelay: '<S13>/Unit Delay1'0
    */
   localDW->left_steering_angle = localDW->SA_fr + localDW->UnitDelay1_DSTATE_e;
 
@@ -1605,13 +1605,13 @@ static void Electronics_j(const real_T rtu_TVS_Information[2], const real_T
   }
 
   minimum(localDW->varargin_1, localDW->SA, localDW->iindx, localDW);
-  for (localDW->idx = 0; localDW->idx < 4; localDW->idx++) {
-    for (localDW->j = 0; localDW->j < 251; localDW->j++) {
-      localDW->c_x[localDW->j + 251 * localDW->idx] = power_loss_grid[((int32_T)
-        (localDW->RPM_index[localDW->idx] + 1.0) - 1) * 251 + localDW->j] -
-        power_loss_limit[localDW->idx];
-    }
-  }
+   for (localDW->idx = 0; localDW->idx < 4; localDW->idx++) {
+     for (localDW->j = 0; localDW->j < 251; localDW->j++) {
+       localDW->c_x[localDW->j + 251 * localDW->idx] = power_loss_grid[((int32_T)
+         (localDW->RPM_index[localDW->idx] + 1.0) - 1) * 251 + localDW->j] -
+         power_loss_limit[localDW->idx];
+     }
+   }
 
   for (localDW->j = 0; localDW->j < 1004; localDW->j++) {
     localDW->varargin_1[localDW->j] = fabs(localDW->c_x[localDW->j]);
@@ -1900,6 +1900,7 @@ static void Electronics_j(const real_T rtu_TVS_Information[2], const real_T
   localDW->lb[1] += 25.0F;
   rtb_lb = localDW->lb[2] + 25.0F;
   localDW->lb[2] += 25.0F;
+ 
   if (((!(localDW->V_flt_idx_1 < min_velocity_regen)) ||
        (!(rtu_TVS_Information_o < 0.0))) && (rtu_TVS_Information_o > 0.0)) {
     localDW->Tx21 = 0.0F;
@@ -2134,37 +2135,6 @@ void Electronics_initialize(RT_MODEL *const rtM)
   Electronics_Init(&rtDW->Electronics_jy);
 
   /* End of SystemInitialize for SubSystem: '<Root>/Electronics' */
-}
-
-void rt_OneStep(RT_MODEL *const rtM)
-{
-  static boolean_T OverrunFlag = false;
-
-  /* Disable interrupts here */
-
-  /* Check for overrun */
-  if (OverrunFlag) {
-    rtmSetErrorStatus(rtM, "Overrun");
-    return;
-  }
-
-  OverrunFlag = true;
-
-  /* Save FPU context here (if necessary) */
-  /* Re-enable timer or interrupt here */
-  /* Set model inputs here */
-
-  /* Step the model */
-  TV_step(rtM, &rtU, &rtY);
-
-  /* Get model outputs here */
-
-  /* Indicate task complete */
-  OverrunFlag = false;
-
-  /* Disable interrupts here */
-  /* Restore FPU context here (if necessary) */
-  /* Enable interrupts here */
 }
 
 /*

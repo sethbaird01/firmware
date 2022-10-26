@@ -20,7 +20,7 @@
                 "-d",
                 "${workspaceFolder}/source/main_module"
             ],
-            "preLaunchTask": "build",
+            //"preLaunchTask": "build",
             "runToEntryPoint": "main"
         },
         {

@@ -31,10 +31,18 @@ rtU->accel[0] = can_data.accel_data.ax * ACCELERATION_CALIBRATION;
 rtU->accel[1] = can_data.accel_data.ay * ACCELERATION_CALIBRATION;
 rtU->accel[2] = can_data.accel_data.az * ACCELERATION_CALIBRATION;
 
-rtU->omega[0] = 0;
-rtU->omega[1] = 0;
+rtU->omega[0] = 0.1;
+rtU->omega[1] = 0.1;
 rtU->omega[2] = can_data.rear_wheel_data.left_speed * OMEGA_CALIBRATION;
 rtU->omega[3] = can_data.rear_wheel_data.right_speed * OMEGA_CALIBRATION;
+
+if (rtU->omega[2] < 0.1){
+    rtU->omega[2] = 0.1;
+} else {
+    rtU->omega[3] = 0.1;
+}
+    
+
 
 rtU->vel[0] = (rtU->omega[2] + rtU->omega[3]) * RE / 2;
 rtU->vel[1] = 0;
@@ -54,10 +62,15 @@ rtU->motor_temp[1] = 55;
 rtU->motor_temp[2] = 55;
 rtU->motor_temp[3] = 55;
 
-rtU->battery_voltage = can_data.orion_currents_volts.pack_voltage * VOLTAGE_CALIBRATION;
+//rtU->battery_voltage = can_data.orion_currents_volts.pack_voltage * VOLTAGE_CALIBRATION;
 
-rtU->power_limits[0] = (rtU->battery_voltage) * can_data.orion_info.pack_dcl * CURRENT_CALIBRATION;
-rtU->power_limits[1] = (rtU->battery_voltage) * can_data.orion_info.pack_ccl * CURRENT_CALIBRATION;
+rtU->battery_voltage = 200;
+
+//rtU->power_limits[0] = (rtU->battery_voltage) * can_data.orion_info.pack_dcl * CURRENT_CALIBRATION;
+//rtU->power_limits[1] = (rtU->battery_voltage) * can_data.orion_info.pack_ccl * CURRENT_CALIBRATION;
+
+rtU->power_limits[0] = 10000;
+rtU->power_limits[1] = 10000;
 
 // Temporary
 rtU->FZ[0] = 1200;

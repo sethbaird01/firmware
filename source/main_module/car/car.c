@@ -10,6 +10,15 @@ uint32_t buzzer_start_tick = 0;
 volatile ADCReadings_t adc_readings;
 uint8_t prchg_set;
 
+static ExtU rtU;                       /* External inputs */
+static ExtY rtY;                       /* External outputs */
+
+/* TV Definitions */
+static RT_MODEL rtM_;
+static RT_MODEL *const rtMPtr = &rtM_; /* Real-time model */
+static DW rtDW;                        /* Observable states */
+static RT_MODEL *const rtM = rtMPtr;
+
 static bool checkErrorFaults();
 static bool checkFatalFaults();
 static void brakeLightUpdate(uint16_t raw_brake);
@@ -31,6 +40,13 @@ bool carInit()
     PHAL_writeGPIO(BUZZER_GPIO_Port, BUZZER_Pin, 0);
     prchg_set = 0;
     mot_left_req = mot_right_req = 0;
+
+    /* Pack model data into RTM */
+    rtM->dwork = &rtDW;
+
+    /* Initialize model */
+    Electronics_initialize(rtM);
+
 }
 
 void carHeartbeat()
@@ -155,14 +171,16 @@ void carPeriodic()
         // t_temp = (t_temp > 469) ? 0 : t_temp + 1;
 
         // TVS
+        volatile uint32_t dur = sched.os_ticks;
         TV_pp(&rtU);
         rt_OneStep(rtM);
+        dur = sched.os_ticks - dur;
 
         // E-diff
         //eDiff(t_req, &torque_r);
         // TODO: fix steering for ediff
-        torque_r.torque_left = rtY.Tx[3];
-        torque_r.torque_right = rtY.Tx[4];
+        torque_r.torque_left = (int16_t)(rtY.Tx[2]*(4095.0/25.0));
+        torque_r.torque_right = (int16_t)(rtY.Tx[3]*(4095.0/25.0));
 
         // check torque request (FSAE rule)
         if(torque_r.torque_left > t_req)
@@ -441,4 +459,35 @@ void eDiff(int16_t t_req, torqueRequest_t* torque_r)
 
         return;
     }
+}
+
+void rt_OneStep(RT_MODEL *const rtM)
+{
+  static boolean_T OverrunFlag = false;
+
+  /* Disable interrupts here */
+
+  /* Check for overrun */
+  if (OverrunFlag) {
+    rtmSetErrorStatus(rtM, "Overrun");
+    return;
+  }
+
+  OverrunFlag = true;
+
+  /* Save FPU context here (if necessary) */
+  /* Re-enable timer or interrupt here */
+  /* Set model inputs here */
+
+  /* Step the model */
+  TV_step(rtM, &rtU, &rtY);
+
+  /* Get model outputs here */
+
+  /* Indicate task complete */
+  OverrunFlag = false;
+
+  /* Disable interrupts here */
+  /* Restore FPU context here (if necessary) */
+  /* Enable interrupts here */
 }

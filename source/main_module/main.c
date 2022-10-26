@@ -15,8 +15,6 @@
 #include "cooling.h"
 #include "daq.h"
 #include "main.h"
-#include "Electronics_types.h"
-//#include "main_linker.h" 
 
 GPIOInitConfig_t gpio_config[] = {
     // CAN
@@ -123,12 +121,6 @@ int main (void)
         HardFault_Handler();
     }
 
-    /* Pack model data into RTM */
-    rtM->dwork = &rtDW;
-
-    /* Initialize model */
-    Electronics_initialize(rtM);
-
     /* Task Creation */
     schedInit(SystemCoreClock);
     configureAnim(preflightAnimation, preflightChecks, 60, 750);
@@ -136,11 +128,15 @@ int main (void)
     taskCreate(coolingPeriodic, 100);
     taskCreate(heartBeatLED, 500);
     taskCreate(carHeartbeat, 100);
-    taskCreate(carPeriodic, 15);
+    taskCreate(carPeriodic, 250);
     taskCreate(setFanPWM, 1);
     taskCreate(daqPeriodic, DAQ_UPDATE_PERIOD);
     taskCreateBackground(canTxUpdate);
     taskCreateBackground(canRxUpdate);
+
+    RCC->AHB1ENR |= RCC_APB2ENR_SYSCFGEN;
+    SYSCFG->CFGR1 |= SYSCFG_CFGR1_FPU_IE_0;
+    NVIC_EnableIRQ(FPU_IRQn);
 
     /*
     CanMsgTypeDef_t msg = {.Bus=CAN1, .StdId=ID_LWS_CONFIG, .DLC=DLC_LWS_CONFIG, .IDE=0};\
@@ -315,4 +311,9 @@ void HardFault_Handler()
     {
         __asm__("nop");
     }
+}
+
+void FPU_IRQHandler()
+{
+    asm("bkpt");
 }

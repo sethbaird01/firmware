@@ -211,15 +211,6 @@ struct tag_RTM {
 /* Block parameters (default storage) */
 extern P rtP;
 
-static ExtU rtU;                       /* External inputs */
-static ExtY rtY;                       /* External outputs */
-
-/* TV Definitions */
-static RT_MODEL rtM_;
-static RT_MODEL *const rtMPtr = &rtM_; /* Real-time model */
-static DW rtDW;                        /* Observable states */
-static RT_MODEL *const rtM = rtMPtr;
-
 
 /* Model entry point functions */
 extern void Electronics_initialize(RT_MODEL *const rtM);
