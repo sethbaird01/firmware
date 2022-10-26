@@ -27,6 +27,8 @@
 #include "wheel_speeds.h"
 #include "shockpot.h"
 #include "plettenberg.h"
+#include "MC_PL0.h"
+#include "MC_PL_pp.h"
 
 GPIOInitConfig_t gpio_config[] = {
   GPIO_INIT_CANRX_PA11,
@@ -151,6 +153,14 @@ motor_t motor_left, motor_right;
 // TODO: REMOVE WHEN NOT TESTING
 uint16_t mot_left_req;
 uint16_t mot_right_req;
+
+static ExtU rtU;                       /* External inputs */
+static ExtY rtY;                       /* External outputs */
+
+/* TV Definitions */
+static RT_MODEL rtM_;
+static RT_MODEL *const rtMPtr = &rtM_; /* Real-time model */                       /* Observable states */
+static RT_MODEL *const rtM = rtMPtr;
 
 int main(void)
 {
@@ -347,6 +357,16 @@ void commandTorquePeriodic()
     if (pow_left < 0) pow_left = 0.0;
     if (pow_right < 0) pow_left = 0.0;
 
+    rtU.Txx = can_data.torque_request_main.rear_left;
+    rtU.Wxx = can_data.rear_wheel_data.left_speed * (1.0/100.0 * 0.278);
+    MC_PL_pp(&rtU);
+    rt_OneStep();
+
+    rtU.Txx = can_data.torque_request_main.rear_right;
+    rtU.Wxx = can_data.rear_wheel_data.right_speed * (1.0/100.0 * 0.278);
+    MC_PL_pp(&rtU);
+    rt_OneStep();
+
     // Only drive if ready
     if (can_data.main_hb.car_state != CAR_STATE_READY2DRIVE || 
         // TODO: fix stale checks can_data.main_hb.stale                              ||
@@ -520,4 +540,35 @@ void HardFault_Handler()
     {
         __asm__("nop");
     }
+}
+
+void rt_OneStep(void)
+{
+  static boolean_T OverrunFlag = false;
+
+  /* Disable interrupts here */
+
+  /* Check for overrun */
+  if (OverrunFlag) {
+    rtmSetErrorStatus(rtM, "Overrun");
+    return;
+  }
+
+  OverrunFlag = true;
+
+  /* Save FPU context here (if necessary) */
+  /* Re-enable timer or interrupt here */
+  /* Set model inputs here */
+
+  /* Step the model */
+  MC_PL0_step();
+
+  /* Get model outputs here */
+
+  /* Indicate task complete */
+  OverrunFlag = false;
+
+  /* Disable interrupts here */
+  /* Restore FPU context here (if necessary) */
+  /* Enable interrupts here */
 }

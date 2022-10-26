@@ -218,7 +218,11 @@
                     ],
                     "rx": [
                         {"msg_name":"torque_request_main"},
-                        {"msg_name":"main_hb"}
+                        {"msg_name":"main_hb"},
+                        {"msg_name":"front_wheel_data"},
+                        {"msg_name":"rear_wheel_data"},
+                        {"msg_name":"orion_info"},
+                        {"msg_name":"orion_currents_volts"}
                     ]
                 },
                 {

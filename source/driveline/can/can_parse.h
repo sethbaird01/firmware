@@ -30,6 +30,8 @@
 #define ID_DAQ_RESPONSE_DRIVELINE 0x17ffffc3
 #define ID_TORQUE_REQUEST_MAIN 0x4000041
 #define ID_MAIN_HB 0x4001901
+#define ID_ORION_INFO 0x140006b8
+#define ID_ORION_CURRENTS_VOLTS 0x140006f8
 #define ID_DAQ_COMMAND_DRIVELINE 0x140000f2
 /* END AUTO ID DEFS */
 
@@ -45,6 +47,8 @@
 #define DLC_DAQ_RESPONSE_DRIVELINE 8
 #define DLC_TORQUE_REQUEST_MAIN 8
 #define DLC_MAIN_HB 2
+#define DLC_ORION_INFO 7
+#define DLC_ORION_CURRENTS_VOLTS 4
 #define DLC_DAQ_COMMAND_DRIVELINE 8
 /* END AUTO DLC DEFS */
 extern uint32_t last_can_rx_time_ms;
@@ -130,6 +134,10 @@ extern uint32_t last_can_rx_time_ms;
 /* BEGIN AUTO UP DEFS (Update Period)*/
 #define UP_TORQUE_REQUEST_MAIN 15
 #define UP_MAIN_HB 100
+#define UP_FRONT_WHEEL_DATA 10
+#define UP_REAR_WHEEL_DATA 10
+#define UP_ORION_INFO 32
+#define UP_ORION_CURRENTS_VOLTS 32
 /* END AUTO UP DEFS */
 
 #define CHECK_STALE(stale, curr, last, period) if(!stale && \
@@ -303,6 +311,31 @@ typedef union { __attribute__((packed))
         uint64_t precharge_state: 1;
     } main_hb;
     struct {
+        uint64_t discharge_enable: 1;
+        uint64_t charge_enable: 1;
+        uint64_t charger_safety: 1;
+        uint64_t dtc_status: 1;
+        uint64_t multi_input: 1;
+        uint64_t always_on: 1;
+        uint64_t is_ready: 1;
+        uint64_t is_charging: 1;
+        uint64_t multi_input_2: 1;
+        uint64_t multi_input_3: 1;
+        uint64_t reserved: 1;
+        uint64_t multi_output_2: 1;
+        uint64_t multi_output_3: 1;
+        uint64_t multi_output_4: 1;
+        uint64_t multi_enable: 1;
+        uint64_t multi_output_1: 1;
+        uint64_t pack_dcl: 16;
+        uint64_t pack_ccl: 16;
+        uint64_t pack_soc: 8;
+    } orion_info;
+    struct {
+        uint64_t pack_current: 16;
+        uint64_t pack_voltage: 16;
+    } orion_currents_volts;
+    struct {
         uint64_t daq_command: 64;
     } daq_command_DRIVELINE;
     uint8_t raw_data[8];
@@ -327,6 +360,51 @@ typedef struct {
         uint8_t stale;
         uint32_t last_rx;
     } main_hb;
+    struct {
+        uint16_t left_speed;
+        uint16_t right_speed;
+        uint16_t left_normal;
+        uint16_t right_normal;
+        uint8_t stale;
+        uint32_t last_rx;
+    } front_wheel_data;
+    struct {
+        uint16_t left_speed;
+        uint16_t right_speed;
+        uint16_t left_normal;
+        uint16_t right_normal;
+        uint8_t stale;
+        uint32_t last_rx;
+    } rear_wheel_data;
+    struct {
+        uint8_t discharge_enable;
+        uint8_t charge_enable;
+        uint8_t charger_safety;
+        uint8_t dtc_status;
+        uint8_t multi_input;
+        uint8_t always_on;
+        uint8_t is_ready;
+        uint8_t is_charging;
+        uint8_t multi_input_2;
+        uint8_t multi_input_3;
+        uint8_t reserved;
+        uint8_t multi_output_2;
+        uint8_t multi_output_3;
+        uint8_t multi_output_4;
+        uint8_t multi_enable;
+        uint8_t multi_output_1;
+        uint16_t pack_dcl;
+        uint16_t pack_ccl;
+        uint8_t pack_soc;
+        uint8_t stale;
+        uint32_t last_rx;
+    } orion_info;
+    struct {
+        int16_t pack_current;
+        uint16_t pack_voltage;
+        uint8_t stale;
+        uint32_t last_rx;
+    } orion_currents_volts;
     struct {
         uint64_t daq_command;
     } daq_command_DRIVELINE;
