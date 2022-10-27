@@ -42,32 +42,32 @@ typedef struct {
   /* Expression: max_rpm
    * Referenced by: '<S1>/MATLAB Function'
    */
-  real_T MATLABFunction_max_rpm[68];
+  float MATLABFunction_max_rpm[68];
 
   /* Expression: max_torque
    * Referenced by: '<S1>/MATLAB Function'
    */
-  real_T MATLABFunction_max_torque[68];
+  float MATLABFunction_max_torque[68];
 
   /* Expression: power_input_grid
    * Referenced by: '<S1>/MATLAB Function'
    */
-  real_T MATLABFunction_power_input_grid[26857];
+  unsigned short MATLABFunction_power_input_grid[26857];
 
   /* Expression: rpm_sweep
    * Referenced by: '<S1>/MATLAB Function'
    */
-  real_T MATLABFunction_rpm_sweep[107];
+  float MATLABFunction_rpm_sweep[107];
 
   /* Expression: torque_sweep
    * Referenced by: '<S1>/MATLAB Function'
    */
-  real_T MATLABFunction_torque_sweep[251];
+  float MATLABFunction_torque_sweep[251];
 
   /* Expression: voltage_grid
    * Referenced by: '<S1>/MATLAB Function'
    */
-  real_T MATLABFunction_voltage_grid[26857];
+  unsigned short MATLABFunction_voltage_grid[26857];
 } ConstP;
 
 /* External inputs (root inport signals with default storage) */
