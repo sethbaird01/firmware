@@ -117,4 +117,13 @@ bool PHAL_configureAPB1Clock(uint32_t apb1_clock_target_hz);
  */
 bool PHAL_configureAPB2Clock(uint32_t apb2_clock_target_hz);
 
+/**
+ * @brief Configure MSI Clock rate
+ * 
+ * @param target_hz
+ * @return true Successfully configured MSI clock rate to @param target_hz
+ * @return false 
+ */
+bool PHAL_configureMSIClock(uint32_t target_hz);
+
 #endif // _PHAL_PLL_H_

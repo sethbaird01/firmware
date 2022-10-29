@@ -7,9 +7,9 @@
  *
  * Code generated for Simulink model 'Electronics'.
  *
- * Model version                  : 1.78
+ * Model version                  : 1.131
  * Simulink Coder version         : 9.7 (R2022a) 13-Nov-2021
- * C/C++ source code generated on : Tue Oct 18 21:02:27 2022
+ * C/C++ source code generated on : Fri Oct 28 19:01:23 2022
  *
  * Target selection: ert.tlc
  * Embedded hardware selection: ARM Compatible->ARM Cortex-M
@@ -53,7 +53,7 @@
 typedef signed char int8_T;
 typedef unsigned char uint8_T;
 typedef short int16_T;
-//typedef unsigned short uint16_T;
+typedef unsigned short uint16_T;
 typedef int int32_T;
 typedef unsigned int uint32_T;
 typedef long long int64_T;

@@ -4,7 +4,7 @@
 
 void TV_pp(ExtU* rtU)
 {
-rtU->r_ref = 0;
+rtU->r_ref = 0.00001;
 
 rtU->driver_input = can_data.raw_throttle_brake.throttle * DRIVER_INPUT_CALIBRATION;
 
@@ -41,10 +41,8 @@ if (rtU->omega[2] < 0.1){
 } else {
     rtU->omega[3] = 0.1;
 }
-    
 
-
-rtU->vel[0] = (rtU->omega[2] + rtU->omega[3]) * RE / 2;
+rtU->vel[0] = (rtU->omega[2] + rtU->omega[3]) * 0.222 / 2;
 rtU->vel[1] = 0;
 
 rtU->shock_displacement[0] = 0;

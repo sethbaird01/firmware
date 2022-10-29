@@ -7,9 +7,9 @@
  *
  * Code generated for Simulink model 'Electronics'.
  *
- * Model version                  : 1.78
+ * Model version                  : 1.131
  * Simulink Coder version         : 9.7 (R2022a) 13-Nov-2021
- * C/C++ source code generated on : Tue Oct 18 21:02:27 2022
+ * C/C++ source code generated on : Fri Oct 28 19:01:23 2022
  *
  * Target selection: ert.tlc
  * Embedded hardware selection: ARM Compatible->ARM Cortex-M
@@ -20,2103 +20,1540 @@
  */
 
 #include "Electronics.h"
+#include "bigM_v2_func.h"
 #include "rtwtypes.h"
-#include <math.h>
-#include <string.h>
-#include <stddef.h>
-#include "data.h"
-#define NumBitsPerChar                 8U
+#ifndef UCHAR_MAX
+#include <limits.h>
+#endif
 
-extern real_T rt_powd_snf(real_T u0, real_T u1);
-extern real_T rt_atan2d_snf(real_T u0, real_T u1);
-extern real_T rt_hypotd_snf(real_T u0, real_T u1);
+#if ( UCHAR_MAX != (0xFFU) ) || ( SCHAR_MAX != (0x7F) )
+#error Code was generated for compiler with different sized uchar/char. \
+Consider adjusting Test hardware word size settings on the \
+Hardware Implementation pane to match your compiler word sizes as \
+defined in limits.h of the compiler. Alternatively, you can \
+select the Test hardware is the same as production hardware option and \
+select the Enable portable word sizes option on the Code Generation > \
+Verification pane for ERT based targets, which will disable the \
+preprocessor word size checks.
+#endif
+
+#if ( USHRT_MAX != (0xFFFFU) ) || ( SHRT_MAX != (0x7FFF) )
+#error Code was generated for compiler with different sized ushort/short. \
+Consider adjusting Test hardware word size settings on the \
+Hardware Implementation pane to match your compiler word sizes as \
+defined in limits.h of the compiler. Alternatively, you can \
+select the Test hardware is the same as production hardware option and \
+select the Enable portable word sizes option on the Code Generation > \
+Verification pane for ERT based targets, which will disable the \
+preprocessor word size checks.
+#endif
+
+#if ( UINT_MAX != (0xFFFFFFFFU) ) || ( INT_MAX != (0x7FFFFFFF) )
+#error Code was generated for compiler with different sized uint/int. \
+Consider adjusting Test hardware word size settings on the \
+Hardware Implementation pane to match your compiler word sizes as \
+defined in limits.h of the compiler. Alternatively, you can \
+select the Test hardware is the same as production hardware option and \
+select the Enable portable word sizes option on the Code Generation > \
+Verification pane for ERT based targets, which will disable the \
+preprocessor word size checks.
+#endif
+
+#if ( ULONG_MAX != (0xFFFFFFFFU) ) || ( LONG_MAX != (0x7FFFFFFF) )
+#error Code was generated for compiler with different sized ulong/long. \
+Consider adjusting Test hardware word size settings on the \
+Hardware Implementation pane to match your compiler word sizes as \
+defined in limits.h of the compiler. Alternatively, you can \
+select the Test hardware is the same as production hardware option and \
+select the Enable portable word sizes option on the Code Generation > \
+Verification pane for ERT based targets, which will disable the \
+preprocessor word size checks.
+#endif
+
+/* Skipping ulong_long/long_long check: insufficient preprocessor integer range. */
+extern uint16_T rt_sqrt_Uu16En3_Yu16En_God3C1DL(uint16_T u);
+static uint16_T look1_is16lu64n32tu16_binlgse(int16_T u0, const int16_T bp0[],
+  const uint16_T table[], uint32_T maxIndex);
+static uint32_T plook_u32u16u64n48_evenc_s(uint16_T u, uint16_T bp0, uint16_T
+  bpSpace, uint32_T maxIndex, uint64_T *fraction);
+static int16_T intrp1d_s16s32s32u32u64n48l_s(uint32_T bpIndex, uint64_T frac,
+  const int16_T table[]);
+static uint32_T plook_u32u16u64n48_even7c_gf(uint16_T u, uint16_T bp0, uint32_T
+  maxIndex, uint64_T *fraction);
+static int16_T intrp1d_s16s32s32u32u64n48l_f(uint32_T bpIndex, uint64_T frac,
+  const int16_T table[]);
 static void Electronics_Init(DW_Electronics *localDW);
-static void Electronics_j(const real_T rtu_TVS_Information[2], const real_T
-  rtu_TVS_Information_h[3], real_T rtu_TVS_Information_o, const real_T
-  rtu_TVS_Information_e[4], const real_T rtu_TVS_Information_n[2], const real_T
-  rtu_TVS_Information_d[4], const real_T rtu_TVS_Information_e2[4], real_T
-  rtu_TVS_Information_ds, real_T rtu_TVS_Information_a, const real_T
-  rtu_TVS_Information_e1[4], real_T rty_Tx[4], DW_Electronics *localDW);
-
-/* Forward declaration for local functions */
-static real_T maximum(const real_T x[4]);
-static real_T minimum_b(const real_T x[4]);
-static void pchip(const real_T x[7], const real_T y[7], const real_T xx[4],
-                  real_T v[4], DW_Electronics *localDW);
-static void minimum(const real_T x[1004], real_T ex[4], int32_T idx[4],
-                    DW_Electronics *localDW);
-static real_T xnrm2(int32_T n, const real_T x[4], int32_T ix0, DW_Electronics
-                    *localDW);
-static void xgeqp3(real_T A[4], real_T *tau, int32_T *jpvt, DW_Electronics
-                   *localDW);
-static void interp1(const real_T varargin_1[68], const real_T varargin_2[68],
-                    const real_T varargin_3[4], real_T Vq[4], DW_Electronics
-                    *localDW);
-static real_T rtGetInf(void);
-static real32_T rtGetInfF(void);
-static real_T rtGetMinusInf(void);
-static real32_T rtGetMinusInfF(void);
-static real_T rtGetNaN(void);
-static real32_T rtGetNaNF(void);
-
-/*===========*
- * Constants *
- *===========*/
-#define RT_PI                          3.14159265358979323846
-#define RT_PIF                         3.1415927F
-#define RT_LN_10                       2.30258509299404568402
-#define RT_LN_10F                      2.3025851F
-#define RT_LOG10E                      0.43429448190325182765
-#define RT_LOG10EF                     0.43429449F
-#define RT_E                           2.7182818284590452354
-#define RT_EF                          2.7182817F
-
-/*
- * UNUSED_PARAMETER(x)
- *   Used to specify that a function parameter (argument) is required but not
- *   accessed by the function body.
- */
-#ifndef UNUSED_PARAMETER
-#if defined(__LCC__)
-#define UNUSED_PARAMETER(x)                                      /* do nothing */
-#else
-
-/*
- * This is the semi-ANSI standard way of indicating that an
- * unused function parameter is required.
- */
-#define UNUSED_PARAMETER(x)            (void) (x)
-#endif
-#endif
-
-extern real_T rtInf;
-extern real_T rtMinusInf;
-extern real_T rtNaN;
-extern real32_T rtInfF;
-extern real32_T rtMinusInfF;
-extern real32_T rtNaNF;
-static void rt_InitInfAndNaN(size_t realSize);
-static boolean_T rtIsInf(real_T value);
-static boolean_T rtIsInfF(real32_T value);
-static boolean_T rtIsNaN(real_T value);
-static boolean_T rtIsNaNF(real32_T value);
-typedef struct {
-  struct {
-    uint32_T wordH;
-    uint32_T wordL;
-  } words;
-} BigEndianIEEEDouble;
-
-typedef struct {
-  struct {
-    uint32_T wordL;
-    uint32_T wordH;
-  } words;
-} LittleEndianIEEEDouble;
-
-typedef struct {
-  union {
-    real32_T wordLreal;
-    uint32_T wordLuint;
-  } wordL;
-} IEEESingle;
-
-real_T rtInf;
-real_T rtMinusInf;
-real_T rtNaN;
-real32_T rtInfF;
-real32_T rtMinusInfF;
-real32_T rtNaNF;
-
-/*
- * Initialize rtInf needed by the generated code.
- * Inf is initialized as non-signaling. Assumes IEEE.
- */
-static real_T rtGetInf(void)
+static void Electronics_a(real_T rtu_TVS_Information_l, real_T
+  rtu_TVS_Information_f, const real_T rtu_TVS_Information_g[3], const real_T
+  rtu_TVS_Information_d[2], const real_T rtu_TVS_Information_h[2], const real_T
+  rtu_TVS_Information_ge[4], const real_T rtu_TVS_Information_e[4], real_T
+  rtu_TVS_Information_b, int32_T *rty_bigM_flag, real_T rty_Tx[4], const
+  ConstB_Electronics *localC, DW_Electronics *localDW);
+static uint16_T look1_is16lu64n32tu16_binlgse(int16_T u0, const int16_T bp0[],
+  const uint16_T table[], uint32_T maxIndex)
 {
-  size_t bitsPerReal = sizeof(real_T) * (NumBitsPerChar);
-  real_T inf = 0.0;
-  if (bitsPerReal == 32U) {
-    inf = rtGetInfF();
-  } else {
-    union {
-      LittleEndianIEEEDouble bitVal;
-      real_T fltVal;
-    } tmpVal;
+  uint64_T frac;
+  uint32_T bpIdx;
+  uint32_T iLeft;
+  uint32_T iRght;
+  int16_T bpLeftVar;
+  uint16_T y;
+  uint16_T yL_0d0;
+  uint16_T yR_0d0;
 
-    tmpVal.bitVal.words.wordH = 0x7FF00000U;
-    tmpVal.bitVal.words.wordL = 0x00000000U;
-    inf = tmpVal.fltVal;
-  }
-
-  return inf;
-}
-
-/*
- * Initialize rtInfF needed by the generated code.
- * Inf is initialized as non-signaling. Assumes IEEE.
- */
-static real32_T rtGetInfF(void)
-{
-  IEEESingle infF;
-  infF.wordL.wordLuint = 0x7F800000U;
-  return infF.wordL.wordLreal;
-}
-
-/*
- * Initialize rtMinusInf needed by the generated code.
- * Inf is initialized as non-signaling. Assumes IEEE.
- */
-static real_T rtGetMinusInf(void)
-{
-  size_t bitsPerReal = sizeof(real_T) * (NumBitsPerChar);
-  real_T minf = 0.0;
-  if (bitsPerReal == 32U) {
-    minf = rtGetMinusInfF();
-  } else {
-    union {
-      LittleEndianIEEEDouble bitVal;
-      real_T fltVal;
-    } tmpVal;
-
-    tmpVal.bitVal.words.wordH = 0xFFF00000U;
-    tmpVal.bitVal.words.wordL = 0x00000000U;
-    minf = tmpVal.fltVal;
-  }
-
-  return minf;
-}
-
-/*
- * Initialize rtMinusInfF needed by the generated code.
- * Inf is initialized as non-signaling. Assumes IEEE.
- */
-static real32_T rtGetMinusInfF(void)
-{
-  IEEESingle minfF;
-  minfF.wordL.wordLuint = 0xFF800000U;
-  return minfF.wordL.wordLreal;
-}
-
-/*
- * Initialize rtNaN needed by the generated code.
- * NaN is initialized as non-signaling. Assumes IEEE.
- */
-static real_T rtGetNaN(void)
-{
-  size_t bitsPerReal = sizeof(real_T) * (NumBitsPerChar);
-  real_T nan = 0.0;
-  if (bitsPerReal == 32U) {
-    nan = rtGetNaNF();
-  } else {
-    union {
-      LittleEndianIEEEDouble bitVal;
-      real_T fltVal;
-    } tmpVal;
-
-    tmpVal.bitVal.words.wordH = 0xFFF80000U;
-    tmpVal.bitVal.words.wordL = 0x00000000U;
-    nan = tmpVal.fltVal;
-  }
-
-  return nan;
-}
-
-/*
- * Initialize rtNaNF needed by the generated code.
- * NaN is initialized as non-signaling. Assumes IEEE.
- */
-static real32_T rtGetNaNF(void)
-{
-  IEEESingle nanF = { { 0.0F } };
-
-  nanF.wordL.wordLuint = 0xFFC00000U;
-  return nanF.wordL.wordLreal;
-}
-
-/*
- * Initialize the rtInf, rtMinusInf, and rtNaN needed by the
- * generated code. NaN is initialized as non-signaling. Assumes IEEE.
- */
-static void rt_InitInfAndNaN(size_t realSize)
-{
-  (void) (realSize);
-  rtNaN = rtGetNaN();
-  rtNaNF = rtGetNaNF();
-  rtInf = rtGetInf();
-  rtInfF = rtGetInfF();
-  rtMinusInf = rtGetMinusInf();
-  rtMinusInfF = rtGetMinusInfF();
-}
-
-/* Test if value is infinite */
-static boolean_T rtIsInf(real_T value)
-{
-  return (boolean_T)((value==rtInf || value==rtMinusInf) ? 1U : 0U);
-}
-
-/* Test if single-precision value is infinite */
-static boolean_T rtIsInfF(real32_T value)
-{
-  return (boolean_T)(((value)==rtInfF || (value)==rtMinusInfF) ? 1U : 0U);
-}
-
-/* Test if value is not a number */
-static boolean_T rtIsNaN(real_T value)
-{
-  boolean_T result = (boolean_T) 0;
-  size_t bitsPerReal = sizeof(real_T) * (NumBitsPerChar);
-  if (bitsPerReal == 32U) {
-    result = rtIsNaNF((real32_T)value);
-  } else {
-    union {
-      LittleEndianIEEEDouble bitVal;
-      real_T fltVal;
-    } tmpVal;
-
-    tmpVal.fltVal = value;
-    result = (boolean_T)((tmpVal.bitVal.words.wordH & 0x7FF00000) == 0x7FF00000 &&
-                         ( (tmpVal.bitVal.words.wordH & 0x000FFFFF) != 0 ||
-                          (tmpVal.bitVal.words.wordL != 0) ));
-  }
-
-  return result;
-}
-
-/* Test if single-precision value is not a number */
-static boolean_T rtIsNaNF(real32_T value)
-{
-  IEEESingle tmp;
-  tmp.wordL.wordLreal = value;
-  return (boolean_T)( (tmp.wordL.wordLuint & 0x7F800000) == 0x7F800000 &&
-                     (tmp.wordL.wordLuint & 0x007FFFFF) != 0 );
-}
-
-real_T rt_powd_snf(real_T u0, real_T u1)
-{
-  real_T tmp;
-  real_T tmp_0;
-  real_T y;
-  if (rtIsNaN(u0) || rtIsNaN(u1)) {
-    y = (rtNaN);
-  } else {
-    tmp = fabs(u0);
-    tmp_0 = fabs(u1);
-    if (rtIsInf(u1)) {
-      if (tmp == 1.0) {
-        y = 1.0;
-      } else if (tmp > 1.0) {
-        if (u1 > 0.0) {
-          y = (rtInf);
-        } else {
-          y = 0.0;
-        }
-      } else if (u1 > 0.0) {
-        y = 0.0;
-      } else {
-        y = (rtInf);
-      }
-    } else if (tmp_0 == 0.0) {
-      y = 1.0;
-    } else if (tmp_0 == 1.0) {
-      if (u1 > 0.0) {
-        y = u0;
-      } else {
-        y = 1.0 / u0;
-      }
-    } else if (u1 == 2.0) {
-      y = u0 * u0;
-    } else if ((u1 == 0.5) && (u0 >= 0.0)) {
-      y = sqrt(u0);
-    } else if ((u0 < 0.0) && (u1 > floor(u1))) {
-      y = (rtNaN);
+  /* Column-major Lookup 1-D
+     Search method: 'binary'
+     Use previous index: 'off'
+     Interpolation method: 'Linear point-slope'
+     Use last breakpoint for index at or above upper limit: 'off'
+     Remove protection against out-of-range input in generated code: 'on'
+     Rounding mode: 'simplest'
+   */
+  /* Prelookup - Index and Fraction
+     Index Search method: 'binary'
+     Use previous index: 'off'
+     Use last breakpoint for index at or above upper limit: 'off'
+     Remove protection against out-of-range input in generated code: 'on'
+     Rounding mode: 'simplest'
+   */
+  /* Binary Search */
+  bpIdx = maxIndex >> 1U;
+  iLeft = 0U;
+  iRght = maxIndex;
+  while (iRght - iLeft > 1U) {
+    if (u0 < bp0[bpIdx]) {
+      iRght = bpIdx;
     } else {
-      y = pow(u0, u1);
+      iLeft = bpIdx;
     }
+
+    bpIdx = (iRght + iLeft) >> 1U;
+  }
+
+  bpLeftVar = bp0[iLeft];
+  frac = ((uint64_T)(uint16_T)(u0 - bpLeftVar) << 32) / (uint16_T)(bp0[iLeft +
+    1U] - bpLeftVar);
+
+  /* Column-major Interpolation 1-D
+     Interpolation method: 'Linear point-slope'
+     Use last breakpoint for index at or above upper limit: 'off'
+     Rounding mode: 'simplest'
+     Overflow mode: 'wrapping'
+   */
+  yR_0d0 = table[iLeft + 1U];
+  yL_0d0 = table[iLeft];
+  if (yR_0d0 >= yL_0d0) {
+    y = (uint16_T)((uint32_T)(uint16_T)(((uint16_T)((uint32_T)yR_0d0 - yL_0d0) *
+      frac) >> 32) + yL_0d0);
+  } else {
+    y = (uint16_T)((uint32_T)yL_0d0 - (uint16_T)(((uint16_T)((uint32_T)yL_0d0 -
+      yR_0d0) * frac) >> 32));
   }
 
   return y;
 }
 
-real_T rt_atan2d_snf(real_T u0, real_T u1)
+static uint32_T plook_u32u16u64n48_evenc_s(uint16_T u, uint16_T bp0, uint16_T
+  bpSpace, uint32_T maxIndex, uint64_T *fraction)
 {
-  real_T y;
-  int32_T u0_0;
-  int32_T u1_0;
-  if (rtIsNaN(u0) || rtIsNaN(u1)) {
-    y = (rtNaN);
-  } else if (rtIsInf(u0) && rtIsInf(u1)) {
-    if (u0 > 0.0) {
-      u0_0 = 1;
-    } else {
-      u0_0 = -1;
-    }
+  uint32_T bpIndex;
+  uint16_T fbpIndex;
+  uint16_T uAdjust;
 
-    if (u1 > 0.0) {
-      u1_0 = 1;
+  /* Prelookup - Index and Fraction
+     Index Search method: 'even'
+     Extrapolation method: 'Clip'
+     Use previous index: 'off'
+     Use last breakpoint for index at or above upper limit: 'off'
+     Remove protection against out-of-range input in generated code: 'off'
+     Rounding mode: 'simplest'
+   */
+  if (u <= bp0) {
+    bpIndex = 0U;
+    *fraction = 0ULL;
+  } else {
+    uAdjust = (uint16_T)((uint32_T)u - bp0);
+    fbpIndex = (uint16_T)((uint32_T)uAdjust / bpSpace);
+    if (fbpIndex < maxIndex) {
+      bpIndex = fbpIndex;
+      *fraction = ((uint64_T)(uint16_T)((uint32_T)uAdjust - (uint16_T)((uint32_T)
+        fbpIndex * bpSpace)) << 48) / bpSpace;
     } else {
-      u1_0 = -1;
+      bpIndex = maxIndex - 1U;
+      *fraction = 281474976710656ULL;
     }
+  }
 
-    y = atan2(u0_0, u1_0);
-  } else if (u1 == 0.0) {
-    if (u0 > 0.0) {
-      y = RT_PI / 2.0;
-    } else if (u0 < 0.0) {
-      y = -(RT_PI / 2.0);
-    } else {
-      y = 0.0;
+  return bpIndex;
+}
+
+static int16_T intrp1d_s16s32s32u32u64n48l_s(uint32_T bpIndex, uint64_T frac,
+  const int16_T table[])
+{
+  int16_T yL_0d0;
+
+  /* Column-major Interpolation 1-D
+     Interpolation method: 'Linear point-slope'
+     Use last breakpoint for index at or above upper limit: 'off'
+     Rounding mode: 'simplest'
+     Overflow mode: 'wrapping'
+   */
+  yL_0d0 = table[bpIndex];
+  return (int16_T)((int16_T)(((table[bpIndex + 1U] - yL_0d0) * (int64_T)frac) >>
+    48) + yL_0d0);
+}
+
+static uint32_T plook_u32u16u64n48_even7c_gf(uint16_T u, uint16_T bp0, uint32_T
+  maxIndex, uint64_T *fraction)
+{
+  uint32_T bpIndex;
+  uint16_T fbpIndex;
+  uint16_T uAdjust;
+
+  /* Prelookup - Index and Fraction
+     Index Search method: 'even'
+     Use previous index: 'off'
+     Use last breakpoint for index at or above upper limit: 'off'
+     Remove protection against out-of-range input in generated code: 'on'
+     Rounding mode: 'floor'
+   */
+  uAdjust = (uint16_T)((uint32_T)u - bp0);
+  fbpIndex = (uint16_T)((uint32_T)uAdjust >> 7U);
+  if (fbpIndex < maxIndex) {
+    bpIndex = fbpIndex;
+    *fraction = (uint64_T)(uint16_T)(uAdjust & 127) << 41;
+  } else {
+    bpIndex = maxIndex - 1U;
+    *fraction = 281474976710656ULL;
+  }
+
+  return bpIndex;
+}
+
+static int16_T intrp1d_s16s32s32u32u64n48l_f(uint32_T bpIndex, uint64_T frac,
+  const int16_T table[])
+{
+  int16_T yL_0d0;
+
+  /* Column-major Interpolation 1-D
+     Interpolation method: 'Linear point-slope'
+     Use last breakpoint for index at or above upper limit: 'off'
+     Rounding mode: 'floor'
+     Overflow mode: 'wrapping'
+   */
+  yL_0d0 = table[bpIndex];
+  return (int16_T)((int16_T)(((table[bpIndex + 1U] - yL_0d0) * (int64_T)frac) >>
+    48) + yL_0d0);
+}
+
+uint16_T rt_sqrt_Uu16En3_Yu16En_God3C1DL(uint16_T u)
+{
+  int32_T iBit;
+  uint32_T tmp03_u;
+  uint16_T shiftMask;
+  uint16_T tmp01_y;
+  uint16_T y;
+
+  /* Fixed-Point Sqrt Computation by the bisection method. */
+  if (u > 0) {
+    y = 0U;
+    shiftMask = 32768U;
+    tmp03_u = (uint32_T)u << 15;
+    for (iBit = 0; iBit < 16; iBit++) {
+      tmp01_y = (uint16_T)(y | shiftMask);
+      if ((uint32_T)tmp01_y * tmp01_y <= tmp03_u) {
+        y = tmp01_y;
+      }
+
+      shiftMask = (uint16_T)((uint32_T)shiftMask >> 1U);
     }
   } else {
-    y = atan2(u0, u1);
+    y = 0U;
   }
 
   return y;
-}
-
-/* Function for MATLAB Function: '<S3>/Tire Model' */
-static real_T maximum(const real_T x[4])
-{
-  real_T ex;
-  int32_T b_k;
-  int32_T idx;
-  boolean_T exitg1;
-  if (!rtIsNaN(x[0])) {
-    idx = 1;
-  } else {
-    idx = 0;
-    b_k = 2;
-    exitg1 = false;
-    while ((!exitg1) && (b_k < 5)) {
-      if (!rtIsNaN(x[b_k - 1])) {
-        idx = b_k;
-        exitg1 = true;
-      } else {
-        b_k++;
-      }
-    }
-  }
-
-  if (idx == 0) {
-    ex = x[0];
-  } else {
-    ex = x[idx - 1];
-    while (idx + 1 <= 4) {
-      if (ex < x[idx]) {
-        ex = x[idx];
-      }
-
-      idx++;
-    }
-  }
-
-  return ex;
-}
-
-/* Function for MATLAB Function: '<S3>/Tire Model' */
-static real_T minimum_b(const real_T x[4])
-{
-  real_T ex;
-  int32_T b_k;
-  int32_T idx;
-  boolean_T exitg1;
-  if (!rtIsNaN(x[0])) {
-    idx = 1;
-  } else {
-    idx = 0;
-    b_k = 2;
-    exitg1 = false;
-    while ((!exitg1) && (b_k < 5)) {
-      if (!rtIsNaN(x[b_k - 1])) {
-        idx = b_k;
-        exitg1 = true;
-      } else {
-        b_k++;
-      }
-    }
-  }
-
-  if (idx == 0) {
-    ex = x[0];
-  } else {
-    ex = x[idx - 1];
-    while (idx + 1 <= 4) {
-      if (ex > x[idx]) {
-        ex = x[idx];
-      }
-
-      idx++;
-    }
-  }
-
-  return ex;
-}
-
-/* Function for MATLAB Function: '<S3>/Tire Model' */
-static void pchip(const real_T x[7], const real_T y[7], const real_T xx[4],
-                  real_T v[4], DW_Electronics *localDW)
-{
-  int32_T b_k;
-  int32_T high_i;
-  int32_T low_i;
-  int32_T low_ip1;
-  int32_T mid_i;
-  for (b_k = 0; b_k < 6; b_k++) {
-    localDW->h_c = x[b_k + 1] - x[b_k];
-    localDW->del[b_k] = (y[b_k + 1] - y[b_k]) / localDW->h_c;
-    localDW->h[b_k] = localDW->h_c;
-  }
-
-  for (b_k = 0; b_k < 5; b_k++) {
-    localDW->h_c = localDW->h[b_k + 1];
-    localDW->hs = localDW->h_c + localDW->h[b_k];
-    localDW->hs3 = 3.0 * localDW->hs;
-    localDW->dzzdx = (localDW->h[b_k] + localDW->hs) / localDW->hs3;
-    localDW->hs = (localDW->h_c + localDW->hs) / localDW->hs3;
-    localDW->d_s[b_k + 1] = 0.0;
-    if (localDW->del[b_k] < 0.0) {
-      localDW->h_c = localDW->del[b_k + 1];
-      if (localDW->h_c <= localDW->del[b_k]) {
-        localDW->d_s[b_k + 1] = localDW->del[b_k] / (localDW->del[b_k] /
-          localDW->h_c * localDW->dzzdx + localDW->hs);
-      } else if (localDW->h_c < 0.0) {
-        localDW->d_s[b_k + 1] = localDW->h_c / (localDW->h_c / localDW->del[b_k]
-          * localDW->hs + localDW->dzzdx);
-      }
-    } else if (localDW->del[b_k] > 0.0) {
-      localDW->h_c = localDW->del[b_k + 1];
-      if (localDW->h_c >= localDW->del[b_k]) {
-        localDW->d_s[b_k + 1] = localDW->del[b_k] / (localDW->del[b_k] /
-          localDW->h_c * localDW->dzzdx + localDW->hs);
-      } else if (localDW->h_c > 0.0) {
-        localDW->d_s[b_k + 1] = localDW->h_c / (localDW->h_c / localDW->del[b_k]
-          * localDW->hs + localDW->dzzdx);
-      }
-    }
-  }
-
-  localDW->dzzdx = ((2.0 * localDW->h[0] + localDW->h[1]) * localDW->del[0] -
-                    localDW->h[0] * localDW->del[1]) / (localDW->h[0] +
-    localDW->h[1]);
-  if (rtIsNaN(localDW->del[0])) {
-    localDW->hs = localDW->del[0];
-  } else if (localDW->del[0] < 0.0) {
-    localDW->hs = -1.0;
-  } else {
-    localDW->hs = (localDW->del[0] > 0.0);
-  }
-
-  if (rtIsNaN(localDW->dzzdx)) {
-    localDW->h_c = localDW->dzzdx;
-  } else if (localDW->dzzdx < 0.0) {
-    localDW->h_c = -1.0;
-  } else {
-    localDW->h_c = (localDW->dzzdx > 0.0);
-  }
-
-  if (localDW->h_c != localDW->hs) {
-    localDW->dzzdx = 0.0;
-  } else {
-    if (rtIsNaN(localDW->del[1])) {
-      localDW->h_c = localDW->del[1];
-    } else if (localDW->del[1] < 0.0) {
-      localDW->h_c = -1.0;
-    } else {
-      localDW->h_c = (localDW->del[1] > 0.0);
-    }
-
-    if ((localDW->hs != localDW->h_c) && (fabs(localDW->dzzdx) > fabs(3.0 *
-          localDW->del[0]))) {
-      localDW->dzzdx = 3.0 * localDW->del[0];
-    }
-  }
-
-  localDW->d_s[0] = localDW->dzzdx;
-  localDW->dzzdx = ((2.0 * localDW->h[5] + localDW->h[4]) * localDW->del[5] -
-                    localDW->del[4] * localDW->h[5]) / (localDW->h[4] +
-    localDW->h[5]);
-  if (rtIsNaN(localDW->del[5])) {
-    localDW->hs = localDW->del[5];
-  } else if (localDW->del[5] < 0.0) {
-    localDW->hs = -1.0;
-  } else {
-    localDW->hs = (localDW->del[5] > 0.0);
-  }
-
-  if (rtIsNaN(localDW->dzzdx)) {
-    localDW->h_c = localDW->dzzdx;
-  } else if (localDW->dzzdx < 0.0) {
-    localDW->h_c = -1.0;
-  } else {
-    localDW->h_c = (localDW->dzzdx > 0.0);
-  }
-
-  if (localDW->h_c != localDW->hs) {
-    localDW->dzzdx = 0.0;
-  } else {
-    if (rtIsNaN(localDW->del[4])) {
-      localDW->h_c = localDW->del[4];
-    } else if (localDW->del[4] < 0.0) {
-      localDW->h_c = -1.0;
-    } else {
-      localDW->h_c = (localDW->del[4] > 0.0);
-    }
-
-    if ((localDW->hs != localDW->h_c) && (fabs(localDW->dzzdx) > fabs(3.0 *
-          localDW->del[5]))) {
-      localDW->dzzdx = 3.0 * localDW->del[5];
-    }
-  }
-
-  localDW->d_s[6] = localDW->dzzdx;
-  for (b_k = 0; b_k < 6; b_k++) {
-    localDW->h_c = localDW->h[b_k];
-    localDW->hs = localDW->del[b_k];
-    localDW->dzzdx = (localDW->hs - localDW->d_s[b_k]) / localDW->h_c;
-    localDW->hs = (localDW->d_s[b_k + 1] - localDW->hs) / localDW->h_c;
-    localDW->pp_coefs[b_k] = (localDW->hs - localDW->dzzdx) / localDW->h_c;
-    localDW->pp_coefs[b_k + 6] = 2.0 * localDW->dzzdx - localDW->hs;
-    localDW->pp_coefs[b_k + 12] = localDW->d_s[b_k];
-    localDW->pp_coefs[b_k + 18] = y[b_k];
-  }
-
-  for (b_k = 0; b_k < 4; b_k++) {
-    if (rtIsNaN(xx[b_k])) {
-      v[b_k] = xx[b_k];
-    } else {
-      high_i = 7;
-      low_i = 0;
-      low_ip1 = 2;
-      while (high_i > low_ip1) {
-        mid_i = ((low_i + high_i) + 1) >> 1;
-        if (xx[b_k] >= x[mid_i - 1]) {
-          low_i = mid_i - 1;
-          low_ip1 = mid_i + 1;
-        } else {
-          high_i = mid_i;
-        }
-      }
-
-      localDW->dzzdx = xx[b_k] - x[low_i];
-      v[b_k] = ((localDW->dzzdx * localDW->pp_coefs[low_i] + localDW->
-                 pp_coefs[low_i + 6]) * localDW->dzzdx + localDW->pp_coefs[low_i
-                + 12]) * localDW->dzzdx + localDW->pp_coefs[low_i + 18];
-    }
-  }
-}
-
-/* Function for MATLAB Function: '<S3>/Constraint Generation' */
-static void minimum(const real_T x[1004], real_T ex[4], int32_T idx[4],
-                    DW_Electronics *localDW)
-{
-  real_T tmp;
-  int32_T i;
-  int32_T j;
-  boolean_T p;
-  for (j = 0; j < 4; j++) {
-    idx[j] = 1;
-    ex[j] = x[251 * j];
-    for (i = 0; i < 250; i++) {
-      localDW->ex = ex[j];
-      tmp = x[(251 * j + i) + 1];
-      if (rtIsNaN(tmp)) {
-        p = false;
-      } else if (rtIsNaN(localDW->ex)) {
-        p = true;
-      } else {
-        p = (localDW->ex > tmp);
-      }
-
-      if (p) {
-        localDW->ex = tmp;
-        idx[j] = i + 2;
-      }
-
-      ex[j] = localDW->ex;
-    }
-  }
-}
-
-/* Function for MATLAB Function: '<S3>/Constraint Generation' */
-static real_T xnrm2(int32_T n, const real_T x[4], int32_T ix0, DW_Electronics
-                    *localDW)
-{
-  real_T y;
-  int32_T b_k;
-  int32_T kend;
-  y = 0.0;
-  if (n >= 1) {
-    if (n == 1) {
-      y = fabs(x[ix0 - 1]);
-    } else {
-      localDW->scale = 3.3121686421112381E-170;
-      kend = (ix0 + n) - 1;
-      for (b_k = ix0; b_k <= kend; b_k++) {
-        localDW->absxk = fabs(x[b_k - 1]);
-        if (localDW->absxk > localDW->scale) {
-          localDW->t = localDW->scale / localDW->absxk;
-          y = y * localDW->t * localDW->t + 1.0;
-          localDW->scale = localDW->absxk;
-        } else {
-          localDW->t = localDW->absxk / localDW->scale;
-          y += localDW->t * localDW->t;
-        }
-      }
-
-      y = localDW->scale * sqrt(y);
-    }
-  }
-
-  return y;
-}
-
-real_T rt_hypotd_snf(real_T u0, real_T u1)
-{
-  real_T a_0;
-  real_T y;
-  a_0 = fabs(u0);
-  y = fabs(u1);
-  if (a_0 < y) {
-    a_0 /= y;
-    y *= sqrt(a_0 * a_0 + 1.0);
-  } else if (a_0 > y) {
-    y /= a_0;
-    y = sqrt(y * y + 1.0) * a_0;
-  } else if (!rtIsNaN(y)) {
-    y = a_0 * 1.4142135623730951;
-  }
-
-  return y;
-}
-
-/* Function for MATLAB Function: '<S3>/Constraint Generation' */
-static void xgeqp3(real_T A[4], real_T *tau, int32_T *jpvt, DW_Electronics
-                   *localDW)
-{
-  int32_T c_k;
-  int32_T knt;
-  *tau = 0.0;
-  localDW->atmp = A[0];
-  localDW->xnorm = xnrm2(3, A, 2, localDW);
-  if (localDW->xnorm != 0.0) {
-    localDW->xnorm = rt_hypotd_snf(A[0], localDW->xnorm);
-    if (A[0] >= 0.0) {
-      localDW->xnorm = -localDW->xnorm;
-    }
-
-    if (fabs(localDW->xnorm) < 1.0020841800044864E-292) {
-      knt = 0;
-      do {
-        knt++;
-        for (c_k = 1; c_k < 4; c_k++) {
-          A[c_k] *= 9.9792015476736E+291;
-        }
-
-        localDW->xnorm *= 9.9792015476736E+291;
-        localDW->atmp *= 9.9792015476736E+291;
-      } while ((fabs(localDW->xnorm) < 1.0020841800044864E-292) && (knt < 20));
-
-      localDW->xnorm = rt_hypotd_snf(localDW->atmp, xnrm2(3, A, 2, localDW));
-      if (localDW->atmp >= 0.0) {
-        localDW->xnorm = -localDW->xnorm;
-      }
-
-      *tau = (localDW->xnorm - localDW->atmp) / localDW->xnorm;
-      localDW->atmp = 1.0 / (localDW->atmp - localDW->xnorm);
-      for (c_k = 1; c_k < 4; c_k++) {
-        A[c_k] *= localDW->atmp;
-      }
-
-      for (c_k = 0; c_k < knt; c_k++) {
-        localDW->xnorm *= 1.0020841800044864E-292;
-      }
-
-      localDW->atmp = localDW->xnorm;
-    } else {
-      *tau = (localDW->xnorm - A[0]) / localDW->xnorm;
-      localDW->atmp = 1.0 / (A[0] - localDW->xnorm);
-      for (knt = 1; knt < 4; knt++) {
-        A[knt] *= localDW->atmp;
-      }
-
-      localDW->atmp = localDW->xnorm;
-    }
-  }
-
-  A[0] = localDW->atmp;
-  *jpvt = 1;
-}
-
-/* Function for MATLAB Function: '<S3>/Constraint Generation' */
-static void interp1(const real_T varargin_1[68], const real_T varargin_2[68],
-                    const real_T varargin_3[4], real_T Vq[4], DW_Electronics
-                    *localDW)
-{
-  int32_T exitg1;
-  int32_T high_i;
-  int32_T low_i;
-  int32_T low_ip1;
-  int32_T mid_i;
-  memcpy(&localDW->y[0], &varargin_2[0], 68U * sizeof(real_T));
-  memcpy(&localDW->x[0], &varargin_1[0], 68U * sizeof(real_T));
-  Vq[0] = (rtNaN);
-  Vq[1] = (rtNaN);
-  Vq[2] = (rtNaN);
-  Vq[3] = (rtNaN);
-  high_i = 0;
-  do {
-    exitg1 = 0;
-    if (high_i < 68) {
-      if (rtIsNaN(varargin_1[high_i])) {
-        exitg1 = 1;
-      } else {
-        high_i++;
-      }
-    } else {
-      if (varargin_1[1] < varargin_1[0]) {
-        for (high_i = 0; high_i < 34; high_i++) {
-          localDW->xtmp = localDW->x[high_i];
-          localDW->x[high_i] = localDW->x[67 - high_i];
-          localDW->x[67 - high_i] = localDW->xtmp;
-          localDW->xtmp = localDW->y[high_i];
-          localDW->y[high_i] = localDW->y[67 - high_i];
-          localDW->y[67 - high_i] = localDW->xtmp;
-        }
-      }
-
-      if (rtIsNaN(varargin_3[0])) {
-        Vq[0] = (rtNaN);
-      } else if ((!(varargin_3[0] > localDW->x[67])) && (!(varargin_3[0] <
-                   localDW->x[0]))) {
-        high_i = 68;
-        low_i = 1;
-        low_ip1 = 2;
-        while (high_i > low_ip1) {
-          mid_i = (low_i + high_i) >> 1;
-          if (varargin_3[0] >= localDW->x[mid_i - 1]) {
-            low_i = mid_i;
-            low_ip1 = mid_i + 1;
-          } else {
-            high_i = mid_i;
-          }
-        }
-
-        localDW->xtmp = localDW->x[low_i - 1];
-        localDW->xtmp = (varargin_3[0] - localDW->xtmp) / (localDW->x[low_i] -
-          localDW->xtmp);
-        if (localDW->xtmp == 0.0) {
-          Vq[0] = localDW->y[low_i - 1];
-        } else if (localDW->xtmp == 1.0) {
-          Vq[0] = localDW->y[low_i];
-        } else {
-          localDW->d1 = localDW->y[low_i - 1];
-          if (localDW->d1 == localDW->y[low_i]) {
-            Vq[0] = localDW->d1;
-          } else {
-            Vq[0] = (1.0 - localDW->xtmp) * localDW->d1 + localDW->xtmp *
-              localDW->y[low_i];
-          }
-        }
-      }
-
-      if (rtIsNaN(varargin_3[1])) {
-        Vq[1] = (rtNaN);
-      } else if ((!(varargin_3[1] > localDW->x[67])) && (!(varargin_3[1] <
-                   localDW->x[0]))) {
-        high_i = 68;
-        low_i = 1;
-        low_ip1 = 2;
-        while (high_i > low_ip1) {
-          mid_i = (low_i + high_i) >> 1;
-          if (varargin_3[1] >= localDW->x[mid_i - 1]) {
-            low_i = mid_i;
-            low_ip1 = mid_i + 1;
-          } else {
-            high_i = mid_i;
-          }
-        }
-
-        localDW->xtmp = localDW->x[low_i - 1];
-        localDW->xtmp = (varargin_3[1] - localDW->xtmp) / (localDW->x[low_i] -
-          localDW->xtmp);
-        if (localDW->xtmp == 0.0) {
-          Vq[1] = localDW->y[low_i - 1];
-        } else if (localDW->xtmp == 1.0) {
-          Vq[1] = localDW->y[low_i];
-        } else {
-          localDW->d1 = localDW->y[low_i - 1];
-          if (localDW->d1 == localDW->y[low_i]) {
-            Vq[1] = localDW->d1;
-          } else {
-            Vq[1] = (1.0 - localDW->xtmp) * localDW->d1 + localDW->xtmp *
-              localDW->y[low_i];
-          }
-        }
-      }
-
-      if (rtIsNaN(varargin_3[2])) {
-        Vq[2] = (rtNaN);
-      } else if ((!(varargin_3[2] > localDW->x[67])) && (!(varargin_3[2] <
-                   localDW->x[0]))) {
-        high_i = 68;
-        low_i = 1;
-        low_ip1 = 2;
-        while (high_i > low_ip1) {
-          mid_i = (low_i + high_i) >> 1;
-          if (varargin_3[2] >= localDW->x[mid_i - 1]) {
-            low_i = mid_i;
-            low_ip1 = mid_i + 1;
-          } else {
-            high_i = mid_i;
-          }
-        }
-
-        localDW->xtmp = localDW->x[low_i - 1];
-        localDW->xtmp = (varargin_3[2] - localDW->xtmp) / (localDW->x[low_i] -
-          localDW->xtmp);
-        if (localDW->xtmp == 0.0) {
-          Vq[2] = localDW->y[low_i - 1];
-        } else if (localDW->xtmp == 1.0) {
-          Vq[2] = localDW->y[low_i];
-        } else {
-          localDW->d1 = localDW->y[low_i - 1];
-          if (localDW->d1 == localDW->y[low_i]) {
-            Vq[2] = localDW->d1;
-          } else {
-            Vq[2] = (1.0 - localDW->xtmp) * localDW->d1 + localDW->xtmp *
-              localDW->y[low_i];
-          }
-        }
-      }
-
-      if (rtIsNaN(varargin_3[3])) {
-        Vq[3] = (rtNaN);
-      } else if ((!(varargin_3[3] > localDW->x[67])) && (!(varargin_3[3] <
-                   localDW->x[0]))) {
-        high_i = 68;
-        low_i = 1;
-        low_ip1 = 2;
-        while (high_i > low_ip1) {
-          mid_i = (low_i + high_i) >> 1;
-          if (varargin_3[3] >= localDW->x[mid_i - 1]) {
-            low_i = mid_i;
-            low_ip1 = mid_i + 1;
-          } else {
-            high_i = mid_i;
-          }
-        }
-
-        localDW->xtmp = localDW->x[low_i - 1];
-        localDW->xtmp = (varargin_3[3] - localDW->xtmp) / (localDW->x[low_i] -
-          localDW->xtmp);
-        if (localDW->xtmp == 0.0) {
-          Vq[3] = localDW->y[low_i - 1];
-        } else if (localDW->xtmp == 1.0) {
-          Vq[3] = localDW->y[low_i];
-        } else {
-          localDW->d1 = localDW->y[low_i - 1];
-          if (localDW->d1 == localDW->y[low_i]) {
-            Vq[3] = localDW->d1;
-          } else {
-            Vq[3] = (1.0 - localDW->xtmp) * localDW->d1 + localDW->xtmp *
-              localDW->y[low_i];
-          }
-        }
-      }
-
-      exitg1 = 1;
-    }
-  } while (exitg1 == 0);
 }
 
 /* System initialize for atomic system: '<Root>/Electronics' */
 static void Electronics_Init(DW_Electronics *localDW)
 {
-  /* InitializeConditions for DiscreteIntegrator: '<S9>/Discrete-Time Integrator2' */
-  localDW->DiscreteTimeIntegrator2_PrevRes = 2;
+  /* SystemInitialize for Atomic SubSystem: '<S1>/Fixed Point Sub' */
+  /* SystemInitialize for Atomic SubSystem: '<S2>/Torque Vectoring Micro Controller' */
+  /* InitializeConditions for UnitDelay: '<S8>/Unit Delay4' */
+  localDW->UnitDelay4_DSTATE = true;
+
+  /* End of SystemInitialize for SubSystem: '<S2>/Torque Vectoring Micro Controller' */
+  /* End of SystemInitialize for SubSystem: '<S1>/Fixed Point Sub' */
 }
 
 /* Output and update for atomic system: '<Root>/Electronics' */
-static void Electronics_j(const real_T rtu_TVS_Information[2], const real_T
-  rtu_TVS_Information_h[3], real_T rtu_TVS_Information_o, const real_T
-  rtu_TVS_Information_e[4], const real_T rtu_TVS_Information_n[2], const real_T
-  rtu_TVS_Information_d[4], const real_T rtu_TVS_Information_e2[4], real_T
-  rtu_TVS_Information_ds, real_T rtu_TVS_Information_a, const real_T
-  rtu_TVS_Information_e1[4], real_T rty_Tx[4], DW_Electronics *localDW)
+static void Electronics_a(real_T rtu_TVS_Information_l, real_T
+  rtu_TVS_Information_f, const real_T rtu_TVS_Information_g[3], const real_T
+  rtu_TVS_Information_d[2], const real_T rtu_TVS_Information_h[2], const real_T
+  rtu_TVS_Information_ge[4], const real_T rtu_TVS_Information_e[4], real_T
+  rtu_TVS_Information_b, int32_T *rty_bigM_flag, real_T rty_Tx[4], const
+  ConstB_Electronics *localC, DW_Electronics *localDW)
 {
-  int32_T e_x_tmp;
-  real32_T M_max_idx_0;
-  real32_T M_max_idx_1;
-  real32_T rtb_A_idx_2;
-  real32_T rtb_A_idx_3;
-  real32_T rtb_Aeq_idx_0;
-  real32_T rtb_Aeq_idx_1;
-  real32_T rtb_Aeq_idx_2;
-  real32_T rtb_Aeq_idx_3;
-  real32_T rtb_lb;
-  boolean_T exitg1;
-  boolean_T p;
+  int32_T i;
+  int32_T u_tmp;
+  int32_T u_tmp_0;
+  uint32_T bpIdx;
+  int16_T DiscreteTimeIntegrator2;
+  int16_T rtb_P;
+  int16_T rtb_Sum;
+  int16_T rtb_Switch_p_idx_1;
+  int16_T rtb_Switch_p_idx_2;
+  int16_T rtb_Switch_p_idx_3;
+  int16_T rtb_TmpSignalConversionAtDotP_0;
+  int16_T rtb_TorqueVectoringMicroCont__0;
+  int16_T rtb_TorqueVectoringMicroContr_0;
+  int16_T rtb_TorqueVectoringMicroContr_1;
+  int16_T rtb_TorqueVectoringMicroContr_2;
+  int16_T rtb_TorqueVectoringMicroContr_n;
+  int16_T u;
+  uint16_T minV_tmp;
+  uint16_T rtb_QuadHandle2_idx_0;
+  uint16_T rtb_Sqrt;
+  boolean_T rtb_GreaterThan;
+  boolean_T rtb_LTEp25_h_idx_0;
+  boolean_T rtb_LTEp50_h_idx_0;
   boolean_T rtb_UnitDelay4;
 
-  /* MATLAB Function: '<S3>/Normal Force Model' */
-  localDW->V_rr_idx_0 = 200.0;
-  if (rtIsNaN(rtu_TVS_Information_e2[0])) {
-    p = false;
+  /* Outputs for Atomic SubSystem: '<S1>/Fixed Point Sub' */
+  /* DataTypeConversion: '<S2>/Torque Vectoring Micro Controller_boundary_DTC1' */
+  localDW->rtb_FixedPointSub_boundary_DT_m = rtu_TVS_Information_l * 16384.0;
+  if (localDW->rtb_FixedPointSub_boundary_DT_m < 32768.0) {
+    rtb_TorqueVectoringMicroCont__0 = (int16_T)
+      localDW->rtb_FixedPointSub_boundary_DT_m;
   } else {
-    p = (rtu_TVS_Information_e2[0] > 200.0);
+    rtb_TorqueVectoringMicroCont__0 = MAX_int16_T;
   }
 
-  if (p) {
-    localDW->V_rr_idx_0 = rtu_TVS_Information_e2[0];
-  }
-
-  localDW->FZ[0] = 1200.0;
-  if (rtIsNaN(localDW->V_rr_idx_0)) {
-    p = false;
+  /* DataTypeConversion: '<S2>/Torque Vectoring Micro Controller_boundary_DTC2' */
+  localDW->rtb_FixedPointSub_boundary_DT_c = rtu_TVS_Information_f * 128.0;
+  if (localDW->rtb_FixedPointSub_boundary_DT_c < 32768.0) {
+    rtb_TmpSignalConversionAtDotP_0 = (int16_T)
+      localDW->rtb_FixedPointSub_boundary_DT_c;
   } else {
-    p = (localDW->V_rr_idx_0 < 1200.0);
+    rtb_TmpSignalConversionAtDotP_0 = MAX_int16_T;
   }
 
-  if (p) {
-    localDW->FZ[0] = localDW->V_rr_idx_0;
-  }
+  /* DataTypeConversion: '<S2>/Torque Vectoring Micro Controller_boundary_DTC5' */
+  localDW->rtb_FixedPointSub_boundary_DT_c = rtu_TVS_Information_g[2] * 2048.0;
 
-  localDW->V_rr_idx_0 = 200.0;
-  if (rtIsNaN(rtu_TVS_Information_e2[1])) {
-    p = false;
+  /* DataTypeConversion: '<S2>/Torque Vectoring Micro Controller_boundary_DTC6' */
+  localDW->CCaller_o2 = rtu_TVS_Information_d[0] * 512.0;
+  if (localDW->CCaller_o2 < 32768.0) {
+    rtb_TorqueVectoringMicroContr_1 = (int16_T)localDW->CCaller_o2;
   } else {
-    p = (rtu_TVS_Information_e2[1] > 200.0);
+    rtb_TorqueVectoringMicroContr_1 = MAX_int16_T;
   }
 
-  if (p) {
-    localDW->V_rr_idx_0 = rtu_TVS_Information_e2[1];
-  }
-
-  localDW->FZ[1] = 1200.0;
-  if (rtIsNaN(localDW->V_rr_idx_0)) {
-    p = false;
+  localDW->CCaller_o2 = rtu_TVS_Information_d[1] * 512.0;
+  if (localDW->CCaller_o2 < 32768.0) {
+    rtb_TorqueVectoringMicroContr_2 = (int16_T)localDW->CCaller_o2;
   } else {
-    p = (localDW->V_rr_idx_0 < 1200.0);
+    rtb_TorqueVectoringMicroContr_2 = MAX_int16_T;
   }
 
-  if (p) {
-    localDW->FZ[1] = localDW->V_rr_idx_0;
-  }
+  /* End of DataTypeConversion: '<S2>/Torque Vectoring Micro Controller_boundary_DTC6' */
 
-  localDW->V_rr_idx_0 = 200.0;
-  if (rtIsNaN(rtu_TVS_Information_e2[2])) {
-    p = false;
+  /* DataTypeConversion: '<S2>/Torque Vectoring Micro Controller_boundary_DTC11' */
+  localDW->CCaller_o2 = rtu_TVS_Information_h[0] * 0.25;
+  if (localDW->CCaller_o2 < 32768.0) {
+    rtb_TorqueVectoringMicroContr_0 = (int16_T)localDW->CCaller_o2;
   } else {
-    p = (rtu_TVS_Information_e2[2] > 200.0);
+    rtb_TorqueVectoringMicroContr_0 = MAX_int16_T;
   }
 
-  if (p) {
-    localDW->V_rr_idx_0 = rtu_TVS_Information_e2[2];
-  }
-
-  localDW->FZ[2] = 1200.0;
-  if (rtIsNaN(localDW->V_rr_idx_0)) {
-    p = false;
+  /* DataTypeConversion: '<S2>/Torque Vectoring Micro Controller_boundary_DTC8' */
+  localDW->CCaller_o2 = rtu_TVS_Information_ge[0] * 128.0;
+  if (localDW->CCaller_o2 < 32768.0) {
+    localDW->TorqueVectoringMicroCont_jz[0] = (int16_T)localDW->CCaller_o2;
   } else {
-    p = (localDW->V_rr_idx_0 < 1200.0);
+    localDW->TorqueVectoringMicroCont_jz[0] = MAX_int16_T;
   }
 
-  if (p) {
-    localDW->FZ[2] = localDW->V_rr_idx_0;
-  }
-
-  localDW->V_rr_idx_0 = 200.0;
-  if (rtIsNaN(rtu_TVS_Information_e2[3])) {
-    p = false;
+  localDW->CCaller_o2 = rtu_TVS_Information_ge[1] * 128.0;
+  if (localDW->CCaller_o2 < 32768.0) {
+    localDW->TorqueVectoringMicroCont_jz[1] = (int16_T)localDW->CCaller_o2;
   } else {
-    p = (rtu_TVS_Information_e2[3] > 200.0);
+    localDW->TorqueVectoringMicroCont_jz[1] = MAX_int16_T;
   }
 
-  if (p) {
-    localDW->V_rr_idx_0 = rtu_TVS_Information_e2[3];
-  }
-
-  localDW->beq = 1200.0;
-  if (rtIsNaN(localDW->V_rr_idx_0)) {
-    p = false;
+  localDW->CCaller_o2 = rtu_TVS_Information_ge[2] * 128.0;
+  if (localDW->CCaller_o2 < 32768.0) {
+    localDW->TorqueVectoringMicroCont_jz[2] = (int16_T)localDW->CCaller_o2;
   } else {
-    p = (localDW->V_rr_idx_0 < 1200.0);
+    localDW->TorqueVectoringMicroCont_jz[2] = MAX_int16_T;
   }
 
-  if (p) {
-    localDW->beq = localDW->V_rr_idx_0;
-  }
-
-  /* End of MATLAB Function: '<S3>/Normal Force Model' */
-
-  /* MATLAB Function: '<S3>/Steering Model' */
-  if ((rtu_TVS_Information_a <= -130.0) || rtIsNaN(rtu_TVS_Information_a)) {
-    localDW->left_steering_angle = -130.0;
+  localDW->CCaller_o2 = rtu_TVS_Information_ge[3] * 128.0;
+  if (localDW->CCaller_o2 < 32768.0) {
+    localDW->TorqueVectoringMicroCont_jz[3] = (int16_T)localDW->CCaller_o2;
   } else {
-    localDW->left_steering_angle = rtu_TVS_Information_a;
+    localDW->TorqueVectoringMicroCont_jz[3] = MAX_int16_T;
   }
 
-  if ((localDW->left_steering_angle >= 130.0) || rtIsNaN
-      (localDW->left_steering_angle)) {
-    localDW->left_steering_angle = 130.0;
-  }
+  /* End of DataTypeConversion: '<S2>/Torque Vectoring Micro Controller_boundary_DTC8' */
 
-  if ((localDW->left_steering_angle < rtP.deadband_angle) &&
-      (localDW->left_steering_angle > -rtP.deadband_angle)) {
-    localDW->left_steering_angle = 0.0;
-  }
+  /* DataTypeConversion: '<S2>/Torque Vectoring Micro Controller_boundary_DTC12' */
+  localDW->CCaller_o2 = rtu_TVS_Information_e[2] * 512.0;
+  localDW->Add1 = rtu_TVS_Information_e[3] * 512.0;
 
-  localDW->rack_displacement = steer_slope * inch2mm *
-    localDW->left_steering_angle;
-  localDW->left_steering_angle = -(((-localDW->rack_displacement *
-    -localDW->rack_displacement * S2 + S1 * rt_powd_snf
-    (-localDW->rack_displacement, 3.0)) + S3 * -localDW->rack_displacement) + S4)
-    * deg2rad;
-  localDW->rack_displacement = (((localDW->rack_displacement *
-    localDW->rack_displacement * S2 + S1 * rt_powd_snf
-    (localDW->rack_displacement, 3.0)) + S3 * localDW->rack_displacement) + S4) *
-    deg2rad;
-  localDW->steering[0] = (localDW->left_steering_angle +
-    localDW->rack_displacement) / 2.0;
-  localDW->steering[1] = localDW->left_steering_angle;
-  localDW->steering[2] = localDW->rack_displacement;
+  /* Outputs for Atomic SubSystem: '<S2>/Torque Vectoring Micro Controller' */
+  for (i = 0; i < 4; i++) {
+    /* Gain: '<S8>/Gain1' incorporates:
+     *  DataTypeConversion: '<S2>/Torque Vectoring Micro Controller_boundary_DTC8'
+     */
+    rtb_TorqueVectoringMicroContr_n = (int16_T)((rtConstP.Gain1_Gain_n[i] *
+      localDW->TorqueVectoringMicroCont_jz[i]) >> 15);
 
-  /* MATLAB Function: '<S3>/Tire Model' incorporates:
-   *  MATLAB Function: '<S2>/Optimization '
-   *  MATLAB Function: '<S3>/Reference Generation'
-   *  MATLAB Function: '<S3>/Steering Model'
-   */
-  localDW->V_rl_idx_0_tmp_tmp = s[1] * rtu_TVS_Information_h[2];
-  localDW->V_rl_idx_0_tmp = localDW->V_rl_idx_0_tmp_tmp + rtu_TVS_Information[0];
-  localDW->V_rr_idx_0 = rtu_TVS_Information_h[2] * -s[1] + rtu_TVS_Information[0];
-  localDW->SA_fr = l[0] * rtu_TVS_Information_h[2] + rtu_TVS_Information[1];
-  localDW->SA_rl = s[0] * rtu_TVS_Information_h[2];
-  localDW->V_fl_tmp = localDW->SA_rl + rtu_TVS_Information[0];
-  localDW->kx_idx_1 = localDW->SA_fr * -sin(localDW->left_steering_angle) +
-    localDW->V_fl_tmp * cos(localDW->left_steering_angle);
-  localDW->V_flt_idx_1 = (rtu_TVS_Information_h[2] * -s[0] +
-    rtu_TVS_Information[0]) * cos(localDW->rack_displacement) + localDW->SA_fr *
-    -sin(localDW->rack_displacement);
-  localDW->d_k = fabs(rtu_TVS_Information[0]);
-  if (localDW->d_k > rtP.Vth) {
-    localDW->rack_displacement = -rt_atan2d_snf(localDW->SA_fr,
-      localDW->V_fl_tmp) + localDW->left_steering_angle;
-    localDW->SA_fr = -rt_atan2d_snf(localDW->SA_fr, rtu_TVS_Information[0] -
-      localDW->SA_rl) + localDW->steering[2];
-    localDW->left_steering_angle = rtu_TVS_Information[1] - l[1] *
-      rtu_TVS_Information_h[2];
-    localDW->SA_rl = -rt_atan2d_snf(localDW->left_steering_angle,
-      localDW->V_rl_idx_0_tmp);
-    localDW->left_steering_angle = -rt_atan2d_snf(localDW->left_steering_angle,
-      rtu_TVS_Information[0] - localDW->V_rl_idx_0_tmp_tmp);
-  } else {
-    localDW->rack_displacement = 0.0;
-    localDW->SA_fr = 0.0;
-    localDW->SA_rl = 0.0;
-    localDW->left_steering_angle = 0.0;
-  }
+    /* Gain: '<S18>/Gain' */
+    localDW->sigIdx = 25033 * rtb_TorqueVectoringMicroContr_n;
 
-  localDW->SA[1] = localDW->SA_fr;
-  localDW->SA[2] = localDW->SA_rl;
-  localDW->SA[3] = localDW->left_steering_angle;
-  if (rtu_TVS_Information[0] > rtP.Vth) {
-    localDW->SL[0] = RE * rtu_TVS_Information_e1[0] / (localDW->kx_idx_1 * cos
-      (localDW->rack_displacement)) - 1.0;
-    localDW->SA_fr = RE * rtu_TVS_Information_e1[1] / (localDW->V_flt_idx_1 *
-      cos(localDW->SA_fr)) - 1.0;
-    localDW->SA_rl = RE * rtu_TVS_Information_e1[2] / (localDW->V_rl_idx_0_tmp *
-      cos(localDW->SA_rl)) - 1.0;
-    localDW->left_steering_angle = RE * rtu_TVS_Information_e1[3] /
-      (localDW->V_rr_idx_0 * cos(localDW->left_steering_angle)) - 1.0;
-  } else {
-    localDW->SL[0] = (RE * rtu_TVS_Information_e1[0] - localDW->kx_idx_1) /
-      (localDW->kx_idx_1 * localDW->kx_idx_1 / rtP.Vth + rtP.Vth);
-    localDW->SA_fr = (RE * rtu_TVS_Information_e1[1] - localDW->V_flt_idx_1) /
-      (localDW->V_flt_idx_1 * localDW->V_flt_idx_1 / rtP.Vth + rtP.Vth);
-    localDW->SA_rl = (RE * rtu_TVS_Information_e1[2] - localDW->V_rl_idx_0_tmp) /
-      (localDW->V_rl_idx_0_tmp * localDW->V_rl_idx_0_tmp / rtP.Vth + rtP.Vth);
-    localDW->left_steering_angle = (RE * rtu_TVS_Information_e1[3] -
-      localDW->V_rr_idx_0) / (localDW->V_rr_idx_0 * localDW->V_rr_idx_0 /
-      rtP.Vth + rtP.Vth);
-  }
+    /* Sum: '<S18>/Sum' incorporates:
+     *  Gain: '<S18>/Gain'
+     *  RelationalOperator: '<S18>/Equal'
+     */
+    rtb_Sum = (int16_T)((((((localDW->sigIdx & 8388607U) != 0U) +
+      (localDW->sigIdx >> 23)) << 1) + (rtb_TorqueVectoringMicroContr_n == 0)) <<
+                        7);
 
-  localDW->kx_idx_1 = fabs(localDW->kx_idx_1) / RE;
-  localDW->omega_fake[0] = localDW->kx_idx_1;
-  localDW->omega_fake[1] = fabs(localDW->V_flt_idx_1) / RE;
-  localDW->V_fl_tmp = fabs(localDW->V_rl_idx_0_tmp) / RE;
-  localDW->omega_fake[2] = localDW->V_fl_tmp;
-  localDW->omega_fake[3] = fabs(localDW->V_rr_idx_0) / RE;
-  if (maximum(localDW->omega_fake) - minimum_b(localDW->omega_fake) <
-      rtP.max_delta_omega) {
-    localDW->V_rr_idx_0 = (((localDW->kx_idx_1 + localDW->omega_fake[1]) +
-      localDW->V_fl_tmp) + localDW->omega_fake[3]) / 4.0;
-    localDW->omega_fake[0] = 1.01 * localDW->V_rr_idx_0;
-    localDW->omega_fake[1] = 1.01 * localDW->V_rr_idx_0;
-    localDW->omega_fake[2] = localDW->V_rr_idx_0;
-    localDW->omega_fake[3] = localDW->V_rr_idx_0;
-  }
-
-  localDW->kx_idx_0 = A1 * localDW->FZ[0] + A2;
-  localDW->RPM_index[0] = fabs(localDW->FZ[0]);
-  localDW->V_rl_idx_0_tmp_tmp = localDW->FZ[0] * localDW->FZ[0];
-  localDW->relative_PL = (localDW->V_rl_idx_0_tmp_tmp * B1 + B2 * localDW->FZ[0])
-    + B3;
-  localDW->kx_idx_1 = A1 * localDW->FZ[1] + A2;
-  localDW->RPM_index[1] = fabs(localDW->FZ[1]);
-  localDW->V_rl_idx_0_tmp = localDW->FZ[1] * localDW->FZ[1];
-  localDW->V_fl_tmp = (localDW->V_rl_idx_0_tmp * B1 + B2 * localDW->FZ[1]) + B3;
-  localDW->kx_idx_2 = A1 * localDW->FZ[2] + A2;
-  localDW->RPM_index[2] = fabs(localDW->FZ[2]);
-  localDW->V_flt_idx_1 = localDW->FZ[2] * localDW->FZ[2];
-  localDW->mu_x = (localDW->V_flt_idx_1 * B1 + B2 * localDW->FZ[2]) + B3;
-  localDW->kx_idx_3 = A1 * localDW->beq + A2;
-  localDW->RPM_index[3] = fabs(localDW->beq);
-  localDW->V_rr_idx_0 = localDW->beq * localDW->beq;
-  localDW->Sum_j = (localDW->V_rr_idx_0 * B1 + B2 * localDW->beq) + B3;
-  pchip(&FZ_C[0], &C_param[0], localDW->RPM_index, localDW->C, localDW);
-  localDW->V_rl_idx_0_tmp_tmp = ((localDW->V_rl_idx_0_tmp_tmp * C2 + C1 *
-    rt_powd_snf(localDW->FZ[0], 3.0)) + C3 * localDW->FZ[0]) + C4;
-  localDW->Fx_max[0] = localDW->relative_PL * localDW->FZ[0];
-  localDW->V_rl_idx_0_tmp = ((localDW->V_rl_idx_0_tmp * C2 + C1 * rt_powd_snf
-    (localDW->FZ[1], 3.0)) + C3 * localDW->FZ[1]) + C4;
-  localDW->Fx_max[1] = localDW->V_fl_tmp * localDW->FZ[1];
-  localDW->mu_y = ((localDW->V_flt_idx_1 * C2 + C1 * rt_powd_snf(localDW->FZ[2],
-    3.0)) + C3 * localDW->FZ[2]) + C4;
-  localDW->Fx_max[2] = localDW->mu_x * localDW->FZ[2];
-  localDW->mu_y_c = ((localDW->V_rr_idx_0 * C2 + C1 * rt_powd_snf(localDW->beq,
-    3.0)) + C3 * localDW->beq) + C4;
-  localDW->V_flt_idx_1 = localDW->Sum_j * localDW->beq;
-  localDW->maxval_idx_3 = localDW->kx_idx_3 * localDW->left_steering_angle /
-    localDW->V_flt_idx_1;
-  localDW->rack_displacement = tan(localDW->rack_displacement);
-  localDW->a_bar_idx_0 = localDW->C[0] * localDW->rack_displacement /
-    (localDW->V_rl_idx_0_tmp_tmp * localDW->FZ[0]);
-  localDW->C[0] = localDW->C[0] * localDW->relative_PL / (localDW->kx_idx_0 *
-    localDW->V_rl_idx_0_tmp_tmp);
-  localDW->V_rr_idx_0 = 1.0;
-  localDW->a_bar_idx_1_tmp = tan(localDW->SA[1]);
-  localDW->a_bar_idx_1 = localDW->C[1] * localDW->a_bar_idx_1_tmp /
-    (localDW->V_rl_idx_0_tmp * localDW->FZ[1]);
-  localDW->C[1] = localDW->C[1] * localDW->V_fl_tmp / (localDW->kx_idx_1 *
-    localDW->V_rl_idx_0_tmp);
-  localDW->V_rl_idx_0_tmp = 1.0;
-  localDW->a_bar_idx_2_tmp = tan(localDW->SA[2]);
-  localDW->a_bar_idx_2 = localDW->C[2] * localDW->a_bar_idx_2_tmp /
-    (localDW->mu_y * localDW->FZ[2]);
-  localDW->C[2] = localDW->C[2] * localDW->mu_x / (localDW->kx_idx_2 *
-    localDW->mu_y);
-  localDW->mu_y = 1.0;
-  localDW->a_bar_tmp = tan(localDW->SA[3]);
-  localDW->a_bar = localDW->C[3] * localDW->a_bar_tmp / (localDW->mu_y_c *
-    localDW->beq);
-  localDW->mu_y_tmp = localDW->a_bar * localDW->a_bar;
-  localDW->V_rl_idx_0_tmp_tmp = sqrt(localDW->maxval_idx_3 *
-    localDW->maxval_idx_3 + localDW->mu_y_tmp);
-  localDW->C[3] = localDW->C[3] * localDW->Sum_j / (localDW->kx_idx_3 *
-    localDW->mu_y_c);
-  localDW->maxval_idx_3 = 1.0;
-  if (fabs(localDW->V_rl_idx_0_tmp_tmp) <= 6.2831853071795862) {
-    localDW->V_rl_idx_0_tmp_tmp = cos(rtP.k_limit / 2.0) * 0.5;
-    localDW->V_rr_idx_0 = (localDW->C[0] + 1.0) * 0.5 - (1.0 - localDW->C[0]) *
-      localDW->V_rl_idx_0_tmp_tmp;
-    localDW->V_rl_idx_0_tmp = (localDW->C[1] + 1.0) * 0.5 - (1.0 - localDW->C[1])
-      * localDW->V_rl_idx_0_tmp_tmp;
-    localDW->mu_y = (localDW->C[2] + 1.0) * 0.5 - (1.0 - localDW->C[2]) *
-      localDW->V_rl_idx_0_tmp_tmp;
-    localDW->maxval_idx_3 = (localDW->C[3] + 1.0) * 0.5 - (1.0 - localDW->C[3]) *
-      localDW->V_rl_idx_0_tmp_tmp;
-  }
-
-  localDW->V_rl_idx_0_tmp_tmp = 0.0;
-  if (rtP.k_limit > fabs(localDW->a_bar_idx_0)) {
-    localDW->V_rl_idx_0_tmp_tmp = sqrt(rtP.k_limit * rtP.k_limit -
-      localDW->a_bar_idx_0 * localDW->a_bar_idx_0);
-  }
-
-  localDW->V_rl_idx_0_tmp_tmp = localDW->V_rl_idx_0_tmp_tmp *
-    localDW->relative_PL * localDW->FZ[0] / localDW->kx_idx_0;
-  localDW->kx_idx_0 = exp(b * rtP.k_limit) * a + exp(d * rtP.k_limit) * c;
-  localDW->Fx_max[0] = localDW->kx_idx_0 * localDW->Fx_max[0] *
-    localDW->V_rl_idx_0_tmp_tmp / sqrt(localDW->V_rr_idx_0 * localDW->V_rr_idx_0
-    * (localDW->rack_displacement * localDW->rack_displacement) +
-    localDW->V_rl_idx_0_tmp_tmp * localDW->V_rl_idx_0_tmp_tmp) * rtP.mu_factor;
-  localDW->V_rl_idx_0_tmp_tmp = 0.0;
-  if (rtP.k_limit > fabs(localDW->a_bar_idx_1)) {
-    localDW->V_rl_idx_0_tmp_tmp = sqrt(rtP.k_limit * rtP.k_limit -
-      localDW->a_bar_idx_1 * localDW->a_bar_idx_1);
-  }
-
-  localDW->V_rl_idx_0_tmp_tmp = localDW->V_rl_idx_0_tmp_tmp * localDW->V_fl_tmp *
-    localDW->FZ[1] / localDW->kx_idx_1;
-  localDW->Fx_max[1] = localDW->kx_idx_0 * localDW->Fx_max[1] *
-    localDW->V_rl_idx_0_tmp_tmp / sqrt(localDW->V_rl_idx_0_tmp *
-    localDW->V_rl_idx_0_tmp * (localDW->a_bar_idx_1_tmp *
-    localDW->a_bar_idx_1_tmp) + localDW->V_rl_idx_0_tmp_tmp *
-    localDW->V_rl_idx_0_tmp_tmp) * rtP.mu_factor;
-  localDW->V_rl_idx_0_tmp_tmp = 0.0;
-  if (rtP.k_limit > fabs(localDW->a_bar_idx_2)) {
-    localDW->V_rl_idx_0_tmp_tmp = sqrt(rtP.k_limit * rtP.k_limit -
-      localDW->a_bar_idx_2 * localDW->a_bar_idx_2);
-  }
-
-  localDW->V_rl_idx_0_tmp_tmp = localDW->V_rl_idx_0_tmp_tmp * localDW->mu_x *
-    localDW->FZ[2] / localDW->kx_idx_2;
-  localDW->Fx_max[2] = localDW->kx_idx_0 * localDW->Fx_max[2] *
-    localDW->V_rl_idx_0_tmp_tmp / sqrt(localDW->mu_y * localDW->mu_y *
-    (localDW->a_bar_idx_2_tmp * localDW->a_bar_idx_2_tmp) +
-    localDW->V_rl_idx_0_tmp_tmp * localDW->V_rl_idx_0_tmp_tmp) * rtP.mu_factor;
-  localDW->V_rl_idx_0_tmp_tmp = 0.0;
-  if (rtP.k_limit > fabs(localDW->a_bar)) {
-    localDW->V_rl_idx_0_tmp_tmp = sqrt(rtP.k_limit * rtP.k_limit -
-      localDW->mu_y_tmp);
-  }
-
-  localDW->V_rl_idx_0_tmp_tmp = localDW->V_rl_idx_0_tmp_tmp * localDW->Sum_j *
-    localDW->beq / localDW->kx_idx_3;
-  localDW->Fx_max[3] = localDW->kx_idx_0 * localDW->V_flt_idx_1 *
-    localDW->V_rl_idx_0_tmp_tmp / sqrt(localDW->maxval_idx_3 *
-    localDW->maxval_idx_3 * (localDW->a_bar_tmp * localDW->a_bar_tmp) +
-    localDW->V_rl_idx_0_tmp_tmp * localDW->V_rl_idx_0_tmp_tmp) * rtP.mu_factor;
-  if ((fabs(localDW->SA_rl) > rtP.SL_limit) + (fabs(localDW->left_steering_angle)
-       > rtP.SL_limit) > 0) {
-    localDW->Fx_max[2] = rtP.Fx_limit[0];
-    localDW->Fx_max[3] = rtP.Fx_limit[1];
-  }
-
-  if ((fabs(localDW->SL[0]) > rtP.SL_limit) + (fabs(localDW->SA_fr) >
-       rtP.SL_limit) > 0) {
-    localDW->Fx_max[0] = rtP.Fx_limit[0];
-    localDW->Fx_max[1] = rtP.Fx_limit[1];
-  }
-
-  /* End of MATLAB Function: '<S3>/Tire Model' */
-
-  /* MATLAB Function: '<S3>/Reference Generation' incorporates:
-   *  MATLAB Function: '<S2>/Optimization '
-   */
-  localDW->kx_idx_2 = 3.3121686421112381E-170;
-  if (localDW->d_k > 3.3121686421112381E-170) {
-    localDW->left_steering_angle = 1.0;
-    localDW->kx_idx_2 = localDW->d_k;
-  } else {
-    localDW->a_bar_idx_1 = localDW->d_k / 3.3121686421112381E-170;
-    localDW->left_steering_angle = localDW->a_bar_idx_1 * localDW->a_bar_idx_1;
-  }
-
-  localDW->mu_x = fabs(rtu_TVS_Information[1]);
-  if (localDW->mu_x > localDW->kx_idx_2) {
-    localDW->a_bar_idx_1 = localDW->kx_idx_2 / localDW->mu_x;
-    localDW->left_steering_angle = localDW->left_steering_angle *
-      localDW->a_bar_idx_1 * localDW->a_bar_idx_1 + 1.0;
-    localDW->kx_idx_2 = localDW->mu_x;
-  } else {
-    localDW->a_bar_idx_1 = localDW->mu_x / localDW->kx_idx_2;
-    localDW->left_steering_angle += localDW->a_bar_idx_1 * localDW->a_bar_idx_1;
-  }
-
-  localDW->left_steering_angle = localDW->kx_idx_2 * sqrt
-    (localDW->left_steering_angle);
-  localDW->rack_displacement = localDW->left_steering_angle * localDW->steering
-    [0] / (l[0] + l[1]);
-  if (localDW->rack_displacement == 0.0) {
-    localDW->kx_idx_2 = 0.0;
-  } else {
-    if (!rtIsNaN(localDW->rack_displacement)) {
-      if (localDW->rack_displacement < 0.0) {
-        localDW->rack_displacement = -1.0;
+    /* Sum: '<S18>/Sum1' incorporates:
+     *  RelationalOperator: '<S18>/Equal1'
+     */
+    rtb_Sum = (int16_T)((rtb_Sum - ((rtb_Sum == 6528) << 7)) >> 7);
+    for (localDW->sigIdx = 0; localDW->sigIdx < 51; localDW->sigIdx++) {
+      /* Abs: '<S18>/Abs1' incorporates:
+       *  Abs: '<S18>/Abs'
+       *  Bias: '<S18>/Bias1'
+       *  Bias: '<S18>/Bias2'
+       *  Constant: '<S18>/Constant4'
+       *  Constant: '<S18>/Constant5'
+       *  Selector: '<S18>/Selector1'
+       */
+      u_tmp = 51 * i + localDW->sigIdx;
+      u_tmp_0 = rtConstP.pooled11[u_tmp];
+      u = (int16_T)(rtConstP.pooled10[(51 * rtb_Sum + rtConstP.pooled19
+        [localDW->sigIdx]) - 1] + u_tmp_0);
+      if (u < 0) {
+        localDW->Abs1[u_tmp] = (int16_T)-u;
       } else {
-        localDW->rack_displacement = (localDW->rack_displacement > 0.0);
+        localDW->Abs1[u_tmp] = u;
+      }
+
+      /* End of Abs: '<S18>/Abs1' */
+
+      /* Abs: '<S18>/Abs' incorporates:
+       *  Bias: '<S18>/Bias1'
+       *  Constant: '<S18>/Constant1'
+       *  Constant: '<S18>/Constant3'
+       *  Selector: '<S18>/Selector'
+       */
+      u = (int16_T)(rtConstP.pooled10[((rtb_Sum - 1) * 51 +
+        rtConstP.pooled19[localDW->sigIdx]) - 1] + u_tmp_0);
+      if (u < 0) {
+        localDW->Abs[u_tmp] = (int16_T)-u;
+      } else {
+        localDW->Abs[u_tmp] = u;
       }
     }
 
-    localDW->kx_idx_2 = localDW->rack_displacement *
-      localDW->left_steering_angle / rtu_TVS_Information_ds;
+    /* Gain: '<S8>/Gain1' */
+    localDW->TorqueVectoringMicroCont_jz[i] = rtb_TorqueVectoringMicroContr_n;
+
+    /* Sum: '<S18>/Sum' */
+    localDW->Sum[i] = rtb_Sum;
   }
 
-  /* Sum: '<S9>/Sum1' */
-  localDW->left_steering_angle = localDW->kx_idx_2 - rtu_TVS_Information_h[2];
+  /* S-Function (sdspstatminmax): '<S18>/Minimum' incorporates:
+   *  Abs: '<S18>/Abs'
+   */
+  u_tmp = 0;
+  u_tmp_0 = 0;
+  for (localDW->sigIdx = 0; localDW->sigIdx < 4; localDW->sigIdx++) {
+    localDW->Minimum_Valdata[u_tmp_0] = localDW->Abs[u_tmp];
+    localDW->Minimum[u_tmp_0] = 1U;
+    u_tmp++;
+    for (i = 0; i < 50; i++) {
+      if (localDW->Abs[u_tmp] < localDW->Minimum_Valdata[u_tmp_0]) {
+        localDW->Minimum_Valdata[u_tmp_0] = localDW->Abs[u_tmp];
+        localDW->Minimum[u_tmp_0] = (uint32_T)(i + 2);
+      }
 
-  /* UnitDelay: '<S3>/Unit Delay4' */
+      u_tmp++;
+    }
+
+    u_tmp_0++;
+  }
+
+  /* End of S-Function (sdspstatminmax): '<S18>/Minimum' */
+
+  /* S-Function (sdspstatminmax): '<S18>/Minimum1' incorporates:
+   *  Abs: '<S18>/Abs1'
+   */
+  u_tmp = 0;
+  u_tmp_0 = 0;
+  for (localDW->sigIdx = 0; localDW->sigIdx < 4; localDW->sigIdx++) {
+    localDW->Minimum1_Valdata[u_tmp_0] = localDW->Abs1[u_tmp];
+    localDW->Minimum1[u_tmp_0] = 1U;
+    u_tmp++;
+    for (i = 0; i < 50; i++) {
+      if (localDW->Abs1[u_tmp] < localDW->Minimum1_Valdata[u_tmp_0]) {
+        localDW->Minimum1_Valdata[u_tmp_0] = localDW->Abs1[u_tmp];
+        localDW->Minimum1[u_tmp_0] = (uint32_T)(i + 2);
+      }
+
+      u_tmp++;
+    }
+
+    u_tmp_0++;
+
+    /* Selector: '<S18>/Selector2' incorporates:
+     *  Abs: '<S18>/Abs1'
+     *  Constant: '<S18>/Constant7'
+     *  MinMax: '<S8>/Min1'
+     *  S-Function (sdspstatminmax): '<S18>/Minimum'
+     *  S-Function (sdspstatminmax): '<S18>/Minimum1'
+     */
+    localDW->Min1[localDW->sigIdx] = rtConstP.pooled15[(int32_T)localDW->
+      Minimum[localDW->sigIdx] - 1];
+  }
+
+  /* End of S-Function (sdspstatminmax): '<S18>/Minimum1' */
+  /* End of Outputs for SubSystem: '<S2>/Torque Vectoring Micro Controller' */
+
+  /* DataTypeConversion: '<S2>/Torque Vectoring Micro Controller_boundary_DTC12' */
+  if (localDW->CCaller_o2 < 65536.0) {
+    rtb_QuadHandle2_idx_0 = (uint16_T)localDW->CCaller_o2;
+  } else {
+    rtb_QuadHandle2_idx_0 = MAX_uint16_T;
+  }
+
+  /* Outputs for Atomic SubSystem: '<S2>/Torque Vectoring Micro Controller' */
+  /* Product: '<S18>/Product' incorporates:
+   *  Bias: '<S18>/Bias3'
+   *  Constant: '<S18>/Constant8'
+   *  Gain: '<S18>/Gain1'
+   *  Gain: '<S18>/Gain2'
+   *  Gain: '<S7>/Gain'
+   *  Gain: '<S8>/Gain1'
+   *  MinMax: '<S8>/Min1'
+   *  Product: '<S18>/Product1'
+   *  RelationalOperator: '<S18>/Less Than'
+   *  S-Function (sdspstatminmax): '<S18>/Minimum1'
+   *  Selector: '<S18>/Selector3'
+   *  Sum: '<S18>/Sum2'
+   *  Sum: '<S18>/Sum3'
+   *  Sum: '<S18>/Sum4'
+   */
+  rtb_Sum = (int16_T)(rtb_QuadHandle2_idx_0 < 38400 ? (localDW->Min1[2] -
+    ((((int16_T)(((int16_T)(localDW->TorqueVectoringMicroCont_jz[2] - (int16_T)
+    (((localDW->Sum[2] + -1) * 21447) >> 7)) * ((localDW->Min1[2] -
+    rtConstP.pooled15[(int32_T)localDW->Minimum1[2] - 1]) >> 1)) >> 15) * 25033)
+      >> 15) << 9)) >> 9 : 0);
+
+  /* Switch: '<S8>/Switch2' incorporates:
+   *  Gain: '<S8>/Gain1'
+   *  Lookup_n-D: '<S8>/1-D Lookup Table'
+   *  Sum: '<S18>/Sum4'
+   */
+  if (rtb_Sum > 4) {
+    rtb_Sqrt = (uint16_T)(rtb_Sum << 1);
+  } else {
+    rtb_Sqrt = (uint16_T)((uint32_T)look1_is16lu64n32tu16_binlgse
+                          (localDW->TorqueVectoringMicroCont_jz[2],
+      rtConstP.uDLookupTable_bp01Data, rtConstP.uDLookupTable_tableData_i, 67U) >>
+                          8);
+  }
+
+  /* Saturate: '<S8>/Saturation' */
+  if (((uint32_T)rtb_Sqrt << 8) <= 51200U) {
+    if (rtb_Sqrt > 255) {
+      /* Gain: '<S8>/Gain8' */
+      rtb_Sqrt = MAX_uint16_T;
+    } else {
+      /* Gain: '<S8>/Gain8' */
+      rtb_Sqrt = (uint16_T)(rtb_Sqrt << 8);
+    }
+  } else {
+    /* Gain: '<S8>/Gain8' */
+    rtb_Sqrt = 51200U;
+  }
+
+  /* Saturate: '<S8>/Max Torque Limiter' incorporates:
+   *  MinMax: '<S8>/Min1'
+   */
+  localDW->sigIdx = (uint16_T)((uint32_T)rtb_Sqrt >> 2) << 1;
+  if (localDW->sigIdx >= 25600) {
+    rtb_TorqueVectoringMicroContr_n = 25600;
+  } else if (localDW->sigIdx <= 10) {
+    rtb_TorqueVectoringMicroContr_n = 10;
+  } else {
+    rtb_TorqueVectoringMicroContr_n = (int16_T)localDW->sigIdx;
+  }
+
+  /* End of Outputs for SubSystem: '<S2>/Torque Vectoring Micro Controller' */
+
+  /* DataTypeConversion: '<S2>/Torque Vectoring Micro Controller_boundary_DTC12' */
+  if (localDW->Add1 < 65536.0) {
+    rtb_QuadHandle2_idx_0 = (uint16_T)localDW->Add1;
+  } else {
+    rtb_QuadHandle2_idx_0 = MAX_uint16_T;
+  }
+
+  /* Outputs for Atomic SubSystem: '<S2>/Torque Vectoring Micro Controller' */
+  /* Product: '<S18>/Product' incorporates:
+   *  Bias: '<S18>/Bias3'
+   *  Constant: '<S18>/Constant8'
+   *  Gain: '<S18>/Gain1'
+   *  Gain: '<S18>/Gain2'
+   *  Gain: '<S7>/Gain'
+   *  Gain: '<S8>/Gain1'
+   *  MinMax: '<S8>/Min1'
+   *  Product: '<S18>/Product1'
+   *  RelationalOperator: '<S18>/Less Than'
+   *  S-Function (sdspstatminmax): '<S18>/Minimum1'
+   *  Selector: '<S18>/Selector3'
+   *  Sum: '<S18>/Sum2'
+   *  Sum: '<S18>/Sum3'
+   *  Sum: '<S18>/Sum4'
+   */
+  rtb_Sum = (int16_T)(rtb_QuadHandle2_idx_0 < 38400 ? (localDW->Min1[3] -
+    ((((int16_T)(((int16_T)(localDW->TorqueVectoringMicroCont_jz[3] - (int16_T)
+    (((localDW->Sum[3] + -1) * 21447) >> 7)) * ((localDW->Min1[3] -
+    rtConstP.pooled15[(int32_T)localDW->Minimum1[3] - 1]) >> 1)) >> 15) * 25033)
+      >> 15) << 9)) >> 9 : 0);
+
+  /* Switch: '<S8>/Switch2' incorporates:
+   *  Gain: '<S8>/Gain1'
+   *  Lookup_n-D: '<S8>/1-D Lookup Table'
+   *  Sum: '<S18>/Sum4'
+   */
+  if (rtb_Sum > 4) {
+    rtb_Sqrt = (uint16_T)(rtb_Sum << 1);
+  } else {
+    rtb_Sqrt = (uint16_T)((uint32_T)look1_is16lu64n32tu16_binlgse
+                          (localDW->TorqueVectoringMicroCont_jz[3],
+      rtConstP.uDLookupTable_bp01Data, rtConstP.uDLookupTable_tableData_i, 67U) >>
+                          8);
+  }
+
+  /* Saturate: '<S8>/Saturation' */
+  if (((uint32_T)rtb_Sqrt << 8) <= 51200U) {
+    if (rtb_Sqrt > 255) {
+      /* Gain: '<S8>/Gain8' */
+      rtb_Sqrt = MAX_uint16_T;
+    } else {
+      /* Gain: '<S8>/Gain8' */
+      rtb_Sqrt = (uint16_T)(rtb_Sqrt << 8);
+    }
+  } else {
+    /* Gain: '<S8>/Gain8' */
+    rtb_Sqrt = 51200U;
+  }
+
+  /* Saturate: '<S8>/Max Torque Limiter' incorporates:
+   *  MinMax: '<S8>/Min1'
+   */
+  localDW->sigIdx = (uint16_T)((uint32_T)rtb_Sqrt >> 2) << 1;
+  if (localDW->sigIdx >= 25600) {
+    rtb_Sum = 25600;
+  } else if (localDW->sigIdx <= 10) {
+    rtb_Sum = 10;
+  } else {
+    rtb_Sum = (int16_T)localDW->sigIdx;
+  }
+
+  /* Math: '<S10>/Square' incorporates:
+   *  DataTypeConversion: '<S2>/Torque Vectoring Micro Controller_boundary_DTC6'
+   */
+  localDW->sigIdx = (rtb_TorqueVectoringMicroContr_1 *
+                     rtb_TorqueVectoringMicroContr_1) >> 14;
+  if (localDW->sigIdx < 0) {
+    localDW->sigIdx = 0;
+  }
+
+  i = (rtb_TorqueVectoringMicroContr_2 * rtb_TorqueVectoringMicroContr_2) >> 14;
+  if (i < 0) {
+    i = 0;
+  }
+
+  /* Sqrt: '<S10>/Sqrt' incorporates:
+   *  Math: '<S10>/Square'
+   *  Sum: '<S10>/Sum'
+   */
+  rtb_Sqrt = rt_sqrt_Uu16En3_Yu16En_God3C1DL((uint16_T)(((uint32_T)(uint16_T)
+    localDW->sigIdx + (uint16_T)i) >> 1));
+
+  /* DeadZone: '<S11>/Dead Zone' incorporates:
+   *  DataTypeConversion: '<S2>/Torque Vectoring Micro Controller_boundary_DTC2'
+   */
+  if (rtb_TmpSignalConversionAtDotP_0 > 1024) {
+    rtb_TmpSignalConversionAtDotP_0 = (int16_T)(rtb_TmpSignalConversionAtDotP_0
+      - 1024);
+  } else if (rtb_TmpSignalConversionAtDotP_0 >= -1024) {
+    rtb_TmpSignalConversionAtDotP_0 = 0;
+  } else {
+    rtb_TmpSignalConversionAtDotP_0 = (int16_T)(rtb_TmpSignalConversionAtDotP_0
+      - -1024);
+  }
+
+  /* End of DeadZone: '<S11>/Dead Zone' */
+
+  /* Gain: '<S11>/Gain' incorporates:
+   *  Gain: '<S9>/I'
+   */
+  rtb_TmpSignalConversionAtDotP_0 = (int16_T)((18477 *
+    rtb_TmpSignalConversionAtDotP_0) >> 14);
+
+  /* Math: '<S23>/Square1' incorporates:
+   *  Gain: '<S9>/I'
+   *  Math: '<S23>/Square'
+   *  Math: '<S24>/Square1'
+   */
+  localDW->sigIdx = (rtb_TmpSignalConversionAtDotP_0 *
+                     rtb_TmpSignalConversionAtDotP_0) >> 13;
+  i = localDW->sigIdx;
+  if (localDW->sigIdx < 0) {
+    i = 0;
+  }
+
+  /* Math: '<S23>/Square' incorporates:
+   *  Math: '<S24>/Square1'
+   */
+  u_tmp = localDW->sigIdx;
+  if (localDW->sigIdx < 0) {
+    u_tmp = 0;
+    localDW->sigIdx = 0;
+  }
+
+  /* Sum: '<S23>/Sum of Elements' incorporates:
+   *  Gain: '<S23>/Gain'
+   *  Gain: '<S23>/Gain1'
+   *  Gain: '<S23>/Gain2'
+   *  Gain: '<S9>/I'
+   *  Math: '<S23>/Square'
+   *  Math: '<S23>/Square1'
+   *  Product: '<S23>/Product'
+   *  Sum: '<S24>/Sum of Elements'
+   */
+  u_tmp_0 = (int16_T)((10707 * rtb_TmpSignalConversionAtDotP_0) >> 13);
+  i = (((int16_T)((((i * rtb_TmpSignalConversionAtDotP_0) >> 15) * 9395) >> 16)
+        + (int16_T)((63753U * u_tmp) >> 19)) + u_tmp_0) + -109;
+
+  /* Sum: '<S24>/Sum of Elements' incorporates:
+   *  Gain: '<S24>/Gain'
+   *  Gain: '<S9>/I'
+   *  Math: '<S24>/Square1'
+   *  Product: '<S24>/Product'
+   */
+  localDW->sigIdx = ((int16_T)((((localDW->sigIdx *
+    rtb_TmpSignalConversionAtDotP_0) >> 15) * 9395) >> 16) + u_tmp_0) + 109;
+
+  /* Gain: '<S10>/Gain' incorporates:
+   *  Product: '<S10>/Product1'
+   *  S-Function (sdspstatfcns): '<S11>/Mean'
+   *  Sqrt: '<S10>/Sqrt'
+   *  Sum: '<S23>/Sum of Elements'
+   *  Sum: '<S24>/Sum of Elements'
+   *  UnitDelay: '<S8>/Unit Delay5'
+   */
+  rtb_TorqueVectoringMicroContr_2 = (int16_T)(((((int16_T)((int16_T)((int16_T)
+    localDW->sigIdx + (int16_T)i) >> 1) * rtb_Sqrt) >> 15) * 5201) >> 13);
+
+  /* Signum: '<S10>/Sign' incorporates:
+   *  UnitDelay: '<S8>/Unit Delay5'
+   */
+  if (rtb_TorqueVectoringMicroContr_2 < 0) {
+    rtb_TmpSignalConversionAtDotP_0 = -1;
+  } else {
+    rtb_TmpSignalConversionAtDotP_0 = (int16_T)(rtb_TorqueVectoringMicroContr_2 >
+      0);
+  }
+
+  /* End of Signum: '<S10>/Sign' */
+
+  /* Lookup_n-D: '<S10>/1-D Lookup Table' incorporates:
+   *  Sqrt: '<S10>/Sqrt'
+   */
+  bpIdx = plook_u32u16u64n48_evenc_s(rtb_Sqrt, 0U, 1536U, 9U, &localDW->frac);
+
+  /* Abs: '<S10>/Abs' incorporates:
+   *  Lookup_n-D: '<S10>/1-D Lookup Table'
+   */
+  if (rtb_TorqueVectoringMicroContr_2 < 0) {
+    rtb_QuadHandle2_idx_0 = (uint16_T)(-rtb_TorqueVectoringMicroContr_2 << 1);
+  } else {
+    rtb_QuadHandle2_idx_0 = (uint16_T)(rtb_TorqueVectoringMicroContr_2 << 1);
+  }
+
+  minV_tmp = (uint16_T)(intrp1d_s16s32s32u32u64n48l_s(bpIdx, localDW->frac,
+    rtConstP.uDLookupTable_tableData) << 1);
+
+  /* MinMax: '<S10>/Min of Elements' incorporates:
+   *  Abs: '<S10>/Abs'
+   */
+  if (minV_tmp > rtb_QuadHandle2_idx_0) {
+    minV_tmp = rtb_QuadHandle2_idx_0;
+  }
+
+  /* Product: '<S10>/Product' incorporates:
+   *  MinMax: '<S10>/Min of Elements'
+   */
+  rtb_TorqueVectoringMicroContr_2 = (int16_T)(((minV_tmp << 11) *
+    rtb_TmpSignalConversionAtDotP_0) >> 1);
+
+  /* Switch: '<S10>/Switch' incorporates:
+   *  Product: '<S10>/Product'
+   */
+  if (rtb_TorqueVectoringMicroContr_2 != 0) {
+    /* DataTypeConversion: '<S2>/Torque Vectoring Micro Controller_boundary_DTC' incorporates:
+     *  Switch: '<S10>/Switch1'
+     */
+    localDW->CCaller_o2 = rtu_TVS_Information_b * 256.0;
+    if (localDW->CCaller_o2 < 65536.0) {
+      rtb_QuadHandle2_idx_0 = (uint16_T)localDW->CCaller_o2;
+    } else {
+      rtb_QuadHandle2_idx_0 = MAX_uint16_T;
+    }
+
+    /* End of DataTypeConversion: '<S2>/Torque Vectoring Micro Controller_boundary_DTC' */
+
+    /* UnitDelay: '<S8>/Unit Delay5' incorporates:
+     *  Product: '<S10>/Divide'
+     *  Product: '<S10>/Product2'
+     *  Sqrt: '<S10>/Sqrt'
+     *  Switch: '<S10>/Switch1'
+     */
+    rtb_TorqueVectoringMicroContr_2 = (int16_T)(((uint16_T)(rtb_Sqrt /
+      ((uint32_T)rtb_QuadHandle2_idx_0 << 2)) * rtb_TmpSignalConversionAtDotP_0)
+      >> 1);
+  }
+
+  /* End of Switch: '<S10>/Switch' */
+
+  /* DataTypeConversion: '<S20>/CastU16En16' incorporates:
+   *  DataTypeConversion: '<S22>/CastU16En16'
+   *  Sum: '<S23>/Sum of Elements'
+   */
+  rtb_Sqrt = (uint16_T)((uint16_T)i << 6);
+
+  /* RelationalOperator: '<S20>/LTEp25' incorporates:
+   *  DataTypeConversion: '<S20>/CastU16En16'
+   */
+  rtb_UnitDelay4 = (rtb_Sqrt <= 16384);
+
+  /* RelationalOperator: '<S20>/GTEp75' incorporates:
+   *  DataTypeConversion: '<S20>/CastU16En16'
+   */
+  rtb_GreaterThan = (rtb_Sqrt >= 49152);
+
+  /* Switch: '<S20>/QuadHandle2' incorporates:
+   *  Constant: '<S20>/Point75'
+   *  DataTypeConversion: '<S20>/CastU16En16'
+   *  RelationalOperator: '<S20>/LTEp50'
+   *  Sum: '<S20>/p75mA'
+   *  Switch: '<S20>/QuadHandle1b'
+   */
+  if (rtb_Sqrt <= 32768) {
+    /* Switch: '<S20>/QuadHandle1a' incorporates:
+     *  Constant: '<S20>/Point25'
+     *  Sum: '<S20>/Amp25'
+     *  Sum: '<S20>/p25mA'
+     */
+    if (rtb_UnitDelay4) {
+      rtb_QuadHandle2_idx_0 = (uint16_T)(16384 - rtb_Sqrt);
+    } else {
+      rtb_QuadHandle2_idx_0 = (uint16_T)(rtb_Sqrt - 16384);
+    }
+  } else if (rtb_GreaterThan) {
+    /* Switch: '<S20>/QuadHandle1b' incorporates:
+     *  Constant: '<S20>/Point75'
+     *  Sum: '<S20>/Amp75'
+     */
+    rtb_QuadHandle2_idx_0 = (uint16_T)(rtb_Sqrt - 49152);
+  } else {
+    rtb_QuadHandle2_idx_0 = (uint16_T)(49152 - rtb_Sqrt);
+  }
+
+  /* RelationalOperator: '<S20>/LTEp25' */
+  rtb_LTEp25_h_idx_0 = rtb_UnitDelay4;
+
+  /* RelationalOperator: '<S20>/GTEp75' */
+  rtb_LTEp50_h_idx_0 = rtb_GreaterThan;
+
+  /* DataTypeConversion: '<S20>/CastU16En16' incorporates:
+   *  DataTypeConversion: '<S22>/CastU16En16'
+   *  Sum: '<S24>/Sum of Elements'
+   */
+  minV_tmp = (uint16_T)((uint16_T)localDW->sigIdx << 6);
+
+  /* RelationalOperator: '<S20>/LTEp25' incorporates:
+   *  DataTypeConversion: '<S20>/CastU16En16'
+   */
+  rtb_UnitDelay4 = (minV_tmp <= 16384);
+
+  /* RelationalOperator: '<S20>/GTEp75' incorporates:
+   *  DataTypeConversion: '<S20>/CastU16En16'
+   */
+  rtb_GreaterThan = (minV_tmp >= 49152);
+
+  /* Lookup_n-D: '<S19>/Look-Up Table' incorporates:
+   *  SignalConversion generated from: '<S8>/Dot Product2'
+   */
+  bpIdx = plook_u32u16u64n48_even7c_gf(rtb_QuadHandle2_idx_0, 0U, 128U,
+    &localDW->frac);
+  rtb_TmpSignalConversionAtDotP_0 = intrp1d_s16s32s32u32u64n48l_f(bpIdx,
+    localDW->frac, rtConstP.pooled6);
+
+  /* Switch: '<S20>/QuadHandle2' incorporates:
+   *  Constant: '<S20>/Point75'
+   *  DataTypeConversion: '<S20>/CastU16En16'
+   *  RelationalOperator: '<S20>/LTEp50'
+   *  Sum: '<S20>/p75mA'
+   *  Switch: '<S20>/QuadHandle1b'
+   */
+  if (minV_tmp <= 32768) {
+    /* Switch: '<S20>/QuadHandle1a' incorporates:
+     *  Constant: '<S20>/Point25'
+     *  Sum: '<S20>/Amp25'
+     *  Sum: '<S20>/p25mA'
+     */
+    if (rtb_UnitDelay4) {
+      rtb_QuadHandle2_idx_0 = (uint16_T)(16384 - minV_tmp);
+    } else {
+      rtb_QuadHandle2_idx_0 = (uint16_T)(minV_tmp - 16384);
+    }
+  } else if (rtb_GreaterThan) {
+    /* Switch: '<S20>/QuadHandle1b' incorporates:
+     *  Constant: '<S20>/Point75'
+     *  Sum: '<S20>/Amp75'
+     */
+    rtb_QuadHandle2_idx_0 = (uint16_T)(minV_tmp - 49152);
+  } else {
+    rtb_QuadHandle2_idx_0 = (uint16_T)(49152 - minV_tmp);
+  }
+
+  /* Lookup_n-D: '<S19>/Look-Up Table' incorporates:
+   *  SignalConversion generated from: '<S8>/Dot Product2'
+   */
+  bpIdx = plook_u32u16u64n48_even7c_gf(rtb_QuadHandle2_idx_0, 0U, 128U,
+    &localDW->frac);
+  rtb_TorqueVectoringMicroContr_1 = intrp1d_s16s32s32u32u64n48l_f(bpIdx,
+    localDW->frac, rtConstP.pooled6);
+
+  /* Switch: '<S20>/SignCorrected' incorporates:
+   *  Logic: '<S20>/1st or 4th Quad'
+   *  SignalConversion generated from: '<S8>/Dot Product2'
+   *  UnaryMinus: '<S20>/Negate'
+   */
+  u = rtb_TmpSignalConversionAtDotP_0;
+  if ((!rtb_LTEp25_h_idx_0) && (!rtb_LTEp50_h_idx_0)) {
+    u = (int16_T)-rtb_TmpSignalConversionAtDotP_0;
+  }
+
+  /* RelationalOperator: '<S22>/LTEp50' */
+  rtb_LTEp25_h_idx_0 = (rtb_Sqrt <= 32768);
+
+  /* Switch: '<S22>/QuadHandle1' incorporates:
+   *  Constant: '<S22>/Point50'
+   *  Sum: '<S22>/Amp50'
+   */
+  if (!rtb_LTEp25_h_idx_0) {
+    rtb_Sqrt = (uint16_T)(rtb_Sqrt - 32768);
+  }
+
+  /* Switch: '<S22>/QuadHandle2' incorporates:
+   *  Constant: '<S22>/Point50'
+   *  RelationalOperator: '<S22>/LTEp25'
+   *  Sum: '<S22>/p50mA'
+   */
+  if (rtb_Sqrt > 16384) {
+    rtb_Sqrt = (uint16_T)(32768 - rtb_Sqrt);
+  }
+
+  /* RelationalOperator: '<S22>/LTEp50' */
+  rtb_LTEp50_h_idx_0 = rtb_LTEp25_h_idx_0;
+
+  /* Switch: '<S20>/SignCorrected' incorporates:
+   *  SignalConversion generated from: '<S8>/Dot Product2'
+   */
+  rtb_TmpSignalConversionAtDotP_0 = u;
+
+  /* DataTypeConversion: '<S22>/CastU16En16' incorporates:
+   *  Switch: '<S22>/QuadHandle2'
+   */
+  rtb_QuadHandle2_idx_0 = rtb_Sqrt;
+
+  /* Switch: '<S20>/SignCorrected' incorporates:
+   *  Logic: '<S20>/1st or 4th Quad'
+   *  SignalConversion generated from: '<S8>/Dot Product2'
+   *  UnaryMinus: '<S20>/Negate'
+   */
+  u = rtb_TorqueVectoringMicroContr_1;
+  if ((!rtb_UnitDelay4) && (!rtb_GreaterThan)) {
+    u = (int16_T)-rtb_TorqueVectoringMicroContr_1;
+  }
+
+  /* DataTypeConversion: '<S22>/CastU16En16' */
+  rtb_Sqrt = minV_tmp;
+
+  /* RelationalOperator: '<S22>/LTEp50' */
+  rtb_LTEp25_h_idx_0 = (minV_tmp <= 32768);
+
+  /* Switch: '<S22>/QuadHandle1' incorporates:
+   *  Constant: '<S22>/Point50'
+   *  Sum: '<S22>/Amp50'
+   */
+  if (!rtb_LTEp25_h_idx_0) {
+    rtb_Sqrt = (uint16_T)(minV_tmp - 32768);
+  }
+
+  /* Switch: '<S22>/QuadHandle2' incorporates:
+   *  Constant: '<S22>/Point50'
+   *  RelationalOperator: '<S22>/LTEp25'
+   *  Sum: '<S22>/p50mA'
+   */
+  if (rtb_Sqrt > 16384) {
+    rtb_Sqrt = (uint16_T)(32768 - rtb_Sqrt);
+  }
+
+  /* Lookup_n-D: '<S21>/Look-Up Table' incorporates:
+   *  Switch: '<S22>/QuadHandle2'
+   *  Switch: '<S22>/SignCorrected'
+   */
+  bpIdx = plook_u32u16u64n48_even7c_gf(rtb_QuadHandle2_idx_0, 0U, 128U,
+    &localDW->frac);
+  rtb_TorqueVectoringMicroContr_1 = intrp1d_s16s32s32u32u64n48l_f(bpIdx,
+    localDW->frac, rtConstP.pooled6);
+  bpIdx = plook_u32u16u64n48_even7c_gf(rtb_Sqrt, 0U, 128U, &localDW->frac);
+
+  /* Switch: '<S22>/SignCorrected' incorporates:
+   *  UnaryMinus: '<S22>/Negate'
+   */
+  rtb_Switch_p_idx_1 = rtb_TorqueVectoringMicroContr_1;
+  if (!rtb_LTEp50_h_idx_0) {
+    rtb_Switch_p_idx_1 = (int16_T)-rtb_TorqueVectoringMicroContr_1;
+  }
+
+  rtb_TorqueVectoringMicroContr_1 = rtb_Switch_p_idx_1;
+
+  /* Lookup_n-D: '<S21>/Look-Up Table' */
+  rtb_Switch_p_idx_1 = intrp1d_s16s32s32u32u64n48l_f(bpIdx, localDW->frac,
+    rtConstP.pooled6);
+
+  /* Switch: '<S22>/SignCorrected' incorporates:
+   *  UnaryMinus: '<S22>/Negate'
+   */
+  if (!rtb_LTEp25_h_idx_0) {
+    rtb_Switch_p_idx_1 = (int16_T)-rtb_Switch_p_idx_1;
+  }
+
+  /* DotProduct: '<S8>/Dot Product1' incorporates:
+   *  Constant: '<S8>/Constant5'
+   *  SignalConversion generated from: '<S8>/Dot Product1'
+   */
+  rtb_TorqueVectoringMicroContr_1 = (int16_T)((int16_T)
+    ((rtb_TmpSignalConversionAtDotP_0 * 10615) >> 18) +
+    ((rtb_TorqueVectoringMicroContr_1 * 3245) >> 16));
+
+  /* DotProduct: '<S8>/Dot Product2' incorporates:
+   *  Constant: '<S8>/Constant6'
+   */
+  u = (int16_T)((int16_T)((u * -10615) >> 18) + ((rtb_Switch_p_idx_1 * 3245) >>
+    16));
+
+  /* Switch: '<S15>/Switch' incorporates:
+   *  Constant: '<S15>/Constant'
+   *  DotProduct: '<S8>/Dot Product'
+   *  Gain: '<S8>/Gain7'
+   *  UnitDelay: '<S8>/Unit Delay5'
+   */
+  if (rtb_TorqueVectoringMicroContr_2 != 0) {
+    /* DotProduct: '<S8>/Dot Product' incorporates:
+     *  DotProduct: '<S8>/Dot Product1'
+     *  DotProduct: '<S8>/Dot Product2'
+     *  Saturate: '<S8>/Max Torque Limiter'
+     */
+    rtb_Switch_p_idx_3 = (int16_T)((int16_T)((int16_T)((int16_T)
+      ((rtb_TorqueVectoringMicroContr_1 * 10) >> 16) + ((u * 10) >> 16)) + ((159
+      * rtb_TorqueVectoringMicroContr_n) >> 14)) + ((-159 * rtb_Sum) >> 14));
+    rtb_TmpSignalConversionAtDotP_0 = (int16_T)((12703 * rtb_Switch_p_idx_3) >>
+      8);
+    rtb_Switch_p_idx_1 = rtb_TmpSignalConversionAtDotP_0;
+    rtb_Switch_p_idx_2 = (int16_T)((6351 * rtb_Switch_p_idx_3) >> 7);
+    rtb_Switch_p_idx_3 = rtb_Switch_p_idx_2;
+  } else {
+    rtb_TmpSignalConversionAtDotP_0 = 0;
+    rtb_Switch_p_idx_1 = 0;
+    rtb_Switch_p_idx_2 = 0;
+    rtb_Switch_p_idx_3 = 0;
+  }
+
+  /* End of Switch: '<S15>/Switch' */
+
+  /* Sum: '<S15>/Sum3' */
+  rtb_Switch_p_idx_2 += rtb_TmpSignalConversionAtDotP_0;
+
+  /* UnitDelay: '<S8>/Unit Delay4' */
   rtb_UnitDelay4 = localDW->UnitDelay4_DSTATE;
 
   /* DiscreteIntegrator: '<S9>/Discrete-Time Integrator' incorporates:
-   *  UnitDelay: '<S3>/Unit Delay4'
+   *  UnitDelay: '<S8>/Unit Delay4'
    */
   if (localDW->UnitDelay4_DSTATE || (localDW->DiscreteTimeIntegrator_PrevRese !=
        0)) {
-    localDW->DiscreteTimeIntegrator_DSTATE = 0.0;
+    localDW->DiscreteTimeIntegrator_DSTATE = 0;
   }
 
-  /* DiscreteIntegrator: '<S9>/Discrete-Time Integrator' incorporates:
-   *  Abs: '<S9>/Abs'
-   *  Constant: '<S9>/Constant'
-   *  Gain: '<S9>/I'
-   *  Product: '<S9>/Product'
-   *  Product: '<S9>/Product3'
-   *  RelationalOperator: '<S9>/Less Than'
-   *  UnitDelay: '<S3>/Unit Delay'
-   */
-  localDW->rack_displacement = (real_T)(rtP.yaw_deadband > fabs
-    (localDW->left_steering_angle)) * (rtP.I * localDW->left_steering_angle) *
-    localDW->UnitDelay_DSTATE * 0.015 + localDW->DiscreteTimeIntegrator_DSTATE;
+  /* DiscreteIntegrator: '<S9>/Discrete-Time Integrator' */
+  rtb_TmpSignalConversionAtDotP_0 = localDW->DiscreteTimeIntegrator_DSTATE;
+
+  /* DiscreteIntegrator: '<S9>/Discrete-Time Integrator' */
+  if (localDW->DiscreteTimeIntegrator_DSTATE >= 20480) {
+    /* DiscreteIntegrator: '<S9>/Discrete-Time Integrator' */
+    rtb_TmpSignalConversionAtDotP_0 = 20480;
+  } else if (localDW->DiscreteTimeIntegrator_DSTATE <= -20480) {
+    /* DiscreteIntegrator: '<S9>/Discrete-Time Integrator' */
+    rtb_TmpSignalConversionAtDotP_0 = -20480;
+  }
 
   /* DiscreteIntegrator: '<S9>/Discrete-Time Integrator2' incorporates:
-   *  UnitDelay: '<S3>/Unit Delay4'
+   *  UnitDelay: '<S8>/Unit Delay4'
    */
-  if (localDW->UnitDelay4_DSTATE && (localDW->DiscreteTimeIntegrator2_PrevRes <=
+  if (localDW->UnitDelay4_DSTATE || (localDW->DiscreteTimeIntegrator2_PrevRes !=
        0)) {
-    localDW->DiscreteTimeIntegrator2_DSTATE = 0.0;
+    localDW->DiscreteTimeIntegrator2_DSTATE = 0;
   }
 
-  /* DiscreteIntegrator: '<S9>/Discrete-Time Integrator2' incorporates:
-   *  Gain: '<S9>/T'
-   *  Product: '<S9>/Product1'
-   *  UnitDelay: '<S3>/Unit Delay'
-   *  UnitDelay: '<S3>/Unit Delay1'
-   */
-  localDW->SA_rl = rtP.T * localDW->UnitDelay1_DSTATE *
-    localDW->UnitDelay_DSTATE * 0.015 + localDW->DiscreteTimeIntegrator2_DSTATE;
+  /* DiscreteIntegrator: '<S9>/Discrete-Time Integrator2' */
+  DiscreteTimeIntegrator2 = localDW->DiscreteTimeIntegrator2_DSTATE;
 
+  /* DiscreteIntegrator: '<S9>/Discrete-Time Integrator2' */
+  if (localDW->DiscreteTimeIntegrator2_DSTATE >= 20480) {
+    /* DiscreteIntegrator: '<S9>/Discrete-Time Integrator2' */
+    DiscreteTimeIntegrator2 = 20480;
+  } else if (localDW->DiscreteTimeIntegrator2_DSTATE <= -20480) {
+    /* DiscreteIntegrator: '<S9>/Discrete-Time Integrator2' */
+    DiscreteTimeIntegrator2 = -20480;
+  }
+
+  /* End of Outputs for SubSystem: '<S2>/Torque Vectoring Micro Controller' */
+
+  /* DataTypeConversion: '<S2>/Torque Vectoring Micro Controller_boundary_DTC5' */
+  if (localDW->rtb_FixedPointSub_boundary_DT_c < 32768.0) {
+    rtb_P = (int16_T)localDW->rtb_FixedPointSub_boundary_DT_c;
+  } else {
+    rtb_P = MAX_int16_T;
+  }
+
+  /* Outputs for Atomic SubSystem: '<S2>/Torque Vectoring Micro Controller' */
   /* Sum: '<S9>/Sum7' incorporates:
+   *  DiscreteIntegrator: '<S9>/Discrete-Time Integrator'
+   *  DiscreteIntegrator: '<S9>/Discrete-Time Integrator2'
    *  Gain: '<S9>/P'
    *  Sum: '<S9>/Sum'
+   *  Sum: '<S9>/Sum1'
+   *  UnitDelay: '<S8>/Unit Delay5'
    */
-  localDW->SA_fr = (rtP.P * localDW->left_steering_angle +
-                    localDW->rack_displacement) + localDW->SA_rl;
+  rtb_P = (int16_T)((((int16_T)((((int16_T)(((int16_T)
+    (((rtb_TorqueVectoringMicroContr_2 << 13) - rtb_P) >> 13) * 3) >> 1) << 13)
+    + rtb_TmpSignalConversionAtDotP_0) >> 13) << 13) + DiscreteTimeIntegrator2) >>
+                    13);
 
-  /* Sum: '<S13>/Sum' incorporates:
-   *  UnitDelay: '<S13>/Unit Delay1'0
+  /* RelationalOperator: '<S16>/LowerRelop1' incorporates:
+   *  RelationalOperator: '<S16>/UpperRelop'
+   *  Sum: '<S9>/Sum7'
+   *  Switch: '<S16>/Switch2'
    */
-  localDW->left_steering_angle = localDW->SA_fr + localDW->UnitDelay1_DSTATE_e;
+  localDW->sigIdx = rtb_P << 14;
 
-  /* Product: '<S13>/Product1' */
-  localDW->kx_idx_3 = localDW->left_steering_angle * 0.0895161414022789;
-
-  /* Sum: '<S14>/Sum' incorporates:
-   *  UnitDelay: '<S14>/Unit Delay1'
+  /* Switch: '<S16>/Switch2' incorporates:
+   *  RelationalOperator: '<S16>/LowerRelop1'
+   *  Sum: '<S15>/Sum3'
    */
-  localDW->Sum_j = localDW->kx_idx_3 + localDW->UnitDelay1_DSTATE_h;
-
-  /* Product: '<S14>/Product1' */
-  localDW->kx_idx_0 = localDW->Sum_j * 0.070255736826063453;
-
-  /* MATLAB Function: '<S3>/Brake Model' */
-  if (rtIsNaN(rtu_TVS_Information[0])) {
-    localDW->relative_PL = rtu_TVS_Information[0];
-  } else if (rtu_TVS_Information[0] < 0.0) {
-    localDW->relative_PL = -1.0;
+  if (localDW->sigIdx > rtb_Switch_p_idx_2) {
+    rtb_Switch_p_idx_2 = (int16_T)(rtb_Switch_p_idx_2 >> 14);
   } else {
-    localDW->relative_PL = (rtu_TVS_Information[0] > 0.0);
+    /* Sum: '<S15>/Sum4' */
+    rtb_Switch_p_idx_2 = (int16_T)(rtb_Switch_p_idx_1 + rtb_Switch_p_idx_3);
+
+    /* Switch: '<S16>/Switch' incorporates:
+     *  RelationalOperator: '<S16>/UpperRelop'
+     *  Sum: '<S15>/Sum4'
+     *  Sum: '<S9>/Sum7'
+     *  Switch: '<S16>/Switch2'
+     */
+    if (localDW->sigIdx < rtb_Switch_p_idx_2) {
+      rtb_Switch_p_idx_2 = (int16_T)(rtb_Switch_p_idx_2 >> 14);
+    } else {
+      rtb_Switch_p_idx_2 = rtb_P;
+    }
+
+    /* End of Switch: '<S16>/Switch' */
   }
 
-  localDW->x_m[1] = -brakecoeff[0] * localDW->relative_PL *
-    rtu_TVS_Information_e[0] / gr[0];
-  localDW->V_rr_idx_0 = -25.0;
-  if (rtIsNaN(localDW->x_m[1])) {
-    p = false;
-  } else {
-    p = (localDW->x_m[1] > -25.0);
-  }
-
-  if (p) {
-    localDW->V_rr_idx_0 = localDW->x_m[1];
-  }
-
-  localDW->FZ[0] = 0.0;
-  if (rtIsNaN(localDW->V_rr_idx_0)) {
-    p = false;
-  } else {
-    p = (localDW->V_rr_idx_0 < 0.0);
-  }
-
-  if (p) {
-    localDW->FZ[0] = localDW->V_rr_idx_0;
-  }
-
-  /* MATLAB Function: '<S3>/Constraint Generation' */
-  localDW->kx_idx_1 = localDW->omega_fake[0] * gr[0];
-  localDW->omega_fake[0] = localDW->kx_idx_1;
-
-  /* MATLAB Function: '<S3>/Brake Model' */
-  localDW->x_m[3] = -brakecoeff[1] * localDW->relative_PL *
-    rtu_TVS_Information_e[1] / gr[1];
-  localDW->V_rr_idx_0 = -25.0;
-  if (rtIsNaN(localDW->x_m[3])) {
-    p = false;
-  } else {
-    p = (localDW->x_m[3] > -25.0);
-  }
-
-  if (p) {
-    localDW->V_rr_idx_0 = localDW->x_m[3];
-  }
-
-  localDW->FZ[1] = 0.0;
-  if (rtIsNaN(localDW->V_rr_idx_0)) {
-    p = false;
-  } else {
-    p = (localDW->V_rr_idx_0 < 0.0);
-  }
-
-  if (p) {
-    localDW->FZ[1] = localDW->V_rr_idx_0;
-  }
-
-  /* MATLAB Function: '<S3>/Constraint Generation' */
-  localDW->V_fl_tmp = localDW->omega_fake[1] * gr[1];
-  localDW->omega_fake[1] = localDW->V_fl_tmp;
-
-  /* MATLAB Function: '<S3>/Brake Model' */
-  localDW->x_m[5] = -brakecoeff[2] * localDW->relative_PL *
-    rtu_TVS_Information_e[2] / gr[2];
-  localDW->V_rr_idx_0 = -25.0;
-  if (rtIsNaN(localDW->x_m[5])) {
-    p = false;
-  } else {
-    p = (localDW->x_m[5] > -25.0);
-  }
-
-  if (p) {
-    localDW->V_rr_idx_0 = localDW->x_m[5];
-  }
-
-  localDW->FZ[2] = 0.0;
-  if (rtIsNaN(localDW->V_rr_idx_0)) {
-    p = false;
-  } else {
-    p = (localDW->V_rr_idx_0 < 0.0);
-  }
-
-  if (p) {
-    localDW->FZ[2] = localDW->V_rr_idx_0;
-  }
-
-  /* MATLAB Function: '<S3>/Constraint Generation' */
-  localDW->maxval_idx_3 = localDW->omega_fake[2] * gr[2];
-  localDW->omega_fake[2] = localDW->maxval_idx_3;
-
-  /* MATLAB Function: '<S3>/Brake Model' */
-  localDW->x_m[7] = -brakecoeff[3] * localDW->relative_PL *
-    rtu_TVS_Information_e[3] / gr[3];
-  localDW->V_rr_idx_0 = -25.0;
-  if (rtIsNaN(localDW->x_m[7])) {
-    p = false;
-  } else {
-    p = (localDW->x_m[7] > -25.0);
-  }
-
-  if (p) {
-    localDW->V_rr_idx_0 = localDW->x_m[7];
-  }
-
-  localDW->FZ[3] = 0.0;
-  if (rtIsNaN(localDW->V_rr_idx_0)) {
-    p = false;
-  } else {
-    p = (localDW->V_rr_idx_0 < 0.0);
-  }
-
-  if (p) {
-    localDW->FZ[3] = localDW->V_rr_idx_0;
-  }
-
-  /* MATLAB Function: '<S3>/Constraint Generation' incorporates:
-   *  UnitDelay: '<S3>/Unit Delay2'
-   *  UnitDelay: '<S3>/Unit Delay3'
+  /* RelationalOperator: '<S8>/GreaterThan' incorporates:
+   *  UnitDelay: '<S8>/Unit Delay5'
    */
-  localDW->a_bar_idx_1_tmp = localDW->omega_fake[3] * gr[3];
-  localDW->omega_fake[3] = localDW->a_bar_idx_1_tmp;
-  localDW->V_rr_idx_0 = s[0] * cos(localDW->steering[1]) + l[0] * sin
-    (localDW->steering[1]);
-  localDW->V_rl_idx_0_tmp = -s[0] * cos(localDW->steering[2]) + l[0] * sin
-    (localDW->steering[2]);
-  if (rtu_TVS_Information_o <= 0.0) {
-    if ((rtu_TVS_Information_n[1] >= absolute_battery_power_limits[1]) ||
-        rtIsNaN(absolute_battery_power_limits[1])) {
-      localDW->relative_PL = rtu_TVS_Information_n[1];
-    } else {
-      localDW->relative_PL = absolute_battery_power_limits[1];
-    }
+  rtb_GreaterThan = (rtb_TorqueVectoringMicroContr_2 != 0);
 
-    if ((localDW->relative_PL >= 0.0) || rtIsNaN(localDW->relative_PL)) {
-      localDW->relative_PL = 0.0;
-    }
+  /* End of Outputs for SubSystem: '<S2>/Torque Vectoring Micro Controller' */
+
+  /* DataTypeConversion: '<S2>/Torque Vectoring Micro Controller_boundary_DTC1' */
+  if (localDW->rtb_FixedPointSub_boundary_DT_m < 32768.0) {
+    rtb_Switch_p_idx_1 = (int16_T)localDW->rtb_FixedPointSub_boundary_DT_m;
   } else {
-    localDW->steering[0] = rtu_TVS_Information_n[0];
-    localDW->steering[1] = absolute_battery_power_limits[0];
-    localDW->steering[2] = ((motor_enable[0] * 28.0 * localDW->kx_idx_1 +
-      motor_enable[1] * 28.0 * localDW->V_fl_tmp) + motor_enable[2] * 28.0 *
-      localDW->maxval_idx_3) + motor_enable[3] * 28.0 * localDW->a_bar_idx_1_tmp;
-    if (!rtIsNaN(rtu_TVS_Information_n[0])) {
-      localDW->idx = 1;
-    } else {
-      localDW->idx = 0;
-      localDW->j = 2;
-      exitg1 = false;
-      while ((!exitg1) && (localDW->j < 4)) {
-        if (!rtIsNaN(localDW->steering[localDW->j - 1])) {
-          localDW->idx = localDW->j;
-          exitg1 = true;
-        } else {
-          localDW->j++;
-        }
-      }
-    }
-
-    if (localDW->idx == 0) {
-      localDW->relative_PL = rtu_TVS_Information_n[0];
-    } else {
-      localDW->relative_PL = localDW->steering[localDW->idx - 1];
-      while (localDW->idx + 1 <= 3) {
-        if (localDW->relative_PL > localDW->steering[localDW->idx]) {
-          localDW->relative_PL = localDW->steering[localDW->idx];
-        }
-
-        localDW->idx++;
-      }
-    }
-
-    if ((localDW->relative_PL <= 0.0) || rtIsNaN(localDW->relative_PL)) {
-      localDW->relative_PL = 0.0;
-    }
+    rtb_Switch_p_idx_1 = MAX_int16_T;
   }
 
-  for (localDW->j = 0; localDW->j < 4; localDW->j++) {
-    localDW->V_rl_idx_0_tmp_tmp = localDW->omega_fake[localDW->j];
-    localDW->beq = localDW->FZ[localDW->j];
-    localDW->V_flt_idx_1 = localDW->Fx_max[localDW->j] * RE / gr[localDW->j];
-    localDW->SL[localDW->j] = localDW->V_flt_idx_1 - localDW->beq;
-    localDW->RPM_index[localDW->j] = localDW->V_rl_idx_0_tmp_tmp /
-      rpm_index_calibration;
-    localDW->RPM_index[localDW->j] = ceil(localDW->RPM_index[localDW->j]);
-    localDW->RPM_index[localDW->j] += (real_T)(localDW->V_rl_idx_0_tmp_tmp ==
-      0.0);
-    for (localDW->idx = 0; localDW->idx < 251; localDW->idx++) {
-      localDW->c_x[localDW->idx + 251 * localDW->j] = power_loss_grid[((int32_T)
-        localDW->RPM_index[localDW->j] - 1) * 251 + localDW->idx] -
-        power_loss_limit[localDW->j];
-    }
-
-    localDW->Fx_max[localDW->j] = -localDW->V_flt_idx_1 - localDW->beq;
-  }
-
-  for (localDW->j = 0; localDW->j < 1004; localDW->j++) {
-    localDW->varargin_1[localDW->j] = fabs(localDW->c_x[localDW->j]);
-  }
-
-  minimum(localDW->varargin_1, localDW->SA, localDW->iindx, localDW);
-   for (localDW->idx = 0; localDW->idx < 4; localDW->idx++) {
-     for (localDW->j = 0; localDW->j < 251; localDW->j++) {
-       localDW->c_x[localDW->j + 251 * localDW->idx] = power_loss_grid[((int32_T)
-         (localDW->RPM_index[localDW->idx] + 1.0) - 1) * 251 + localDW->j] -
-         power_loss_limit[localDW->idx];
-     }
-   }
-
-  for (localDW->j = 0; localDW->j < 1004; localDW->j++) {
-    localDW->varargin_1[localDW->j] = fabs(localDW->c_x[localDW->j]);
-  }
-
-  minimum(localDW->varargin_1, localDW->SA, localDW->b_iindx, localDW);
-  p = (localDW->relative_PL <= 0.0);
-  localDW->V_rl_idx_0_tmp_tmp = torque_sweep[localDW->iindx[0] - 1];
-  localDW->V_flt_idx_1 = (localDW->RPM_index[0] - 1.0) * rpm_index_calibration;
-  localDW->FZ[0] = (localDW->V_rl_idx_0_tmp_tmp - torque_sweep[localDW->b_iindx
-                    [0] - 1]) * (localDW->kx_idx_1 - localDW->V_flt_idx_1);
-  localDW->C[0] = localDW->V_rl_idx_0_tmp_tmp;
-  localDW->RPM_index[0] = localDW->RPM_index[0] * rpm_index_calibration -
-    localDW->V_flt_idx_1;
-  localDW->V_rl_idx_0_tmp_tmp = torque_sweep[localDW->iindx[1] - 1];
-  localDW->V_flt_idx_1 = (localDW->RPM_index[1] - 1.0) * rpm_index_calibration;
-  localDW->FZ[1] = (localDW->V_rl_idx_0_tmp_tmp - torque_sweep[localDW->b_iindx
-                    [1] - 1]) * (localDW->V_fl_tmp - localDW->V_flt_idx_1);
-  localDW->C[1] = localDW->V_rl_idx_0_tmp_tmp;
-  localDW->RPM_index[1] = localDW->RPM_index[1] * rpm_index_calibration -
-    localDW->V_flt_idx_1;
-  localDW->V_rl_idx_0_tmp_tmp = torque_sweep[localDW->iindx[2] - 1];
-  localDW->V_flt_idx_1 = (localDW->RPM_index[2] - 1.0) * rpm_index_calibration;
-  localDW->FZ[2] = (localDW->V_rl_idx_0_tmp_tmp - torque_sweep[localDW->b_iindx
-                    [2] - 1]) * (localDW->maxval_idx_3 - localDW->V_flt_idx_1);
-  localDW->C[2] = localDW->V_rl_idx_0_tmp_tmp;
-  localDW->RPM_index[2] = localDW->RPM_index[2] * rpm_index_calibration -
-    localDW->V_flt_idx_1;
-  localDW->V_rl_idx_0_tmp_tmp = torque_sweep[localDW->iindx[3] - 1];
-  localDW->V_flt_idx_1 = (localDW->RPM_index[3] - 1.0) * rpm_index_calibration;
-  localDW->RPM_index[3] = localDW->RPM_index[3] * rpm_index_calibration -
-    localDW->V_flt_idx_1;
-  xgeqp3(localDW->RPM_index, &localDW->beq, &localDW->j, localDW);
-  localDW->idx = 0;
-  localDW->a_bar_idx_1 = fabs(localDW->RPM_index[0]);
-  if (!(localDW->a_bar_idx_1 <= 8.8817841970012523E-15 * localDW->a_bar_idx_1))
-  {
-    localDW->idx = 1;
-  }
-
-  localDW->a_bar_idx_1 = 0.0;
-  if (localDW->beq != 0.0) {
-    localDW->V_flt_idx_1 = ((localDW->V_rl_idx_0_tmp_tmp - torque_sweep
-      [localDW->b_iindx[3] - 1]) * (localDW->a_bar_idx_1_tmp -
-      localDW->V_flt_idx_1) * localDW->RPM_index[3] + ((localDW->RPM_index[1] *
-      localDW->FZ[1] + localDW->FZ[0]) + localDW->RPM_index[2] * localDW->FZ[2]))
-      * localDW->beq;
-    if (localDW->V_flt_idx_1 != 0.0) {
-      localDW->FZ[0] -= localDW->V_flt_idx_1;
-    }
-  }
-
-  localDW->j = 0;
-  while (localDW->j <= localDW->idx - 1) {
-    localDW->a_bar_idx_1 = localDW->FZ[0];
-    localDW->j = 1;
-  }
-
-  while (localDW->idx > 0) {
-    localDW->a_bar_idx_1 /= localDW->RPM_index[0];
-    localDW->idx = 0;
-  }
-
-  interp1(&max_rpm[0], &max_torque[0], localDW->omega_fake, localDW->FZ, localDW);
-  localDW->x_m[0] = localDW->FZ[0];
-  localDW->x_m[1] = (real_T)!((real_T)(rtu_TVS_Information_d[0] < max_motor_temp)
-    * motor_enable[0] * (real_T)p != 0.0) * (localDW->C[0] -
-    localDW->a_bar_idx_1);
-  localDW->x_m[2] = localDW->FZ[1];
-  localDW->x_m[3] = (real_T)!((real_T)(rtu_TVS_Information_d[1] < max_motor_temp)
-    * motor_enable[1] * (real_T)p != 0.0) * (localDW->C[1] -
-    localDW->a_bar_idx_1);
-  localDW->x_m[4] = localDW->FZ[2];
-  localDW->x_m[5] = (real_T)!((real_T)(rtu_TVS_Information_d[2] < max_motor_temp)
-    * motor_enable[2] * (real_T)p != 0.0) * (localDW->C[2] -
-    localDW->a_bar_idx_1);
-  localDW->x_m[6] = localDW->FZ[3];
-  localDW->x_m[7] = (real_T)!((real_T)(rtu_TVS_Information_d[3] < max_motor_temp)
-    * motor_enable[3] * (real_T)p != 0.0) * (localDW->V_rl_idx_0_tmp_tmp -
-    localDW->a_bar_idx_1);
-  for (localDW->j = 0; localDW->j < 4; localDW->j++) {
-    localDW->idx = localDW->j << 1;
-    localDW->beq = localDW->x_m[localDW->idx];
-    localDW->V_rl_idx_0_tmp_tmp = localDW->x_m[localDW->idx + 1];
-    if (rtIsNaN(localDW->V_rl_idx_0_tmp_tmp)) {
-      p = false;
-    } else if (rtIsNaN(localDW->beq)) {
-      p = true;
-    } else {
-      p = (localDW->beq > localDW->V_rl_idx_0_tmp_tmp);
-    }
-
-    if (p) {
-      localDW->beq = localDW->V_rl_idx_0_tmp_tmp;
-    }
-
-    if ((localDW->beq <= 0.0) || rtIsNaN(localDW->beq)) {
-      localDW->beq = 0.0;
-    }
-
-    localDW->e_x[3 * localDW->j] = localDW->SL[localDW->j];
-    localDW->idx = 3 * localDW->j + 1;
-    localDW->e_x[localDW->idx] = localDW->beq;
-    e_x_tmp = 3 * localDW->j + 2;
-    localDW->e_x[e_x_tmp] = abs_max_torque[localDW->j];
-    localDW->V_flt_idx_1 = localDW->e_x[3 * localDW->j];
-    localDW->V_rl_idx_0_tmp_tmp = localDW->e_x[localDW->idx];
-    if (rtIsNaN(localDW->V_rl_idx_0_tmp_tmp)) {
-      p = false;
-    } else if (rtIsNaN(localDW->V_flt_idx_1)) {
-      p = true;
-    } else {
-      p = (localDW->V_flt_idx_1 > localDW->V_rl_idx_0_tmp_tmp);
-    }
-
-    if (p) {
-      localDW->V_flt_idx_1 = localDW->V_rl_idx_0_tmp_tmp;
-    }
-
-    localDW->V_rl_idx_0_tmp_tmp = localDW->e_x[e_x_tmp];
-    if (rtIsNaN(localDW->V_rl_idx_0_tmp_tmp)) {
-      p = false;
-    } else if (rtIsNaN(localDW->V_flt_idx_1)) {
-      p = true;
-    } else {
-      p = (localDW->V_flt_idx_1 > localDW->V_rl_idx_0_tmp_tmp);
-    }
-
-    if (p) {
-      localDW->V_flt_idx_1 = localDW->V_rl_idx_0_tmp_tmp;
-    }
-
-    if ((dTx >= localDW->V_flt_idx_1) || rtIsNaN(localDW->V_flt_idx_1)) {
-      localDW->V_flt_idx_1 = dTx;
-    }
-
-    localDW->ub[localDW->j] = (real32_T)localDW->V_flt_idx_1;
-    localDW->e_x[3 * localDW->j] = localDW->Fx_max[localDW->j];
-    localDW->e_x[localDW->idx] = -localDW->beq;
-    localDW->e_x[e_x_tmp] = -abs_max_torque[localDW->j];
-    localDW->V_flt_idx_1 = localDW->e_x[3 * localDW->j];
-    if (rtIsNaN(localDW->e_x[localDW->idx])) {
-      p = false;
-    } else if (rtIsNaN(localDW->V_flt_idx_1)) {
-      p = true;
-    } else {
-      p = (localDW->V_flt_idx_1 < localDW->e_x[localDW->idx]);
-    }
-
-    if (p) {
-      localDW->V_flt_idx_1 = localDW->e_x[localDW->idx];
-    }
-
-    if (rtIsNaN(localDW->e_x[e_x_tmp])) {
-      p = false;
-    } else if (rtIsNaN(localDW->V_flt_idx_1)) {
-      p = true;
-    } else {
-      p = (localDW->V_flt_idx_1 < localDW->e_x[e_x_tmp]);
-    }
-
-    if (p) {
-      localDW->V_flt_idx_1 = localDW->e_x[e_x_tmp];
-    }
-
-    if ((-dTx <= localDW->V_flt_idx_1) || rtIsNaN(localDW->V_flt_idx_1)) {
-      localDW->beq = -dTx;
-    } else {
-      localDW->beq = localDW->V_flt_idx_1;
-    }
-
-    localDW->lb[localDW->j] = (real32_T)localDW->beq;
-  }
-
-  if (rtu_TVS_Information[0] < min_velocity_regen) {
-    localDW->lb[0] = (real32_T)-dTx;
-    localDW->lb[1] = (real32_T)-dTx;
-    localDW->lb[2] = (real32_T)-dTx;
-    localDW->lb[3] = (real32_T)-dTx;
-  }
-
-  localDW->rtb_A_idx_0 = (real32_T)(localDW->kx_idx_1 / motor_efficiency[0]);
-  rtb_Aeq_idx_0 = (real32_T)localDW->V_rr_idx_0 * T2F[0] * (real32_T)gr[0] /
-    (real32_T)J_z;
-  localDW->rtb_A_idx_1 = (real32_T)(localDW->V_fl_tmp / motor_efficiency[1]);
-  rtb_Aeq_idx_1 = (real32_T)localDW->V_rl_idx_0_tmp * T2F[1] * (real32_T)gr[1] /
-    (real32_T)J_z;
-  rtb_A_idx_2 = (real32_T)(localDW->maxval_idx_3 / motor_efficiency[2]);
-  rtb_Aeq_idx_2 = (real32_T)s[1] * T2F[2] * (real32_T)gr[2] / (real32_T)J_z;
-  rtb_A_idx_3 = (real32_T)(localDW->a_bar_idx_1_tmp / motor_efficiency[3]);
-  rtb_Aeq_idx_3 = (real32_T)-s[1] * T2F[3] * (real32_T)gr[3] / (real32_T)J_z;
-  M_max_idx_0 = (localDW->ub[0] * T2F[0] * (real32_T)gr[0] * (real32_T)
-                 localDW->V_rr_idx_0 + localDW->ub[2] * T2F[2] * (real32_T)gr[2]
-                 * (real32_T)s[1]) / (real32_T)J_z;
-  M_max_idx_1 = (localDW->ub[1] * T2F[1] * (real32_T)gr[1] * (real32_T)
-                 localDW->V_rl_idx_0_tmp + localDW->ub[3] * T2F[3] * (real32_T)
-                 gr[3] * (real32_T)-s[1]) / (real32_T)J_z;
-  if (localDW->kx_idx_0 >= M_max_idx_0) {
-    localDW->kx_idx_0 = M_max_idx_0;
-
-    /* Update for UnitDelay: '<S3>/Unit Delay' */
-    localDW->UnitDelay_DSTATE = 0.0;
-  } else if (localDW->kx_idx_0 <= M_max_idx_1) {
-    localDW->kx_idx_0 = M_max_idx_1;
-
-    /* Update for UnitDelay: '<S3>/Unit Delay' */
-    localDW->UnitDelay_DSTATE = 0.0;
-  } else {
-    /* Update for UnitDelay: '<S3>/Unit Delay' */
-    localDW->UnitDelay_DSTATE = 1.0;
-  }
-
-  localDW->beq = (real_T)((rtu_TVS_Information[0] > rtP.deadband_velocity) &&
-    ((localDW->kx_idx_2 != 0.0) && (rtu_TVS_Information_o > 0.0))) *
-    localDW->kx_idx_0 + 0.01;
-  if (rtIsNaN(localDW->UnitDelay3_DSTATE)) {
-    localDW->V_rl_idx_0_tmp_tmp = localDW->UnitDelay3_DSTATE;
-  } else if (localDW->UnitDelay3_DSTATE < 0.0) {
-    localDW->V_rl_idx_0_tmp_tmp = -1.0;
-  } else {
-    localDW->V_rl_idx_0_tmp_tmp = (localDW->UnitDelay3_DSTATE > 0.0);
-  }
-
-  if (rtIsNaN(localDW->relative_PL)) {
-    localDW->V_rr_idx_0 = localDW->relative_PL;
-  } else if (localDW->relative_PL < 0.0) {
-    localDW->V_rr_idx_0 = -1.0;
-  } else {
-    localDW->V_rr_idx_0 = (localDW->relative_PL > 0.0);
-  }
-
-  if (localDW->V_rl_idx_0_tmp_tmp != localDW->V_rr_idx_0) {
-    /* Update for UnitDelay: '<S3>/Unit Delay4' */
-    localDW->UnitDelay4_DSTATE = true;
-  } else if ((localDW->UnitDelay2_DSTATE[0] < rtP.deadband_velocity) &&
-             (rtu_TVS_Information[0] >= rtP.deadband_velocity)) {
-    /* Update for UnitDelay: '<S3>/Unit Delay4' */
-    localDW->UnitDelay4_DSTATE = true;
-  } else {
-    if (!rtIsNaN(localDW->kx_idx_0)) {
-      if (localDW->kx_idx_0 < 0.0) {
-        localDW->kx_idx_0 = -1.0;
-      } else {
-        localDW->kx_idx_0 = (localDW->kx_idx_0 > 0.0);
-      }
-    }
-
-    if (!rtIsNaN(localDW->kx_idx_2)) {
-      if (localDW->kx_idx_2 < 0.0) {
-        localDW->kx_idx_2 = -1.0;
-      } else {
-        localDW->kx_idx_2 = (localDW->kx_idx_2 > 0.0);
-      }
-    }
-
-    /* Update for UnitDelay: '<S3>/Unit Delay4' */
-    localDW->UnitDelay4_DSTATE = (localDW->kx_idx_0 != localDW->kx_idx_2);
-  }
-
-  /* MATLAB Function: '<S2>/Optimization ' incorporates:
-   *  MATLAB Function: '<S3>/Constraint Generation'
+  /* Outputs for Atomic SubSystem: '<S2>/Torque Vectoring Micro Controller' */
+  /* Sum: '<S8>/Sum' incorporates:
+   *  Gain: '<S8>/Gain'
+   *  Gain: '<S8>/Gain1'
+   *  UnitDelay: '<S8>/Unit Delay5'
    */
-  localDW->kx_idx_2 = 3.3121686421112381E-170;
-  if (localDW->d_k > 3.3121686421112381E-170) {
-    localDW->V_flt_idx_1 = 1.0;
-    localDW->kx_idx_2 = localDW->d_k;
-  } else {
-    localDW->a_bar_idx_1 = localDW->d_k / 3.3121686421112381E-170;
-    localDW->V_flt_idx_1 = localDW->a_bar_idx_1 * localDW->a_bar_idx_1;
+  localDW->sigIdx = (int16_T)((7 * localDW->TorqueVectoringMicroCont_jz[2]) >> 3)
+    + (int16_T)((7 * localDW->TorqueVectoringMicroCont_jz[3]) >> 3);
+  rtb_TorqueVectoringMicroContr_2 = (int16_T)localDW->sigIdx;
+
+  /* Abs: '<S8>/Abs' incorporates:
+   *  Sum: '<S8>/Sum'
+   */
+  if ((int16_T)localDW->sigIdx < 0) {
+    rtb_TorqueVectoringMicroContr_2 = (int16_T)-(int16_T)localDW->sigIdx;
   }
 
-  if (localDW->mu_x > localDW->kx_idx_2) {
-    localDW->a_bar_idx_1 = localDW->kx_idx_2 / localDW->mu_x;
-    localDW->V_flt_idx_1 = localDW->V_flt_idx_1 * localDW->a_bar_idx_1 *
-      localDW->a_bar_idx_1 + 1.0;
-    localDW->kx_idx_2 = localDW->mu_x;
-  } else {
-    localDW->a_bar_idx_1 = localDW->mu_x / localDW->kx_idx_2;
-    localDW->V_flt_idx_1 += localDW->a_bar_idx_1 * localDW->a_bar_idx_1;
-  }
+  /* End of Abs: '<S8>/Abs' */
 
-  localDW->V_flt_idx_1 = localDW->kx_idx_2 * sqrt(localDW->V_flt_idx_1);
-  M_max_idx_0 = localDW->lb[0] + 25.0F;
-  localDW->lb[0] += 25.0F;
-  M_max_idx_1 = localDW->lb[1] + 25.0F;
-  localDW->lb[1] += 25.0F;
-  rtb_lb = localDW->lb[2] + 25.0F;
-  localDW->lb[2] += 25.0F;
- 
-  if (((!(localDW->V_flt_idx_1 < min_velocity_regen)) ||
-       (!(rtu_TVS_Information_o < 0.0))) && (rtu_TVS_Information_o > 0.0)) {
-    localDW->Tx21 = 0.0F;
-    localDW->Tx22 = 0.0F;
-    localDW->Tx23 = 0.0F;
-    localDW->Tx24 = 0.0F;
-    localDW->j = bigM_func(T2F[0] * (real32_T)gr[0], T2F[1] * (real32_T)gr[1],
-      T2F[2] * (real32_T)gr[2], T2F[3] * (real32_T)gr[3], (((25.0F *
-      localDW->rtb_A_idx_0 + 25.0F * localDW->rtb_A_idx_1) + 25.0F * rtb_A_idx_2)
-      + 25.0F * rtb_A_idx_3) + (real32_T)(rtu_TVS_Information_o *
-      localDW->relative_PL), localDW->rtb_A_idx_0, localDW->rtb_A_idx_1,
-      rtb_A_idx_2, rtb_A_idx_3, (((25.0F * rtb_Aeq_idx_0 + 25.0F * rtb_Aeq_idx_1)
-      + 25.0F * rtb_Aeq_idx_2) + 25.0F * rtb_Aeq_idx_3) + (real32_T)localDW->beq,
-      rtb_Aeq_idx_0, rtb_Aeq_idx_1, rtb_Aeq_idx_2, rtb_Aeq_idx_3, M_max_idx_0,
-      M_max_idx_1, rtb_lb, localDW->lb[3] + 25.0F, localDW->ub[0] + 25.0F,
-      localDW->ub[1] + 25.0F, localDW->ub[2] + 25.0F, localDW->ub[3] + 25.0F,
-      &localDW->Tx21, &localDW->Tx22, &localDW->Tx23, &localDW->Tx24, 1.0, 1.0,
-      1.0, 1.0, yaw_error_limit);
-    if ((localDW->j == 0) || (localDW->j == 1)) {
-      localDW->kx_idx_1 = rtu_TVS_Information_o * 25.0 + 25.0;
-      localDW->omega_fake[0] = localDW->kx_idx_1;
-      localDW->omega_fake[1] = localDW->kx_idx_1;
-      localDW->omega_fake[2] = localDW->kx_idx_1;
-      localDW->omega_fake[3] = localDW->kx_idx_1;
+  /* Switch: '<S8>/Switch' incorporates:
+   *  DataTypeConversion: '<S2>/Torque Vectoring Micro Controller_boundary_DTC1'
+   */
+  if (rtb_TorqueVectoringMicroCont__0 > 0) {
+    /* Saturate: '<S8>/Saturation1' incorporates:
+     *  Abs: '<S8>/Abs'
+     */
+    if (rtb_TorqueVectoringMicroContr_2 >= 50) {
+      /* MinMax: '<S8>/Min3' */
+      localDW->sigIdx = rtb_TorqueVectoringMicroContr_2 >> 1;
     } else {
-      localDW->omega_fake[0] = localDW->Tx21;
-      localDW->omega_fake[1] = localDW->Tx22;
-      localDW->omega_fake[2] = localDW->Tx23;
-      localDW->omega_fake[3] = localDW->Tx24;
+      /* MinMax: '<S8>/Min3' */
+      localDW->sigIdx = 25;
     }
+
+    /* End of Saturate: '<S8>/Saturation1' */
+
+    /* MinMax: '<S8>/Min3' incorporates:
+     *  DataTypeConversion: '<S2>/Torque Vectoring Micro Controller_boundary_DTC11'
+     */
+    if (localDW->sigIdx <= rtb_TorqueVectoringMicroContr_0) {
+      rtb_TorqueVectoringMicroContr_2 = (int16_T)localDW->sigIdx;
+    } else {
+      rtb_TorqueVectoringMicroContr_2 = rtb_TorqueVectoringMicroContr_0;
+    }
+
+    /* Saturate: '<S8>/Discharge Limits' incorporates:
+     *  MinMax: '<S8>/Min3'
+     *  Switch: '<S8>/Switch'
+     */
+    if ((rtb_TorqueVectoringMicroContr_2 << 1) <= 0) {
+      rtb_Sqrt = 0U;
+    } else {
+      rtb_Sqrt = (uint16_T)((uint16_T)rtb_TorqueVectoringMicroContr_2 << 1);
+    }
+
+    /* End of Saturate: '<S8>/Discharge Limits' */
   } else {
-    localDW->omega_fake[0] = 25.0;
-    localDW->omega_fake[1] = 25.0;
-    localDW->omega_fake[2] = 25.0;
-    localDW->omega_fake[3] = 25.0;
+    /* Saturate: '<S8>/Charge Limits' incorporates:
+     *  Switch: '<S8>/Switch'
+     */
+    rtb_Sqrt = 0U;
   }
 
-  localDW->d_k = 2.0 * dTx;
-  if ((localDW->lb[0] >= (real32_T)localDW->omega_fake[0]) || rtIsNaNF((real32_T)
-       localDW->omega_fake[0])) {
-    localDW->rtb_A_idx_0 = localDW->lb[0];
+  /* End of Switch: '<S8>/Switch' */
+
+  /* Product: '<S8>/Product' incorporates:
+   *  DataTypeConversion: '<S2>/Torque Vectoring Micro Controller_boundary_DTC1'
+   *  Switch: '<S8>/Switch'
+   */
+  rtb_TorqueVectoringMicroCont__0 = (int16_T)((rtb_Sqrt *
+    rtb_TorqueVectoringMicroCont__0) >> 15);
+
+  /* Update for UnitDelay: '<S8>/Unit Delay' incorporates:
+   *  RelationalOperator: '<S8>/Equal'
+   *  Sum: '<S9>/Sum7'
+   *  Switch: '<S16>/Switch2'
+   */
+  localDW->UnitDelay_DSTATE = (rtb_Switch_p_idx_2 == rtb_P);
+
+  /* Signum: '<S8>/Sign' incorporates:
+   *  Product: '<S8>/Product'
+   */
+  if (rtb_TorqueVectoringMicroCont__0 < 0) {
+    rtb_TorqueVectoringMicroContr_0 = -1;
   } else {
-    localDW->rtb_A_idx_0 = (real32_T)localDW->omega_fake[0];
+    rtb_TorqueVectoringMicroContr_0 = (int16_T)(rtb_TorqueVectoringMicroCont__0 >
+      0);
   }
 
-  rty_Tx[0] = fabs(localDW->omega_fake[0]);
-  if ((localDW->ub[0] + 25.0F <= localDW->rtb_A_idx_0) || rtIsNaNF
-      (localDW->rtb_A_idx_0)) {
-    localDW->rtb_A_idx_0 = localDW->ub[0] + 25.0F;
-  }
+  /* End of Signum: '<S8>/Sign' */
 
-  rty_Tx[0] = (localDW->rtb_A_idx_0 - 25.0F) * (real_T)(rty_Tx[0] > localDW->d_k);
-  if ((localDW->lb[1] >= (real32_T)localDW->omega_fake[1]) || rtIsNaNF((real32_T)
-       localDW->omega_fake[1])) {
-    localDW->rtb_A_idx_0 = localDW->lb[1];
+  /* Signum: '<S8>/Sign1' incorporates:
+   *  UnitDelay: '<S8>/Unit Delay5'
+   */
+  if (localDW->UnitDelay5_DSTATE < 0) {
+    rtb_P = -1;
   } else {
-    localDW->rtb_A_idx_0 = (real32_T)localDW->omega_fake[1];
+    rtb_P = (int16_T)(localDW->UnitDelay5_DSTATE > 0);
   }
 
-  rty_Tx[1] = fabs(localDW->omega_fake[1]);
-  if ((localDW->ub[1] + 25.0F <= localDW->rtb_A_idx_0) || rtIsNaNF
-      (localDW->rtb_A_idx_0)) {
-    localDW->rtb_A_idx_0 = localDW->ub[1] + 25.0F;
-  }
+  /* End of Signum: '<S8>/Sign1' */
 
-  rty_Tx[1] = (localDW->rtb_A_idx_0 - 25.0F) * (real_T)(rty_Tx[1] > localDW->d_k);
-  if ((localDW->lb[2] >= (real32_T)localDW->omega_fake[2]) || rtIsNaNF((real32_T)
-       localDW->omega_fake[2])) {
-    localDW->rtb_A_idx_0 = localDW->lb[2];
-  } else {
-    localDW->rtb_A_idx_0 = (real32_T)localDW->omega_fake[2];
-  }
-
-  rty_Tx[2] = fabs(localDW->omega_fake[2]);
-  if ((localDW->ub[2] + 25.0F <= localDW->rtb_A_idx_0) || rtIsNaNF
-      (localDW->rtb_A_idx_0)) {
-    localDW->rtb_A_idx_0 = localDW->ub[2] + 25.0F;
-  }
-
-  rty_Tx[2] = (localDW->rtb_A_idx_0 - 25.0F) * (real_T)(rty_Tx[2] > localDW->d_k);
-  if ((localDW->lb[3] + 25.0F >= (real32_T)localDW->omega_fake[3]) || rtIsNaNF
-      ((real32_T)localDW->omega_fake[3])) {
-    localDW->rtb_A_idx_0 = localDW->lb[3] + 25.0F;
-  } else {
-    localDW->rtb_A_idx_0 = (real32_T)localDW->omega_fake[3];
-  }
-
-  rty_Tx[3] = fabs(localDW->omega_fake[3]);
-  if ((localDW->ub[3] + 25.0F <= localDW->rtb_A_idx_0) || rtIsNaNF
-      (localDW->rtb_A_idx_0)) {
-    localDW->rtb_A_idx_0 = localDW->ub[3] + 25.0F;
-  }
-
-  rty_Tx[3] = (localDW->rtb_A_idx_0 - 25.0F) * (real_T)(rty_Tx[3] > localDW->d_k);
-  if (localDW->V_flt_idx_1 > 4.0) {
-    rty_Tx[0] = rtu_TVS_Information_o * 0.0;
-    rty_Tx[1] = rtu_TVS_Information_o * 0.0;
-    rty_Tx[2] = rtu_TVS_Information_o * 25.0;
-    rty_Tx[3] = rtu_TVS_Information_o * 25.0;
-  }
-
-  /* RateLimiter: '<S2>/Rate Limiter' */
-  localDW->V_rl_idx_0_tmp_tmp = rty_Tx[0] - localDW->PrevY[0];
-  if (localDW->V_rl_idx_0_tmp_tmp > 1.875) {
-    rty_Tx[0] = localDW->PrevY[0] + 1.875;
-  } else if (localDW->V_rl_idx_0_tmp_tmp < -4.5) {
-    rty_Tx[0] = localDW->PrevY[0] + -4.5;
-  }
-
-  localDW->PrevY[0] = rty_Tx[0];
-  localDW->V_rl_idx_0_tmp_tmp = rty_Tx[1] - localDW->PrevY[1];
-  if (localDW->V_rl_idx_0_tmp_tmp > 1.875) {
-    rty_Tx[1] = localDW->PrevY[1] + 1.875;
-  } else if (localDW->V_rl_idx_0_tmp_tmp < -4.5) {
-    rty_Tx[1] = localDW->PrevY[1] + -4.5;
-  }
-
-  localDW->PrevY[1] = rty_Tx[1];
-  localDW->V_rl_idx_0_tmp_tmp = rty_Tx[2] - localDW->PrevY[2];
-  if (localDW->V_rl_idx_0_tmp_tmp > 1.875) {
-    rty_Tx[2] = localDW->PrevY[2] + 1.875;
-  } else if (localDW->V_rl_idx_0_tmp_tmp < -4.5) {
-    rty_Tx[2] = localDW->PrevY[2] + -4.5;
-  }
-
-  localDW->PrevY[2] = rty_Tx[2];
-  localDW->V_rl_idx_0_tmp_tmp = rty_Tx[3] - localDW->PrevY[3];
-  if (localDW->V_rl_idx_0_tmp_tmp > 1.875) {
-    rty_Tx[3] = localDW->PrevY[3] + 1.875;
-  } else if (localDW->V_rl_idx_0_tmp_tmp < -4.5) {
-    rty_Tx[3] = localDW->PrevY[3] + -4.5;
-  }
-
-  localDW->PrevY[3] = rty_Tx[3];
-
-  /* End of RateLimiter: '<S2>/Rate Limiter' */
-
-  /* Update for UnitDelay: '<S3>/Unit Delay2' */
-  localDW->UnitDelay2_DSTATE[0] = rtu_TVS_Information[0];
-  localDW->UnitDelay2_DSTATE[1] = rtu_TVS_Information[1];
+  /* Update for UnitDelay: '<S8>/Unit Delay4' incorporates:
+   *  Logic: '<S8>/NAND'
+   *  RelationalOperator: '<S8>/Equal1'
+   */
+  localDW->UnitDelay4_DSTATE = ((!rtb_GreaterThan) ||
+    (rtb_TorqueVectoringMicroContr_0 != rtb_P));
 
   /* Update for DiscreteIntegrator: '<S9>/Discrete-Time Integrator' */
-  localDW->DiscreteTimeIntegrator_DSTATE = localDW->rack_displacement;
+  localDW->DiscreteTimeIntegrator_DSTATE = rtb_TmpSignalConversionAtDotP_0;
   localDW->DiscreteTimeIntegrator_PrevRese = (int8_T)rtb_UnitDelay4;
 
-  /* Update for UnitDelay: '<S3>/Unit Delay1' */
-  localDW->UnitDelay1_DSTATE = localDW->beq;
+  /* Update for UnitDelay: '<S8>/Unit Delay1' incorporates:
+   *  Switch: '<S16>/Switch2'
+   */
+  localDW->UnitDelay1_DSTATE = rtb_Switch_p_idx_2;
 
   /* Update for DiscreteIntegrator: '<S9>/Discrete-Time Integrator2' incorporates:
    *  DiscreteIntegrator: '<S9>/Discrete-Time Integrator'
    */
-  localDW->DiscreteTimeIntegrator2_DSTATE = localDW->SA_rl;
+  localDW->DiscreteTimeIntegrator2_DSTATE = DiscreteTimeIntegrator2;
   localDW->DiscreteTimeIntegrator2_PrevRes = (int8_T)rtb_UnitDelay4;
 
-  /* Update for UnitDelay: '<S13>/Unit Delay1' incorporates:
-   *  Gain: '<S13>/Gain1'
-   *  Product: '<S13>/Product5'
-   *  Sum: '<S13>/Sum1'
-   *  Sum: '<S13>/Sum2'
-   *  UnitDelay: '<S13>/Unit Delay2'
+  /* Update for UnitDelay: '<S8>/Unit Delay5' incorporates:
+   *  Product: '<S8>/Product'
    */
-  localDW->UnitDelay1_DSTATE_e = (localDW->left_steering_angle *
-    0.62711646319811842 + localDW->SA_fr) * 2.0 + localDW->UnitDelay2_DSTATE_j;
+  localDW->UnitDelay5_DSTATE = rtb_TorqueVectoringMicroCont__0;
 
-  /* Update for UnitDelay: '<S14>/Unit Delay1' incorporates:
-   *  Gain: '<S14>/Gain1'
-   *  Product: '<S14>/Product5'
-   *  Sum: '<S14>/Sum1'
-   *  Sum: '<S14>/Sum2'
-   *  UnitDelay: '<S14>/Unit Delay2'
+  /* DataTypeConversion: '<S2>/Fixed Point Sub_boundary_DTC4' incorporates:
+   *  DotProduct: '<S8>/Dot Product1'
+   *  DotProduct: '<S8>/Dot Product2'
+   *  Gain: '<S8>/Gain6'
    */
-  localDW->UnitDelay1_DSTATE_h = (localDW->Sum_j * 0.49218530320406634 +
-    localDW->kx_idx_3) * 2.0 + localDW->UnitDelay2_DSTATE_e;
+  localDW->rtb_FixedPointSub_boundary_DT_m = (real_T)((12703 *
+    rtb_TorqueVectoringMicroContr_1) >> 11) * 6.103515625E-5;
+  localDW->rtb_FixedPointSub_boundary_DT_c = (real_T)((12703 * u) >> 11) *
+    6.103515625E-5;
 
-  /* Update for UnitDelay: '<S3>/Unit Delay3' incorporates:
-   *  MATLAB Function: '<S3>/Constraint Generation'
+  /* DataTypeConversion: '<S2>/Fixed Point Sub_boundary_DTC7' incorporates:
+   *  Gain: '<S8>/Gain1'
+   *  Gain: '<S8>/Gain5'
    */
-  localDW->UnitDelay3_DSTATE = localDW->relative_PL;
+  rty_Tx[0] = (real_T)((15565 * localDW->TorqueVectoringMicroCont_jz[0]) >> 15) *
+    0.125;
+  rty_Tx[1] = (real_T)((15565 * localDW->TorqueVectoringMicroCont_jz[1]) >> 15) *
+    0.125;
+  rty_Tx[2] = (real_T)((15565 * localDW->TorqueVectoringMicroCont_jz[2]) >> 15) *
+    0.125;
+  rty_Tx[3] = (real_T)((15565 * localDW->TorqueVectoringMicroCont_jz[3]) >> 15) *
+    0.125;
 
-  /* Update for UnitDelay: '<S14>/Unit Delay2' incorporates:
-   *  Product: '<S14>/Product2'
-   *  Sum: '<S14>/Sum3'
-   */
-  localDW->UnitDelay2_DSTATE_e = localDW->kx_idx_3 - localDW->Sum_j *
-    0.26539355371238654;
+  /* End of Outputs for SubSystem: '<S2>/Torque Vectoring Micro Controller' */
 
-  /* Update for UnitDelay: '<S13>/Unit Delay2' incorporates:
-   *  Product: '<S13>/Product2'
-   *  Sum: '<S13>/Sum3'
+  /* DotProduct: '<S5>/Dot Product' incorporates:
+   *  Constant: '<S5>/Constant1'
    */
-  localDW->UnitDelay2_DSTATE_j = localDW->SA_fr - localDW->left_steering_angle *
-    0.61229749200535255;
+  localDW->CCaller_o2 = rty_Tx[0];
+  localDW->Add1 = rty_Tx[1];
+  localDW->CCaller_o3 = rty_Tx[2];
+  localDW->CCaller_o4 = rty_Tx[3];
+  localDW->CCaller_o2 = ((25.0 * localDW->CCaller_o2 + 25.0 * localDW->Add1) +
+    25.0 * localDW->CCaller_o3) + 25.0 * localDW->CCaller_o4;
+
+  /* Sum: '<S5>/Add1' incorporates:
+   *  DataTypeConversion: '<S2>/Fixed Point Sub_boundary_DTC5'
+   *  Product: '<S8>/Product'
+   */
+  localDW->Add1 = (real_T)rtb_TorqueVectoringMicroCont__0 * 4.0 +
+    localDW->CCaller_o2;
+
+  /* CCaller: '<S5>/C Caller' incorporates:
+   *  Bias: '<S5>/Add Constant1'
+   *  Constant: '<S5>/Constant'
+   *  Constant: '<S5>/Constant2'
+   *  Constant: '<S5>/Constant4'
+   *  DataTypeConversion: '<S2>/Fixed Point Sub_boundary_DTC1'
+   *  DataTypeConversion: '<S2>/Fixed Point Sub_boundary_DTC3'
+   *  DataTypeConversion: '<S2>/Fixed Point Sub_boundary_DTC4'
+   *  DotProduct: '<S5>/Dot Product1'
+   *  Saturate: '<S8>/Max Torque Limiter'
+   *  Sum: '<S5>/Add'
+   *  Switch: '<S16>/Switch2'
+   */
+  localDW->CCaller_o2 = 0.0;
+  localDW->CCaller_o3 = 0.0;
+  localDW->CCaller_o4 = 0.0;
+  localDW->CCaller_o5 = 0.0;
+
+  /* Outputs for Atomic SubSystem: '<S2>/Torque Vectoring Micro Controller' */
+  *rty_bigM_flag = bigM_func(localC->FixedPointSub_boundary_DTC6[0],
+    localC->FixedPointSub_boundary_DTC6[1], localC->FixedPointSub_boundary_DTC6
+    [2], localC->FixedPointSub_boundary_DTC6[3], localDW->Add1, rty_Tx[0],
+    rty_Tx[1], rty_Tx[2], rty_Tx[3], (((25.0 *
+    localDW->rtb_FixedPointSub_boundary_DT_m + 25.0 *
+    localDW->rtb_FixedPointSub_boundary_DT_c) + 6.01806640625) +
+    -6.01959228515625) + (real_T)rtb_Switch_p_idx_2 * 8.0,
+    localDW->rtb_FixedPointSub_boundary_DT_m,
+    localDW->rtb_FixedPointSub_boundary_DT_c, 0.24072265625, -0.24078369140625,
+    24.9892578125, 24.9892578125, 24.9892578125, 24.9892578125, 25.009765625,
+    25.009765625, (real_T)rtb_TorqueVectoringMicroContr_n * 0.0009765625 + 25.0,
+    (real_T)rtb_Sum * 0.0009765625 + 25.0, &localDW->CCaller_o2,
+    &localDW->CCaller_o3, &localDW->CCaller_o4, &localDW->CCaller_o5, 0.2);
+
+  /* End of Outputs for SubSystem: '<S2>/Torque Vectoring Micro Controller' */
+
+  /* Switch: '<S6>/Switch' incorporates:
+   *  Bias: '<S6>/Add Constant3'
+   */
+  if (*rty_bigM_flag > 2) {
+    rty_Tx[0] = localDW->CCaller_o2;
+    rty_Tx[1] = localDW->CCaller_o3;
+    rty_Tx[2] = localDW->CCaller_o4;
+    rty_Tx[3] = localDW->CCaller_o5;
+  } else {
+    rty_Tx[0] = 25.0;
+    rty_Tx[1] = 25.0;
+
+    /* Bias: '<S6>/Add Constant3' incorporates:
+     *  DataTypeConversion: '<S2>/Fixed Point Sub_boundary_DTC'
+     *  DataTypeConversion: '<S2>/Torque Vectoring Micro Controller_boundary_DTC1'
+     *  Gain: '<S6>/Gain'
+     */
+    localDW->rtb_FixedPointSub_boundary_DT_m = (real_T)rtb_Switch_p_idx_1 *
+      6.103515625E-5 * 25.0 + 25.0;
+    rty_Tx[2] = localDW->rtb_FixedPointSub_boundary_DT_m;
+    rty_Tx[3] = localDW->rtb_FixedPointSub_boundary_DT_m;
+  }
+
+  /* End of Switch: '<S6>/Switch' */
+
+  /* Bias: '<S6>/Add Constant2' */
+  rty_Tx[0] += -24.99;
+  rty_Tx[1] += -24.99;
+  rty_Tx[2] += -24.99;
+  rty_Tx[3] += -24.99;
+
+  /* DeadZone: '<S6>/Dead Zone' */
+  if (rty_Tx[0] > 0.02) {
+    rty_Tx[0] -= 0.02;
+  } else if (rty_Tx[0] >= -0.02) {
+    rty_Tx[0] = 0.0;
+  } else {
+    rty_Tx[0] -= -0.02;
+  }
+
+  if (rty_Tx[1] > 0.02) {
+    rty_Tx[1] -= 0.02;
+  } else if (rty_Tx[1] >= -0.02) {
+    rty_Tx[1] = 0.0;
+  } else {
+    rty_Tx[1] -= -0.02;
+  }
+
+  if (rty_Tx[2] > 0.02) {
+    rty_Tx[2] -= 0.02;
+  } else if (rty_Tx[2] >= -0.02) {
+    rty_Tx[2] = 0.0;
+  } else {
+    rty_Tx[2] -= -0.02;
+  }
+
+  if (rty_Tx[3] > 0.02) {
+    rty_Tx[3] -= 0.02;
+  } else if (rty_Tx[3] >= -0.02) {
+    rty_Tx[3] = 0.0;
+  } else {
+    rty_Tx[3] -= -0.02;
+  }
+
+  /* End of DeadZone: '<S6>/Dead Zone' */
+
+  /* RateLimiter: '<S6>/Rate Limiter' */
+  localDW->Add1 = rty_Tx[0] - localDW->PrevY[0];
+  localDW->rtb_FixedPointSub_boundary_DT_m = rty_Tx[1] - localDW->PrevY[1];
+  localDW->rtb_FixedPointSub_boundary_DT_c = rty_Tx[2] - localDW->PrevY[2];
+  localDW->CCaller_o2 = rty_Tx[3] - localDW->PrevY[3];
+  if (localDW->Add1 > 1.875) {
+    localDW->Add1 = localDW->PrevY[0] + 1.875;
+  } else if (localDW->Add1 < -4.5) {
+    localDW->Add1 = localDW->PrevY[0] + -4.5;
+  } else {
+    localDW->Add1 = rty_Tx[0];
+  }
+
+  rty_Tx[0] = localDW->Add1;
+  if (localDW->rtb_FixedPointSub_boundary_DT_m > 1.875) {
+    localDW->Add1 = localDW->PrevY[1] + 1.875;
+  } else if (localDW->rtb_FixedPointSub_boundary_DT_m < -4.5) {
+    localDW->Add1 = localDW->PrevY[1] + -4.5;
+  } else {
+    localDW->Add1 = rty_Tx[1];
+  }
+
+  rty_Tx[1] = localDW->Add1;
+  if (localDW->rtb_FixedPointSub_boundary_DT_c > 1.875) {
+    localDW->Add1 = localDW->PrevY[2] + 1.875;
+  } else if (localDW->rtb_FixedPointSub_boundary_DT_c < -4.5) {
+    localDW->Add1 = localDW->PrevY[2] + -4.5;
+  } else {
+    localDW->Add1 = rty_Tx[2];
+  }
+
+  rty_Tx[2] = localDW->Add1;
+  if (localDW->CCaller_o2 > 1.875) {
+    localDW->Add1 = localDW->PrevY[3] + 1.875;
+  } else if (localDW->CCaller_o2 < -4.5) {
+    localDW->Add1 = localDW->PrevY[3] + -4.5;
+  } else {
+    localDW->Add1 = rty_Tx[3];
+  }
+
+  rty_Tx[3] = localDW->Add1;
+  localDW->PrevY[0] = rty_Tx[0];
+  localDW->PrevY[1] = rty_Tx[1];
+  localDW->PrevY[2] = rty_Tx[2];
+  localDW->PrevY[3] = rty_Tx[3];
+
+  /* End of RateLimiter: '<S6>/Rate Limiter' */
+  /* End of Outputs for SubSystem: '<S1>/Fixed Point Sub' */
 }
 
 /* Model step function */
-void TV_step(RT_MODEL *const rtM, ExtU *rtU, ExtY *rtY)
+void Electronics_step(RT_MODEL *const rtM, ExtU *rtU, ExtY *rtY)
 {
   DW *rtDW = rtM->dwork;
 
   /* Outputs for Atomic SubSystem: '<Root>/Electronics' */
 
-  /* Inport: '<Root>/vel' incorporates:
-   *  Inport: '<Root>/FZ'
+  /* Inport: '<Root>/brake_pressure' incorporates:
    *  Inport: '<Root>/ang_vel'
-   *  Inport: '<Root>/brake_pressure'
    *  Inport: '<Root>/driver_input'
    *  Inport: '<Root>/motor_temp'
    *  Inport: '<Root>/omega'
    *  Inport: '<Root>/power_limits'
    *  Inport: '<Root>/r_ref'
    *  Inport: '<Root>/steering_angle'
+   *  Inport: '<Root>/vel'
    *  Outport: '<Root>/Tx'
+   *  Outport: '<Root>/bigM_flag'
    */
-  Electronics_j(rtU->vel, rtU->ang_vel, rtU->driver_input, rtU->brake_pressure,
-                rtU->power_limits, rtU->motor_temp, rtU->FZ, rtU->r_ref,
-                rtU->steering_angle, rtU->omega, rtY->Tx, &rtDW->Electronics_jy);
+  Electronics_a(rtU->driver_input, rtU->steering_angle, rtU->ang_vel, rtU->vel,
+                rtU->power_limits, rtU->omega, rtU->motor_temp, rtU->r_ref,
+                &rtY->bigM_flag, rtY->Tx, &rtConstB.Electronics_am,
+                &rtDW->Electronics_am);
 
   /* End of Outputs for SubSystem: '<Root>/Electronics' */
 }
@@ -2126,13 +1563,8 @@ void Electronics_initialize(RT_MODEL *const rtM)
 {
   DW *rtDW = rtM->dwork;
 
-  /* Registration code */
-
-  /* initialize non-finites */
-  rt_InitInfAndNaN(sizeof(real_T));
-
   /* SystemInitialize for Atomic SubSystem: '<Root>/Electronics' */
-  Electronics_Init(&rtDW->Electronics_jy);
+  Electronics_Init(&rtDW->Electronics_am);
 
   /* End of SystemInitialize for SubSystem: '<Root>/Electronics' */
 }

@@ -7,9 +7,9 @@
  *
  * Code generated for Simulink model 'Electronics'.
  *
- * Model version                  : 1.78
+ * Model version                  : 1.117
  * Simulink Coder version         : 9.7 (R2022a) 13-Nov-2021
- * C/C++ source code generated on : Tue Oct 18 21:02:27 2022
+ * C/C++ source code generated on : Thu Oct 27 21:19:30 2022
  *
  * Target selection: ert.tlc
  * Embedded hardware selection: ARM Compatible->ARM Cortex-M
@@ -26,63 +26,69 @@
 
 /* Const memory section */
 /* Definition for custom storage class: Const */
-const real_T A1 = 39.8344;             /* Referenced by: '<S3>/Tire Model' */
-const real_T A2 = 813.078;             /* Referenced by: '<S3>/Tire Model' */
-const real_T B1 = 1.287E-6;            /* Referenced by: '<S3>/Tire Model' */
-const real_T B2 = -0.002325;           /* Referenced by: '<S3>/Tire Model' */
-const real_T B3 = 3.797;               /* Referenced by: '<S3>/Tire Model' */
-const real_T C1 = -2.541E-9;           /* Referenced by: '<S3>/Tire Model' */
-const real_T C2 = 5.279E-6;            /* Referenced by: '<S3>/Tire Model' */
-const real_T C3 = -0.003943;           /* Referenced by: '<S3>/Tire Model' */
-const real_T C4 = 3.634;               /* Referenced by: '<S3>/Tire Model' */
+const real_T A1 = 39.8344;             /* Referenced by: '<S4>/Tire Model' */
+const real_T A2 = 813.078;             /* Referenced by: '<S4>/Tire Model' */
+const real_T B1 = 1.287E-6;            /* Referenced by: '<S4>/Tire Model' */
+const real_T B2 = -0.002325;           /* Referenced by: '<S4>/Tire Model' */
+const real_T B3 = 3.797;               /* Referenced by: '<S4>/Tire Model' */
+const real_T C1 = -2.541E-9;           /* Referenced by: '<S4>/Tire Model' */
+const real_T C2 = 5.279E-6;            /* Referenced by: '<S4>/Tire Model' */
+const real_T C3 = -0.003943;           /* Referenced by: '<S4>/Tire Model' */
+const real_T C4 = 3.634;               /* Referenced by: '<S4>/Tire Model' */
 const real_T C_param[7] = { 0.0, 13757.41, 21278.97, 26666.02, 30253.47,
-  30313.18, 30313.18 } ;               /* Referenced by: '<S3>/Tire Model' */
+  30313.18, 30313.18 } ;               /* Referenced by: '<S4>/Tire Model' */
 
-const real_T FZ_C[7] = { 0.0, 204.13, 427.04, 668.1, 895.72, 1124.4, 1324.4 } ;/* Referenced by: '<S3>/Tire Model' */
+const real_T FZ_C[7] = { 0.0, 204.13, 427.04, 668.1, 895.72, 1124.4, 1324.4 } ;/* Referenced by: '<S4>/Tire Model' */
 
-const real_T J_z = 75.0;       /* Referenced by: '<S3>/Constraint Generation' */
+const real_T J_z = 75.0;       /* Referenced by: '<S4>/Constraint Generation' */
 const real_T RE = 0.2228169203;        /* Referenced by:
-                                        * '<S3>/Constraint Generation'
-                                        * '<S3>/Tire Model'
+                                        * '<S4>/Constraint Generation'
+                                        * '<S4>/Tire Model'
                                         */
-const real_T S1 = 7.0E-5;             /* Referenced by: '<S3>/Steering Model' */
-const real_T S2 = -0.0038;            /* Referenced by: '<S3>/Steering Model' */
-const real_T S3 = 0.6535;             /* Referenced by: '<S3>/Steering Model' */
-const real_T S4 = 0.1061;             /* Referenced by: '<S3>/Steering Model' */
-const real32_T T2F[4] = { 4.385F, 4.385F, 4.385F, 4.385F } ;
-                               /* Referenced by: '<S3>/Constraint Generation' */
+const real_T S1 = 7.0E-5;             /* Referenced by: '<S4>/Steering Model' */
+const real_T S2 = -0.0038;            /* Referenced by: '<S4>/Steering Model' */
+const real_T S3 = 0.6535;             /* Referenced by: '<S4>/Steering Model' */
+const real_T S4 = 0.1061;             /* Referenced by: '<S4>/Steering Model' */
+const real_T T2F[4] = { 4.385, 4.385, 4.385, 4.385 } ;
+                               /* Referenced by: '<S4>/Constraint Generation' */
 
-const real_T a = 1.14;                 /* Referenced by: '<S3>/Tire Model' */
-const real_T abs_max_torque[4] = { 25.0, 25.0, 25.0, 25.0 } ;
-                               /* Referenced by: '<S3>/Constraint Generation' */
+const real_T a = 1.14;                 /* Referenced by: '<S4>/Tire Model' */
+const real_T abs_max_torque[4] = { 25.0, 25.0, 25.0, 25.0 } ;/* Referenced by:
+                                                              * '<S4>/Constraint Generation'
+                                                              * '<S6>/Gain'
+                                                              */
 
-const real_T absolute_battery_power_limits[2] = { 75000.0, -700.0 } ;
-                               /* Referenced by: '<S3>/Constraint Generation' */
+const real_T abs_min_torque[4] = { 0.0, 0.0, 0.0, 0.0 } ;
+                               /* Referenced by: '<S4>/Constraint Generation' */
 
-const real_T b = -0.03291;             /* Referenced by: '<S3>/Tire Model' */
-const real_T brakecoeff[4] = { 61.33, 61.33, 40.54, 40.54 } ;/* Referenced by: '<S3>/Brake Model' */
+const real_T absolute_battery_power_limits[2] = { 75000.0, 0.0 } ;
+                               /* Referenced by: '<S4>/Constraint Generation' */
 
-const real_T c = -1.14;                /* Referenced by: '<S3>/Tire Model' */
-const real_T d = -1.027;               /* Referenced by: '<S3>/Tire Model' */
+const real_T b = -0.03291;             /* Referenced by: '<S4>/Tire Model' */
+const real_T brakecoeff[4] = { 61.33, 61.33, 40.54, 40.54 } ;/* Referenced by: '<S4>/Brake Model' */
+
+const real_T c = -1.14;                /* Referenced by: '<S4>/Tire Model' */
+const real_T d = -1.027;               /* Referenced by: '<S4>/Tire Model' */
 const real_T dTx = 0.01;               /* Referenced by:
-                                        * '<S2>/Optimization '
-                                        * '<S3>/Constraint Generation'
+                                        * '<S4>/Constraint Generation'
+                                        * '<S6>/Add Constant2'
+                                        * '<S6>/Dead Zone'
                                         */
-const real_T deg2rad = 0.01745329;    /* Referenced by: '<S3>/Steering Model' */
+const real_T deg2rad = 0.01745329;    /* Referenced by: '<S4>/Steering Model' */
 const real_T gr[4] = { 6.63043, 6.63043, 8.0, 8.0 } ;/* Referenced by:
-                                                      * '<S3>/Brake Model'
-                                                      * '<S3>/Constraint Generation'
+                                                      * '<S4>/Brake Model'
+                                                      * '<S4>/Constraint Generation'
                                                       */
 
-const real_T inch2mm = 25.4;          /* Referenced by: '<S3>/Steering Model' */
+const real_T inch2mm = 25.4;          /* Referenced by: '<S4>/Steering Model' */
 const real_T l[2] = { 0.7922471, 0.7828529 } ;/* Referenced by:
-                                               * '<S3>/Constraint Generation'
-                                               * '<S3>/Reference Generation'
-                                               * '<S3>/Tire Model'
+                                               * '<S4>/Constraint Generation'
+                                               * '<S4>/Reference Generation'
+                                               * '<S4>/Tire Model'
                                                */
 
 const real_T max_motor_temp = 75.0;
-                               /* Referenced by: '<S3>/Constraint Generation' */
+                               /* Referenced by: '<S4>/Constraint Generation' */
 const real_T max_rpm[68] = { 0.0, 841.62680947093384, 843.6537622065,
   845.89476496349994, 848.1567116715, 850.4605462815, 852.795796818,
   855.162463281, 857.571017646, 860.0109879375, 862.49284613100008,
@@ -100,7 +106,7 @@ const real_T max_rpm[68] = { 0.0, 841.62680947093384, 843.6537622065,
   1048.202859648, 1054.1614137075, 1060.2351594975, 1066.4136250425,
   1072.6968103425, 1079.095187373, 1085.5982841585, 1092.2165726745,
   1098.950052921, 1105.8091968735, 1112.773060581, 1138.429400556 } ;
-                               /* Referenced by: '<S3>/Constraint Generation' */
+                               /* Referenced by: '<S4>/Constraint Generation' */
 
 const real_T max_torque[68] = { 25.0, 25.0, 24.669, 24.305, 23.939,
   23.570999999999998, 23.201999999999998, 22.83, 22.458000000000002, 22.084,
@@ -112,17 +118,15 @@ const real_T max_torque[68] = { 25.0, 25.0, 24.669, 24.305, 23.939,
   8.029, 7.666, 7.305, 6.9460000000000006, 6.5889999999999995, 6.234,
   5.8820000000000006, 5.532, 5.185, 4.84, 4.499, 4.16, 3.824, 3.491, 3.161,
   2.8339999999999996, 2.511, 2.191, 1.875, 1.5619999999999998, 1.252,
-  0.94700000000000006, 0.0 } ; /* Referenced by: '<S3>/Constraint Generation' */
+  0.94700000000000006, 0.0 } ; /* Referenced by: '<S4>/Constraint Generation' */
 
-const real_T min_velocity_regen = 1.4; /* Referenced by:
-                                        * '<S2>/Optimization '
-                                        * '<S3>/Constraint Generation'
-                                        */
+const real_T min_velocity_regen = 1.4;
+                               /* Referenced by: '<S4>/Constraint Generation' */
 const real_T motor_efficiency[4] = { 0.95, 0.95, 0.95, 0.95 } ;
-                               /* Referenced by: '<S3>/Constraint Generation' */
+                               /* Referenced by: '<S4>/Constraint Generation' */
 
 const real_T motor_enable[4] = { 0.0, 0.0, 1.0, 1.0 } ;
-                               /* Referenced by: '<S3>/Constraint Generation' */
+                               /* Referenced by: '<S4>/Constraint Generation' */
 
 const real_T power_loss_grid[26857] = { 0.1, 0.2, 0.30000000000000004, 0.4, 0.5,
   0.6, 0.70000000000000007, 0.8, 0.9, 1.0, 1.1, 1.2000000000000002,
@@ -6809,19 +6813,19 @@ const real_T power_loss_grid[26857] = { 0.1, 0.2, 0.30000000000000004, 0.4, 0.5,
   2929.147484350518, 2947.0547774559782, 2965.5884796666282, 2984.084053426408,
   3002.8979599206709, 3021.779548479215, 3040.989440092364, 3060.7245040064981,
   3080.1454134817441, 3100.1119654627068, 3120.4855068184393, 3141.0979239966837
-} ;                            /* Referenced by: '<S3>/Constraint Generation' */
+} ;                            /* Referenced by: '<S4>/Constraint Generation' */
 
 const real_T power_loss_limit[4] = { 0.0, 0.0, 5800.0, 5800.0 } ;
-                               /* Referenced by: '<S3>/Constraint Generation' */
+                               /* Referenced by: '<S4>/Constraint Generation' */
 
 const real_T rpm_index_calibration = 10.4719755;
-                               /* Referenced by: '<S3>/Constraint Generation' */
+                               /* Referenced by: '<S4>/Constraint Generation' */
 const real_T s[2] = { 0.647895, 0.62102 } ;/* Referenced by:
-                                            * '<S3>/Constraint Generation'
-                                            * '<S3>/Tire Model'
+                                            * '<S4>/Constraint Generation'
+                                            * '<S4>/Tire Model'
                                             */
 
-const real_T steer_slope = 0.0111;    /* Referenced by: '<S3>/Steering Model' */
+const real_T steer_slope = 0.0111;    /* Referenced by: '<S4>/Steering Model' */
 const real_T torque_sweep[251] = { 0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8,
   0.9, 1.0, 1.1, 1.2, 1.3, 1.4, 1.5, 1.6, 1.7, 1.8, 1.9, 2.0, 2.1, 2.2, 2.3, 2.4,
   2.5, 2.6, 2.7, 2.8, 2.9, 3.0, 3.1, 3.2, 3.3, 3.4, 3.5, 3.6, 3.7, 3.8, 3.9, 4.0,
@@ -6840,9 +6844,9 @@ const real_T torque_sweep[251] = { 0.0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8,
   20.8, 20.9, 21.0, 21.1, 21.2, 21.3, 21.4, 21.5, 21.6, 21.7, 21.8, 21.9, 22.0,
   22.1, 22.2, 22.3, 22.4, 22.5, 22.6, 22.7, 22.8, 22.9, 23.0, 23.1, 23.2, 23.3,
   23.4, 23.5, 23.6, 23.7, 23.8, 23.9, 24.0, 24.1, 24.2, 24.3, 24.4, 24.5, 24.6,
-  24.7, 24.8, 24.9, 25.0 } ;   /* Referenced by: '<S3>/Constraint Generation' */
+  24.7, 24.8, 24.9, 25.0 } ;   /* Referenced by: '<S4>/Constraint Generation' */
 
-const real_T yaw_error_limit = 0.2;    /* Referenced by: '<S2>/Optimization ' */
+const real_T yaw_error_limit = 0.2;    /* Referenced by: '<S5>/Constant2' */
 
 /*
  * File trailer for generated code.

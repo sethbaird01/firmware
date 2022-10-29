@@ -480,7 +480,7 @@ void rt_OneStep(RT_MODEL *const rtM)
   /* Set model inputs here */
 
   /* Step the model */
-  TV_step(rtM, &rtU, &rtY);
+  Electronics_step(rtM, &rtU, &rtY);
 
   /* Get model outputs here */
 

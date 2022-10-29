@@ -220,7 +220,7 @@
                 "-d",
                 "${workspaceFolder}/source/driveline"
             ],
-            "preLaunchTask": "build",
+            //"preLaunchTask": "build",
             "runToEntryPoint": "main"
         },
         {

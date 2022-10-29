@@ -350,22 +350,24 @@ void commandTorquePeriodic()
     #endif
     // pow_left = (float) mot_left_req;
     // pow_right = (float) mot_right_req;
-    pow_left  = pow_left  * 100.0 / 4095.0;
-    pow_right = pow_right * 100.0 / 4095.0;
+    //pow_left  = pow_left  * 100.0 / 4095.0;
+    //pow_right = pow_right * 100.0 / 4095.0;
 
     // NO regen for now!!!
     if (pow_left < 0) pow_left = 0.0;
     if (pow_right < 0) pow_left = 0.0;
 
-    rtU.Txx = can_data.torque_request_main.rear_left;
+    rtU.Txx = can_data.torque_request_main.rear_left * (25.0 / 4095.0);
     rtU.Wxx = can_data.rear_wheel_data.left_speed * (1.0/100.0 * 0.278);
     MC_PL_pp(&rtU);
     rt_OneStep();
+    pow_left = 100*rtY.k;
 
-    rtU.Txx = can_data.torque_request_main.rear_right;
+    rtU.Txx = can_data.torque_request_main.rear_right * (25.0 / 4095.0);
     rtU.Wxx = can_data.rear_wheel_data.right_speed * (1.0/100.0 * 0.278);
     MC_PL_pp(&rtU);
     rt_OneStep();
+    pow_right = 100*rtY.k;
 
     // Only drive if ready
     if (can_data.main_hb.car_state != CAR_STATE_READY2DRIVE || 

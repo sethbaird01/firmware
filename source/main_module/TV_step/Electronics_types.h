@@ -7,9 +7,9 @@
  *
  * Code generated for Simulink model 'Electronics'.
  *
- * Model version                  : 1.78
+ * Model version                  : 1.131
  * Simulink Coder version         : 9.7 (R2022a) 13-Nov-2021
- * C/C++ source code generated on : Tue Oct 18 21:02:27 2022
+ * C/C++ source code generated on : Fri Oct 28 19:01:23 2022
  *
  * Target selection: ert.tlc
  * Embedded hardware selection: ARM Compatible->ARM Cortex-M
@@ -23,9 +23,6 @@
 #define RTW_HEADER_Electronics_types_h_
 
 /* Model Code Variants */
-
-/* Parameters (default storage) */
-typedef struct P_ P;
 
 /* Forward declaration for rtModel */
 typedef struct tag_RTM RT_MODEL;
