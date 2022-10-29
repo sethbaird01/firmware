@@ -563,7 +563,7 @@ void rt_OneStep(void)
   /* Set model inputs here */
 
   /* Step the model */
-  MC_PL0_step();
+  MC_PL0_step(&rtU, &rtY);
 
   /* Get model outputs here */
 

@@ -86,7 +86,6 @@ typedef struct {
   real_T Wxxb;                         /* '<Root>/Wxxb' */
   real_T T;                            /* '<Root>/T' */
   real_T k;                            /* '<Root>/k' */
-  real_T Out2;                         /* '<Root>/Out2' */
 } ExtY;
 
 /* Code_Instrumentation_Declarations_Placeholder */
@@ -101,7 +100,7 @@ extern const ConstP rtConstP;
 
 /* Model entry point functions */
 extern void MC_PL0_initialize(void);
-extern void MC_PL0_step(void);
+extern void MC_PL0_step(ExtU* rtU, ExtY* rtY);
 
 /*-
  * The generated code includes comments that allow you to trace directly

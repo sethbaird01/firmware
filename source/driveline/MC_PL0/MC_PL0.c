@@ -25,12 +25,6 @@
 #include <stddef.h>
 #define NumBitsPerChar                 8U
 
-/* External inputs (root inport signals with default storage) */
-ExtU rtU;
-
-/* External outputs (root outports fed by signals with default storage) */
-ExtY rtY;
-
 /* Real-time model */
 static RT_MODEL rtM_;
 RT_MODEL *const rtM = &rtM_;
@@ -610,7 +604,7 @@ static void MC_PL(real_T rtu_In1, const real_T rtu_In1_i[2], real_T rtu_In1_k,
 }
 
 /* Model step function */
-void MC_PL0_step(void)
+void MC_PL0_step(ExtU* rtU, ExtY* rtY)
 {
   /* Outputs for Atomic SubSystem: '<Root>/MC_PL' */
 
@@ -625,8 +619,8 @@ void MC_PL0_step(void)
    *  Outport: '<Root>/Wxxb'
    *  Outport: '<Root>/k'
    */
-  MC_PL(rtU.Wxx, rtU.Woo, rtU.Txx, rtU.Too, rtU.Pmax, rtU.Pmin, rtU.Vbatt,
-        &rtY.Wxxb, &rtY.T, &rtY.k);
+  MC_PL(rtU->Wxx, rtU->Woo, rtU->Txx, rtU->Too, rtU->Pmax, rtU->Pmin, rtU->Vbatt,
+        &rtY->Wxxb, &rtY->T, &rtY->k);
 
   /* End of Outputs for SubSystem: '<Root>/MC_PL' */
 }
@@ -638,9 +632,6 @@ void MC_PL0_initialize(void)
 
   /* initialize non-finites */
   rt_InitInfAndNaN(sizeof(real_T));
-
-  /* ConstCode for Outport: '<Root>/Out2' */
-  rtY.Out2 = 0.0;
 }
 
 /*
