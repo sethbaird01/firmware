@@ -47,6 +47,7 @@ typedef struct {
     /* Only used for system_source == PLL */
     PLLSrc_t pll_src;                   /* Input source for PLL VCO */
     uint32_t vco_output_rate_target_hz; /* VCO output target rate */
+    uint32_t msi_output_rate_target_hz; /* Use if pll_src == MSI */
 } ClockRateConfig_t;
 
 

@@ -24,14 +24,14 @@
 #define ID_PACK_CURR 0x4007d6a
 #define ID_BALANCE_REQUEST 0xc00002a
 #define ID_PRECHARGE_HB 0x4001944
-#define ID_BATTERY_INFO 0x8008004
-#define ID_CELL_INFO 0x8008044
 #define ID_ELCON_CHARGER_COMMAND 0x1806e5f4
 #define ID_PACK_CHARGE_STATUS 0x8008084
 #define ID_GYRO_DATA 0x4008004
 #define ID_ACCEL_DATA 0x4008044
+#define ID_ANGLE_DATA 0x4008104
 #define ID_MAX_CELL_TEMP 0x404e604
 #define ID_MOD_CELL_TEMP_AVG 0x14008084
+#define ID_RAW_CELL_TEMP 0x140080c4
 #define ID_DAQ_RESPONSE_PRECHARGE 0x17ffffc4
 #define ID_MODULE_TEMP_0 0xbe0
 #define ID_MODULE_TEMP_1 0xbe1
@@ -53,6 +53,7 @@
 #define ID_ORION_INFO 0x140006b8
 #define ID_ORION_CURRENTS_VOLTS 0x140006f8
 #define ID_ORION_ERRORS 0xc000738
+#define ID_PRECHARGE_BL_CMD 0x409c57e
 #define ID_DAQ_COMMAND_PRECHARGE 0x14000132
 /* END AUTO ID DEFS */
 
@@ -62,14 +63,14 @@
 #define DLC_PACK_CURR 2
 #define DLC_BALANCE_REQUEST 2
 #define DLC_PRECHARGE_HB 2
-#define DLC_BATTERY_INFO 8
-#define DLC_CELL_INFO 7
 #define DLC_ELCON_CHARGER_COMMAND 5
 #define DLC_PACK_CHARGE_STATUS 7
 #define DLC_GYRO_DATA 6
 #define DLC_ACCEL_DATA 6
+#define DLC_ANGLE_DATA 6
 #define DLC_MAX_CELL_TEMP 2
 #define DLC_MOD_CELL_TEMP_AVG 8
+#define DLC_RAW_CELL_TEMP 7
 #define DLC_DAQ_RESPONSE_PRECHARGE 8
 #define DLC_MODULE_TEMP_0 8
 #define DLC_MODULE_TEMP_1 8
@@ -91,6 +92,7 @@
 #define DLC_ORION_INFO 7
 #define DLC_ORION_CURRENTS_VOLTS 4
 #define DLC_ORION_ERRORS 4
+#define DLC_PRECHARGE_BL_CMD 5
 #define DLC_DAQ_COMMAND_PRECHARGE 8
 /* END AUTO DLC DEFS */
 
@@ -120,24 +122,6 @@
         CanParsedData_t* data_a = (CanParsedData_t *) &msg.Data;\
         data_a->precharge_hb.IMD = IMD_;\
         data_a->precharge_hb.BMS = BMS_;\
-        qSendToBack(&queue, &msg);\
-    } while(0)
-#define SEND_BATTERY_INFO(queue, voltage_, delta_, lowest_, error_) do {\
-        CanMsgTypeDef_t msg = {.Bus=CAN1, .ExtId=ID_BATTERY_INFO, .DLC=DLC_BATTERY_INFO, .IDE=1};\
-        CanParsedData_t* data_a = (CanParsedData_t *) &msg.Data;\
-        data_a->battery_info.voltage = voltage_;\
-        data_a->battery_info.delta = delta_;\
-        data_a->battery_info.lowest = lowest_;\
-        data_a->battery_info.error = error_;\
-        qSendToBack(&queue, &msg);\
-    } while(0)
-#define SEND_CELL_INFO(queue, idx_, v1_, v2_, v3_) do {\
-        CanMsgTypeDef_t msg = {.Bus=CAN1, .ExtId=ID_CELL_INFO, .DLC=DLC_CELL_INFO, .IDE=1};\
-        CanParsedData_t* data_a = (CanParsedData_t *) &msg.Data;\
-        data_a->cell_info.idx = idx_;\
-        data_a->cell_info.v1 = v1_;\
-        data_a->cell_info.v2 = v2_;\
-        data_a->cell_info.v3 = v3_;\
         qSendToBack(&queue, &msg);\
     } while(0)
 #define SEND_ELCON_CHARGER_COMMAND(queue, voltage_limit_, current_limit_, charge_disable_) do {\
@@ -173,6 +157,14 @@
         data_a->accel_data.az = az_;\
         qSendToBack(&queue, &msg);\
     } while(0)
+#define SEND_ANGLE_DATA(queue, pitch_, roll_, yaw_) do {\
+        CanMsgTypeDef_t msg = {.Bus=CAN1, .ExtId=ID_ANGLE_DATA, .DLC=DLC_ANGLE_DATA, .IDE=1};\
+        CanParsedData_t* data_a = (CanParsedData_t *) &msg.Data;\
+        data_a->angle_data.pitch = pitch_;\
+        data_a->angle_data.roll = roll_;\
+        data_a->angle_data.yaw = yaw_;\
+        qSendToBack(&queue, &msg);\
+    } while(0)
 #define SEND_MAX_CELL_TEMP(queue, max_temp_) do {\
         CanMsgTypeDef_t msg = {.Bus=CAN1, .ExtId=ID_MAX_CELL_TEMP, .DLC=DLC_MAX_CELL_TEMP, .IDE=1};\
         CanParsedData_t* data_a = (CanParsedData_t *) &msg.Data;\
@@ -186,6 +178,16 @@
         data_a->mod_cell_temp_avg.temp_B = temp_B_;\
         data_a->mod_cell_temp_avg.temp_C = temp_C_;\
         data_a->mod_cell_temp_avg.temp_D = temp_D_;\
+        qSendToBack(&queue, &msg);\
+    } while(0)
+#define SEND_RAW_CELL_TEMP(queue, index_, temp_A_, temp_B_, temp_C_, temp_D_) do {\
+        CanMsgTypeDef_t msg = {.Bus=CAN1, .ExtId=ID_RAW_CELL_TEMP, .DLC=DLC_RAW_CELL_TEMP, .IDE=1};\
+        CanParsedData_t* data_a = (CanParsedData_t *) &msg.Data;\
+        data_a->raw_cell_temp.index = index_;\
+        data_a->raw_cell_temp.temp_A = temp_A_;\
+        data_a->raw_cell_temp.temp_B = temp_B_;\
+        data_a->raw_cell_temp.temp_C = temp_C_;\
+        data_a->raw_cell_temp.temp_D = temp_D_;\
         qSendToBack(&queue, &msg);\
     } while(0)
 #define SEND_DAQ_RESPONSE_PRECHARGE(queue, daq_response_) do {\
@@ -229,18 +231,6 @@ typedef union { __attribute__((packed))
         uint64_t BMS: 8;
     } precharge_hb;
     struct {
-        uint64_t voltage: 16;
-        uint64_t delta: 16;
-        uint64_t lowest: 16;
-        uint64_t error: 16;
-    } battery_info;
-    struct {
-        uint64_t idx: 8;
-        uint64_t v1: 16;
-        uint64_t v2: 16;
-        uint64_t v3: 16;
-    } cell_info;
-    struct {
         uint64_t voltage_limit: 16;
         uint64_t current_limit: 16;
         uint64_t charge_disable: 1;
@@ -262,6 +252,11 @@ typedef union { __attribute__((packed))
         uint64_t az: 16;
     } accel_data;
     struct {
+        uint64_t pitch: 16;
+        uint64_t roll: 16;
+        uint64_t yaw: 16;
+    } angle_data;
+    struct {
         uint64_t max_temp: 16;
     } max_cell_temp;
     struct {
@@ -270,6 +265,13 @@ typedef union { __attribute__((packed))
         uint64_t temp_C: 16;
         uint64_t temp_D: 16;
     } mod_cell_temp_avg;
+    struct {
+        uint64_t index: 8;
+        uint64_t temp_A: 12;
+        uint64_t temp_B: 12;
+        uint64_t temp_C: 12;
+        uint64_t temp_D: 12;
+    } raw_cell_temp;
     struct {
         uint64_t daq_response: 64;
     } daq_response_PRECHARGE;
@@ -438,6 +440,10 @@ typedef union { __attribute__((packed))
         uint64_t charge_limit_enforce: 1;
     } orion_errors;
     struct {
+        uint64_t cmd: 8;
+        uint64_t data: 32;
+    } precharge_bl_cmd;
+    struct {
         uint64_t daq_command: 64;
     } daq_command_PRECHARGE;
     uint8_t raw_data[8];
@@ -585,41 +591,45 @@ typedef struct {
         uint32_t last_rx;
     } orion_currents_volts;
     struct {
-        uint16_t discharge_limit_enforce;
-        uint16_t charger_safety_relay;
-        uint16_t internal_hardware;
-        uint16_t heatsink_thermistor;
-        uint16_t software;
-        uint16_t max_cellv_high;
-        uint16_t min_cellv_low;
-        uint16_t pack_overheat;
-        uint16_t reserved0;
-        uint16_t reserved1;
-        uint16_t reserved2;
-        uint16_t reserved3;
-        uint16_t reserved4;
-        uint16_t reserved5;
-        uint16_t reserved6;
-        uint16_t reserved7;
-        uint16_t internal_comms;
-        uint16_t cell_balancing_foff;
-        uint16_t weak_cell;
-        uint16_t low_cellv;
-        uint16_t open_wire;
-        uint16_t current_sensor;
-        uint16_t max_cellv_o5v;
-        uint16_t cell_asic;
-        uint16_t weak_pack;
-        uint16_t fan_monitor;
-        uint16_t thermistor;
-        uint16_t external_comms;
-        uint16_t redundant_psu;
-        uint16_t hv_isolation;
-        uint16_t input_psu;
-        uint16_t charge_limit_enforce;
+        uint8_t discharge_limit_enforce;
+        uint8_t charger_safety_relay;
+        uint8_t internal_hardware;
+        uint8_t heatsink_thermistor;
+        uint8_t software;
+        uint8_t max_cellv_high;
+        uint8_t min_cellv_low;
+        uint8_t pack_overheat;
+        uint8_t reserved0;
+        uint8_t reserved1;
+        uint8_t reserved2;
+        uint8_t reserved3;
+        uint8_t reserved4;
+        uint8_t reserved5;
+        uint8_t reserved6;
+        uint8_t reserved7;
+        uint8_t internal_comms;
+        uint8_t cell_balancing_foff;
+        uint8_t weak_cell;
+        uint8_t low_cellv;
+        uint8_t open_wire;
+        uint8_t current_sensor;
+        uint8_t max_cellv_o5v;
+        uint8_t cell_asic;
+        uint8_t weak_pack;
+        uint8_t fan_monitor;
+        uint8_t thermistor;
+        uint8_t external_comms;
+        uint8_t redundant_psu;
+        uint8_t hv_isolation;
+        uint8_t input_psu;
+        uint8_t charge_limit_enforce;
         uint8_t stale;
         uint32_t last_rx;
     } orion_errors;
+    struct {
+        uint8_t cmd;
+        uint32_t data;
+    } precharge_bl_cmd;
     struct {
         uint64_t daq_command;
     } daq_command_PRECHARGE;
@@ -630,6 +640,7 @@ extern can_data_t can_data;
 
 /* BEGIN AUTO EXTERN CALLBACK */
 extern void daq_command_PRECHARGE_CALLBACK(CanMsgTypeDef_t* msg_header_a);
+extern void precharge_bl_cmd_CALLBACK(CanParsedData_t* msg_data_a);
 /* END AUTO EXTERN CALLBACK */
 
 /* BEGIN AUTO EXTERN RX IRQ */

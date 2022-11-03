@@ -40,6 +40,7 @@
 #define ID_ORION_INFO 0x140006b8
 #define ID_GYRO_DATA 0x4008004
 #define ID_ACCEL_DATA 0x4008044
+#define ID_MAIN_MODULE_BL_CMD 0x409c43e
 #define ID_DAQ_COMMAND_MAIN_MODULE 0x14000072
 /* END AUTO ID DEFS */
 
@@ -47,7 +48,7 @@
 /* BEGIN AUTO DLC DEFS */
 #define DLC_MAIN_HB 2
 #define DLC_TORQUE_REQUEST_MAIN 8
-#define DLC_FLOWRATE_TEMPS 2
+#define DLC_FLOWRATE_TEMPS 6
 #define DLC_LWS_CONFIG 2
 #define DLC_DAQ_RESPONSE_MAIN_MODULE 8
 #define DLC_RAW_THROTTLE_BRAKE 3
@@ -65,6 +66,7 @@
 #define DLC_ORION_INFO 7
 #define DLC_GYRO_DATA 6
 #define DLC_ACCEL_DATA 6
+#define DLC_MAIN_MODULE_BL_CMD 5
 #define DLC_DAQ_COMMAND_MAIN_MODULE 8
 /* END AUTO DLC DEFS */
 
@@ -86,11 +88,14 @@
         data_a->torque_request_main.rear_right = rear_right_;\
         qSendToBack(&queue, &msg);\
     } while(0)
-#define SEND_FLOWRATE_TEMPS(queue, flowrate_battery_, battery_line_temp_) do {\
+#define SEND_FLOWRATE_TEMPS(queue, flowrate_battery_, battery_line_temp_, battery_line_temp_two_, aux_analog_one_, aux_analog_two_) do {\
         CanMsgTypeDef_t msg = {.Bus=CAN1, .ExtId=ID_FLOWRATE_TEMPS, .DLC=DLC_FLOWRATE_TEMPS, .IDE=1};\
         CanParsedData_t* data_a = (CanParsedData_t *) &msg.Data;\
         data_a->flowrate_temps.flowrate_battery = flowrate_battery_;\
         data_a->flowrate_temps.battery_line_temp = battery_line_temp_;\
+        data_a->flowrate_temps.battery_line_temp_two = battery_line_temp_two_;\
+        data_a->flowrate_temps.aux_analog_one = aux_analog_one_;\
+        data_a->flowrate_temps.aux_analog_two = aux_analog_two_;\
         qSendToBack(&queue, &msg);\
     } while(0)
 #define SEND_LWS_CONFIG(queue, CCW_, Reserved_1_, Reserved_2_) do {\
@@ -251,6 +256,9 @@ typedef union { __attribute__((packed))
     struct {
         uint64_t flowrate_battery: 8;
         uint64_t battery_line_temp: 8;
+        uint64_t battery_line_temp_two: 8;
+        uint64_t aux_analog_one: 12;
+        uint64_t aux_analog_two: 12;
     } flowrate_temps;
     struct {
         uint64_t CCW: 3;
@@ -361,6 +369,10 @@ typedef union { __attribute__((packed))
         uint64_t ay: 16;
         uint64_t az: 16;
     } accel_data;
+    struct {
+        uint64_t cmd: 8;
+        uint64_t data: 32;
+    } main_module_bl_cmd;
     struct {
         uint64_t daq_command: 64;
     } daq_command_MAIN_MODULE;
@@ -500,6 +512,10 @@ typedef struct {
         uint32_t last_rx;
     } accel_data;
     struct {
+        uint8_t cmd;
+        uint32_t data;
+    } main_module_bl_cmd;
+    struct {
         uint64_t daq_command;
     } daq_command_MAIN_MODULE;
 } can_data_t;
@@ -510,6 +526,7 @@ extern volatile uint32_t last_can_rx_time_ms;
 
 /* BEGIN AUTO EXTERN CALLBACK */
 extern void daq_command_MAIN_MODULE_CALLBACK(CanMsgTypeDef_t* msg_header_a);
+extern void main_module_bl_cmd_CALLBACK(CanParsedData_t* msg_data_a);
 /* END AUTO EXTERN CALLBACK */
 
 /* BEGIN AUTO EXTERN RX IRQ */

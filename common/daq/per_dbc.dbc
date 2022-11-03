@@ -33,7 +33,7 @@ NS_ :
 
 BS_:
 
-BU_: Main_Module Torque_Vector Driveline Precharge OrionBMS Dashboard Steering Acceleration bootloader BMS_LV TESTER Charger DAQ Precharge ARDUINO TEST_NODE TEST_NODE_2 DAQ
+BU_: Main_Module Torque_Vector Driveline Precharge OrionBMS Dashboard Steering Acceleration bootloader BMS_LV BITSTREAM Charger DAQ Precharge ARDUINO TEST_NODE TEST_NODE_2 DAQ
 
 
 BO_ 2214598913 main_hb: 2 Main_Module
@@ -46,7 +46,10 @@ BO_ 2214592577 torque_request_main: 8 Main_Module
  SG_ front_right : 16|16@1- (1,0) [0|0] "" Vector__XXX
  SG_ front_left : 0|16@1- (1,0) [0|0] "" Vector__XXX
 
-BO_ 2214594689 flowrate_temps: 2 Main_Module
+BO_ 2214594689 flowrate_temps: 6 Main_Module
+ SG_ aux_analog_two : 36|12@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ aux_analog_one : 24|12@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ battery_line_temp_two : 16|8@1+ (1,0) [0|0] "" Vector__XXX
  SG_ battery_line_temp : 8|8@1+ (1,0) [0|0] "" Vector__XXX
  SG_ flowrate_battery : 0|8@1+ (0.1,0) [0|0] "" Vector__XXX
 
@@ -85,14 +88,14 @@ BO_ 2214598979 rear_driveline_hb: 6 Driveline
  SG_ rear_left_motor : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2214592515 front_wheel_data: 8 Driveline
- SG_ right_normal : 48|16@1+ (1,0) [0|0] "" Vector__XXX
- SG_ left_normal : 32|16@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ right_normal : 48|16@1+ (0.1,0) [0|0] "mm" Vector__XXX
+ SG_ left_normal : 32|16@1+ (0.1,0) [0|0] "mm" Vector__XXX
  SG_ right_speed : 16|16@1+ (1,0) [0|0] "kphx100" Vector__XXX
  SG_ left_speed : 0|16@1+ (1,0) [0|0] "kphx100" Vector__XXX
 
 BO_ 2214592579 rear_wheel_data: 8 Driveline
- SG_ right_normal : 48|16@1+ (1,0) [0|0] "" Vector__XXX
- SG_ left_normal : 32|16@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ right_normal : 48|16@1+ (0.1,0) [0|0] "mm" Vector__XXX
+ SG_ left_normal : 32|16@1+ (0.1,0) [0|0] "mm" Vector__XXX
  SG_ right_speed : 16|16@1+ (1,0) [0|0] "kphx100" Vector__XXX
  SG_ left_speed : 0|16@1+ (1,0) [0|0] "kphx100" Vector__XXX
 
@@ -121,18 +124,6 @@ BO_ 2214598980 precharge_hb: 2 Precharge
  SG_ BMS : 8|8@1+ (1,0) [0|0] "" Vector__XXX
  SG_ IMD : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
-BO_ 2281734148 battery_info: 8 Precharge
- SG_ error : 48|16@1+ (1,0) [0|0] "" Vector__XXX
- SG_ lowest : 32|16@1+ (1,0) [0|0] "" Vector__XXX
- SG_ delta : 16|16@1+ (1,0) [0|0] "" Vector__XXX
- SG_ voltage : 0|16@1+ (1,0) [0|0] "" Vector__XXX
-
-BO_ 2281734212 cell_info: 7 Precharge
- SG_ v3 : 40|16@1+ (1,0) [0|0] "" Vector__XXX
- SG_ v2 : 24|16@1+ (1,0) [0|0] "" Vector__XXX
- SG_ v1 : 8|16@1+ (1,0) [0|0] "" Vector__XXX
- SG_ idx : 0|8@1+ (1,0) [0|0] "" Vector__XXX
-
 BO_ 2550588916 elcon_charger_command: 5 Precharge
  SG_ charge_disable : 32|1@1+ (1,0) [0|0] "" Vector__XXX
  SG_ current_limit : 16|16@1+ (0.1,0) [0|0] "A" Vector__XXX
@@ -145,14 +136,19 @@ BO_ 2281734276 pack_charge_status: 7 Precharge
  SG_ power : 0|16@1+ (1,0) [0|0] "W" Vector__XXX
 
 BO_ 2214625284 gyro_data: 6 Precharge
- SG_ gz : 32|16@1- (1,0) [0|0] "deg/s" Vector__XXX
- SG_ gy : 16|16@1- (1,0) [0|0] "deg/s" Vector__XXX
- SG_ gx : 0|16@1- (1,0) [0|0] "deg/s" Vector__XXX
+ SG_ gz : 32|16@1- (1,0) [0|0] "rad/s*100" Vector__XXX
+ SG_ gy : 16|16@1- (1,0) [0|0] "rad/s*100" Vector__XXX
+ SG_ gx : 0|16@1- (1,0) [0|0] "rad/s*100" Vector__XXX
 
 BO_ 2214625348 accel_data: 6 Precharge
- SG_ az : 32|16@1- (1,0) [0|0] "g" Vector__XXX
- SG_ ay : 16|16@1- (1,0) [0|0] "g" Vector__XXX
- SG_ ax : 0|16@1- (1,0) [0|0] "g" Vector__XXX
+ SG_ az : 32|16@1- (1,0) [0|0] "m/s^2*100" Vector__XXX
+ SG_ ay : 16|16@1- (1,0) [0|0] "m/s^2*100" Vector__XXX
+ SG_ ax : 0|16@1- (1,0) [0|0] "m/s^2*100" Vector__XXX
+
+BO_ 2214625540 angle_data: 6 Precharge
+ SG_ yaw : 32|16@1- (1,0) [0|0] "degx10" Vector__XXX
+ SG_ roll : 16|16@1- (1,0) [0|0] "degx10" Vector__XXX
+ SG_ pitch : 0|16@1- (1,0) [0|0] "degx10" Vector__XXX
 
 BO_ 2214913540 max_cell_temp: 2 Precharge
  SG_ max_temp : 0|16@1+ (0.1,0) [0|0] "" Vector__XXX
@@ -162,6 +158,13 @@ BO_ 2483060868 mod_cell_temp_avg: 8 Precharge
  SG_ temp_C : 32|16@1+ (0.1,0) [0|0] "" Vector__XXX
  SG_ temp_B : 16|16@1+ (0.1,0) [0|0] "" Vector__XXX
  SG_ temp_A : 0|16@1+ (0.1,0) [0|0] "" Vector__XXX
+
+BO_ 2483060932 raw_cell_temp: 7 Precharge
+ SG_ temp_D : 44|12@1+ (0.1,0) [0|0] "C" Vector__XXX
+ SG_ temp_C : 32|12@1+ (0.1,0) [0|0] "C" Vector__XXX
+ SG_ temp_B : 20|12@1+ (0.1,0) [0|0] "C" Vector__XXX
+ SG_ temp_A : 8|12@1+ (0.1,0) [0|0] "C" Vector__XXX
+ SG_ index : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2550136772 daq_response_PRECHARGE: 8 Precharge
  SG_ daq_response : 0|64@1+ (1,0) [0|0] "" Vector__XXX
@@ -270,7 +273,7 @@ BO_ 380 Z_Accel: 8 Acceleration
  SG_ Reserved_2 : 16|16@1+ (1,0) [0|0] "" Vector__XXX
  SG_ Reserved_1 : 0|16@1+ (1,0) [0|0] "" Vector__XXX
 
-BO_ 2214912572 mainmodule_bl_resp: 5 bootloader
+BO_ 2214912572 main_module_bl_resp: 5 bootloader
  SG_ data : 8|32@1+ (1,0) [0|0] "" Vector__XXX
  SG_ cmd : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
@@ -282,11 +285,11 @@ BO_ 2214912700 torquevector_bl_resp: 5 bootloader
  SG_ data : 8|32@1+ (1,0) [0|0] "" Vector__XXX
  SG_ cmd : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
-BO_ 2214912764 driveline_f_bl_resp: 5 bootloader
+BO_ 2214912764 driveline_front_bl_resp: 5 bootloader
  SG_ data : 8|32@1+ (1,0) [0|0] "" Vector__XXX
  SG_ cmd : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
-BO_ 2214912828 driveline_r_bl_resp: 5 bootloader
+BO_ 2214912828 driveline_rear_bl_resp: 5 bootloader
  SG_ data : 8|32@1+ (1,0) [0|0] "" Vector__XXX
  SG_ cmd : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
@@ -334,6 +337,10 @@ BO_ 2214913532 bms_j_bl_resp: 5 bootloader
  SG_ data : 8|32@1+ (1,0) [0|0] "" Vector__XXX
  SG_ cmd : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
+BO_ 2214913596 l4_testing_bl_resp: 5 bootloader
+ SG_ data : 8|32@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ cmd : 0|8@1+ (1,0) [0|0] "" Vector__XXX
+
 BO_ 2281733446 soc_cells_lv: 7 BMS_LV
  SG_ soc3 : 40|16@1+ (1,0) [0|0] "" Vector__XXX
  SG_ soc2 : 24|16@1+ (1,0) [0|0] "" Vector__XXX
@@ -366,10 +373,7 @@ BO_ 2214624902 power_lim_lv: 4 BMS_LV
  SG_ chg_lim : 16|16@1+ (1,0) [0|0] "" Vector__XXX
  SG_ disch_lim : 0|16@1+ (1,0) [0|0] "" Vector__XXX
 
-BO_ 2282341438 bootloader_request_reset: 1 TESTER
- SG_ node : 0|8@1+ (1,0) [0|0] "" Vector__XXX
-
-BO_ 2415925566 bitstream_data: 8 TESTER
+BO_ 2214598974 bitstream_data: 8 BITSTREAM
  SG_ d7 : 56|8@1+ (1,0) [0|0] "" Vector__XXX
  SG_ d6 : 48|8@1+ (1,0) [0|0] "" Vector__XXX
  SG_ d5 : 40|8@1+ (1,0) [0|0] "" Vector__XXX
@@ -379,71 +383,75 @@ BO_ 2415925566 bitstream_data: 8 TESTER
  SG_ d1 : 8|8@1+ (1,0) [0|0] "" Vector__XXX
  SG_ d0 : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
-BO_ 2415925630 bitstream_request: 5 TESTER
+BO_ 2415925630 bitstream_request: 5 BITSTREAM
  SG_ download_size : 1|32@1+ (1,0) [0|0] "" Vector__XXX
  SG_ download_request : 0|1@1+ (1,0) [0|0] "" Vector__XXX
 
-BO_ 2215232574 mainmodule_bl_cmd: 5 TESTER
+BO_ 2215232574 main_module_bl_cmd: 5 BITSTREAM
  SG_ data : 8|32@1+ (1,0) [0|0] "" Vector__XXX
  SG_ cmd : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
-BO_ 2215232638 dashboard_bl_cmd: 5 TESTER
+BO_ 2215232638 dashboard_bl_cmd: 5 BITSTREAM
  SG_ data : 8|32@1+ (1,0) [0|0] "" Vector__XXX
  SG_ cmd : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
-BO_ 2215232702 torquevector_bl_cmd: 5 TESTER
+BO_ 2215232702 torquevector_bl_cmd: 5 BITSTREAM
  SG_ data : 8|32@1+ (1,0) [0|0] "" Vector__XXX
  SG_ cmd : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
-BO_ 2215232766 driveline_f_bl_cmd: 5 TESTER
+BO_ 2215232766 driveline_front_bl_cmd: 5 BITSTREAM
  SG_ data : 8|32@1+ (1,0) [0|0] "" Vector__XXX
  SG_ cmd : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
-BO_ 2215232830 driveline_r_bl_cmd: 5 TESTER
+BO_ 2215232830 driveline_rear_bl_cmd: 5 BITSTREAM
  SG_ data : 8|32@1+ (1,0) [0|0] "" Vector__XXX
  SG_ cmd : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
-BO_ 2215232894 precharge_bl_cmd: 5 TESTER
+BO_ 2215232894 precharge_bl_cmd: 5 BITSTREAM
  SG_ data : 8|32@1+ (1,0) [0|0] "" Vector__XXX
  SG_ cmd : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
-BO_ 2215232958 bms_a_bl_cmd: 5 TESTER
+BO_ 2215232958 bms_a_bl_cmd: 5 BITSTREAM
  SG_ data : 8|32@1+ (1,0) [0|0] "" Vector__XXX
  SG_ cmd : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
-BO_ 2215233022 bms_b_bl_cmd: 5 TESTER
+BO_ 2215233022 bms_b_bl_cmd: 5 BITSTREAM
  SG_ data : 8|32@1+ (1,0) [0|0] "" Vector__XXX
  SG_ cmd : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
-BO_ 2215233086 bms_c_bl_cmd: 5 TESTER
+BO_ 2215233086 bms_c_bl_cmd: 5 BITSTREAM
  SG_ data : 8|32@1+ (1,0) [0|0] "" Vector__XXX
  SG_ cmd : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
-BO_ 2215233150 bms_d_bl_cmd: 5 TESTER
+BO_ 2215233150 bms_d_bl_cmd: 5 BITSTREAM
  SG_ data : 8|32@1+ (1,0) [0|0] "" Vector__XXX
  SG_ cmd : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
-BO_ 2215233214 bms_e_bl_cmd: 5 TESTER
+BO_ 2215233214 bms_e_bl_cmd: 5 BITSTREAM
  SG_ data : 8|32@1+ (1,0) [0|0] "" Vector__XXX
  SG_ cmd : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
-BO_ 2215233278 bms_f_bl_cmd: 5 TESTER
+BO_ 2215233278 bms_f_bl_cmd: 5 BITSTREAM
  SG_ data : 8|32@1+ (1,0) [0|0] "" Vector__XXX
  SG_ cmd : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
-BO_ 2215233342 bms_g_bl_cmd: 5 TESTER
+BO_ 2215233342 bms_g_bl_cmd: 5 BITSTREAM
  SG_ data : 8|32@1+ (1,0) [0|0] "" Vector__XXX
  SG_ cmd : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
-BO_ 2215233406 bms_h_bl_cmd: 5 TESTER
+BO_ 2215233406 bms_h_bl_cmd: 5 BITSTREAM
  SG_ data : 8|32@1+ (1,0) [0|0] "" Vector__XXX
  SG_ cmd : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
-BO_ 2215233470 bms_i_bl_cmd: 5 TESTER
+BO_ 2215233470 bms_i_bl_cmd: 5 BITSTREAM
  SG_ data : 8|32@1+ (1,0) [0|0] "" Vector__XXX
  SG_ cmd : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
-BO_ 2215233534 bms_j_bl_cmd: 5 TESTER
+BO_ 2215233534 bms_j_bl_cmd: 5 BITSTREAM
+ SG_ data : 8|32@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ cmd : 0|8@1+ (1,0) [0|0] "" Vector__XXX
+
+BO_ 2215233598 l4_testing_bl_cmd: 5 BITSTREAM
  SG_ data : 8|32@1+ (1,0) [0|0] "" Vector__XXX
  SG_ cmd : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
@@ -649,7 +657,7 @@ CM_ BU_ Steering "";
 CM_ BU_ Acceleration "";
 CM_ BU_ bootloader "";
 CM_ BU_ BMS_LV "";
-CM_ BU_ TESTER "";
+CM_ BU_ BITSTREAM "";
 CM_ BU_ Charger "";
 CM_ BU_ DAQ "";
 CM_ BU_ Precharge "";
@@ -666,6 +674,9 @@ CM_ SG_ 2214592577 rear_left "torque request. -4095-4095";
 CM_ SG_ 2214592577 front_right "torque request. -4095-4095";
 CM_ SG_ 2214592577 front_left "torque request. -4095-4095";
 CM_ BO_ 2214594689 "Flowrate and Water temp";
+CM_ SG_ 2214594689 aux_analog_two "Auxilary analog two";
+CM_ SG_ 2214594689 aux_analog_one "Auxilary analog one";
+CM_ SG_ 2214594689 battery_line_temp_two "Temp in battery line two";
 CM_ SG_ 2214594689 battery_line_temp "Temp in battery line";
 CM_ SG_ 2214594689 flowrate_battery "Flow rate for battery";
 CM_ BO_ 1984 "Steering sensor configuration";
@@ -697,13 +708,13 @@ CM_ SG_ 2214598979 rear_left_last_link_error "";
 CM_ SG_ 2214598979 rear_left_motor_link "";
 CM_ SG_ 2214598979 rear_left_motor "";
 CM_ BO_ 2214592515 "Wheel data for the rear tires";
-CM_ SG_ 2214592515 right_normal "";
-CM_ SG_ 2214592515 left_normal "";
+CM_ SG_ 2214592515 right_normal "Linear potentiometer distance between mounting points";
+CM_ SG_ 2214592515 left_normal "Linear potentiometer distance between mounting points";
 CM_ SG_ 2214592515 right_speed "";
 CM_ SG_ 2214592515 left_speed "";
 CM_ BO_ 2214592579 "Wheel data for the rear tires";
-CM_ SG_ 2214592579 right_normal "";
-CM_ SG_ 2214592579 left_normal "";
+CM_ SG_ 2214592579 right_normal "Linear potentiometer distance between mounting points";
+CM_ SG_ 2214592579 left_normal "Linear potentiometer distance between mounting points";
 CM_ SG_ 2214592579 right_speed "";
 CM_ SG_ 2214592579 left_speed "";
 CM_ BO_ 2348810883 "DC Current and Temperature of the motors";
@@ -726,16 +737,6 @@ CM_ SG_ 2550136771 daq_response "";
 CM_ BO_ 2214598980 "heart beat for precharge";
 CM_ SG_ 2214598980 BMS "";
 CM_ SG_ 2214598980 IMD "";
-CM_ BO_ 2281734148 "Information about battery voltage and other stuff";
-CM_ SG_ 2281734148 error "";
-CM_ SG_ 2281734148 lowest "";
-CM_ SG_ 2281734148 delta "";
-CM_ SG_ 2281734148 voltage "";
-CM_ BO_ 2281734212 "Information about specific cell voltages";
-CM_ SG_ 2281734212 v3 "Cell idx in V * 10000";
-CM_ SG_ 2281734212 v2 "Cell idx in V * 10000";
-CM_ SG_ 2281734212 v1 "Cell idx in V * 10000";
-CM_ SG_ 2281734212 idx "Cell starting index";
 CM_ BO_ 2550588916 "Charge voltage and current request to ELCON charger";
 CM_ SG_ 2550588916 charge_disable "Disable charging";
 CM_ SG_ 2550588916 current_limit "Charge current";
@@ -753,6 +754,10 @@ CM_ BO_ 2214625348 "Acceleration rate data";
 CM_ SG_ 2214625348 az "";
 CM_ SG_ 2214625348 ay "";
 CM_ SG_ 2214625348 ax "";
+CM_ BO_ 2214625540 "Angle data from bsxlite software";
+CM_ SG_ 2214625540 yaw "";
+CM_ SG_ 2214625540 roll "";
+CM_ SG_ 2214625540 pitch "";
 CM_ BO_ 2214913540 "maximum cell temperature for the whole pack";
 CM_ SG_ 2214913540 max_temp "";
 CM_ BO_ 2483060868 "Average cell temperature for each module";
@@ -760,6 +765,12 @@ CM_ SG_ 2483060868 temp_D "";
 CM_ SG_ 2483060868 temp_C "";
 CM_ SG_ 2483060868 temp_B "";
 CM_ SG_ 2483060868 temp_A "";
+CM_ BO_ 2483060932 "Raw cell temperature for each module of thermistor at index";
+CM_ SG_ 2483060932 temp_D "";
+CM_ SG_ 2483060932 temp_C "";
+CM_ SG_ 2483060932 temp_B "";
+CM_ SG_ 2483060932 temp_A "";
+CM_ SG_ 2483060932 index "";
 CM_ BO_ 2550136772 "daq response from node PRECHARGE";
 CM_ SG_ 2550136772 daq_response "";
 CM_ BO_ 2483029688 "charge, State, Current/voltage limits";
@@ -903,6 +914,9 @@ CM_ SG_ 2214913468 cmd "";
 CM_ BO_ 2214913532 "Torque Vector Bootloader response";
 CM_ SG_ 2214913532 data "";
 CM_ SG_ 2214913532 cmd "";
+CM_ BO_ 2214913596 "L4 Test Bootloader response";
+CM_ SG_ 2214913596 data "";
+CM_ SG_ 2214913596 cmd "";
 CM_ BO_ 2281733446 "Estimated soc";
 CM_ SG_ 2281733446 soc3 "Cell 2 in % * 100";
 CM_ SG_ 2281733446 soc2 "Cell 1 in % * 100";
@@ -929,17 +943,15 @@ CM_ SG_ 2281733702 delta "Max cell delta in V * 10000";
 CM_ BO_ 2214624902 "Power limits";
 CM_ SG_ 2214624902 chg_lim "Charge limit in W";
 CM_ SG_ 2214624902 disch_lim "Discharge limit in W";
-CM_ BO_ 2282341438 "Request message for resetting a node for bootloader download";
-CM_ SG_ 2282341438 node "Target node to reset";
-CM_ BO_ 2415925566 "Bitstream download command";
-CM_ SG_ 2415925566 d7 "Bitstream data word 7";
-CM_ SG_ 2415925566 d6 "Bitstream data word 6";
-CM_ SG_ 2415925566 d5 "Bitstream data word 5";
-CM_ SG_ 2415925566 d4 "Bitstream data word 4";
-CM_ SG_ 2415925566 d3 "Bitstream data word 3";
-CM_ SG_ 2415925566 d2 "Bitstream data word 2";
-CM_ SG_ 2415925566 d1 "Bitstream data word 1";
-CM_ SG_ 2415925566 d0 "Bitstream data word 0";
+CM_ BO_ 2214598974 "Bitstream download command";
+CM_ SG_ 2214598974 d7 "Bitstream data word 7";
+CM_ SG_ 2214598974 d6 "Bitstream data word 6";
+CM_ SG_ 2214598974 d5 "Bitstream data word 5";
+CM_ SG_ 2214598974 d4 "Bitstream data word 4";
+CM_ SG_ 2214598974 d3 "Bitstream data word 3";
+CM_ SG_ 2214598974 d2 "Bitstream data word 2";
+CM_ SG_ 2214598974 d1 "Bitstream data word 1";
+CM_ SG_ 2214598974 d0 "Bitstream data word 0";
 CM_ BO_ 2415925630 "Bitstream state command";
 CM_ SG_ 2415925630 download_size "size for expected bitstream download (bytes)";
 CM_ SG_ 2415925630 download_request "Request to download new bitstream";
@@ -991,6 +1003,9 @@ CM_ SG_ 2215233470 cmd "Bootloader Command type";
 CM_ BO_ 2215233534 "Bootloader command for torque vector";
 CM_ SG_ 2215233534 data "Bootloader data";
 CM_ SG_ 2215233534 cmd "Bootloader Command type";
+CM_ BO_ 2215233598 "Bootloader command for l4 testing";
+CM_ SG_ 2215233598 data "Bootloader data";
+CM_ SG_ 2215233598 cmd "Bootloader Command type";
 CM_ BO_ 2566869221 "Realtime charger status";
 CM_ SG_ 2566869221 communication_fail " 5s timeout from communication failure";
 CM_ SG_ 2566869221 startup_fail "Startup voltage detection failure";

@@ -34,6 +34,7 @@
 #define ID_REAR_CONTROLLER_TEMPS 0xc000303
 #define ID_PRECHARGE_HB 0x4001944
 #define ID_TORQUE_REQUEST_MAIN 0x4000041
+#define ID_DASHBOARD_BL_CMD 0x409c47e
 #define ID_DAQ_COMMAND_DASHBOARD 0x14000172
 /* END AUTO ID DEFS */
 
@@ -53,6 +54,7 @@
 #define DLC_REAR_CONTROLLER_TEMPS 2
 #define DLC_PRECHARGE_HB 2
 #define DLC_TORQUE_REQUEST_MAIN 8
+#define DLC_DASHBOARD_BL_CMD 5
 #define DLC_DAQ_COMMAND_DASHBOARD 8
 /* END AUTO DLC DEFS */
 
@@ -229,6 +231,10 @@ typedef union { __attribute__((packed))
         uint64_t rear_right: 16;
     } torque_request_main;
     struct {
+        uint64_t cmd: 8;
+        uint64_t data: 32;
+    } dashboard_bl_cmd;
+    struct {
         uint64_t daq_command: 64;
     } daq_command_DASHBOARD;
     uint8_t raw_data[8];
@@ -292,38 +298,38 @@ typedef struct {
         uint32_t last_rx;
     } orion_currents_volts;
     struct {
-        uint16_t discharge_limit_enforce;
-        uint16_t charger_safety_relay;
-        uint16_t internal_hardware;
-        uint16_t heatsink_thermistor;
-        uint16_t software;
-        uint16_t max_cellv_high;
-        uint16_t min_cellv_low;
-        uint16_t pack_overheat;
-        uint16_t reserved0;
-        uint16_t reserved1;
-        uint16_t reserved2;
-        uint16_t reserved3;
-        uint16_t reserved4;
-        uint16_t reserved5;
-        uint16_t reserved6;
-        uint16_t reserved7;
-        uint16_t internal_comms;
-        uint16_t cell_balancing_foff;
-        uint16_t weak_cell;
-        uint16_t low_cellv;
-        uint16_t open_wire;
-        uint16_t current_sensor;
-        uint16_t max_cellv_o5v;
-        uint16_t cell_asic;
-        uint16_t weak_pack;
-        uint16_t fan_monitor;
-        uint16_t thermistor;
-        uint16_t external_comms;
-        uint16_t redundant_psu;
-        uint16_t hv_isolation;
-        uint16_t input_psu;
-        uint16_t charge_limit_enforce;
+        uint8_t discharge_limit_enforce;
+        uint8_t charger_safety_relay;
+        uint8_t internal_hardware;
+        uint8_t heatsink_thermistor;
+        uint8_t software;
+        uint8_t max_cellv_high;
+        uint8_t min_cellv_low;
+        uint8_t pack_overheat;
+        uint8_t reserved0;
+        uint8_t reserved1;
+        uint8_t reserved2;
+        uint8_t reserved3;
+        uint8_t reserved4;
+        uint8_t reserved5;
+        uint8_t reserved6;
+        uint8_t reserved7;
+        uint8_t internal_comms;
+        uint8_t cell_balancing_foff;
+        uint8_t weak_cell;
+        uint8_t low_cellv;
+        uint8_t open_wire;
+        uint8_t current_sensor;
+        uint8_t max_cellv_o5v;
+        uint8_t cell_asic;
+        uint8_t weak_pack;
+        uint8_t fan_monitor;
+        uint8_t thermistor;
+        uint8_t external_comms;
+        uint8_t redundant_psu;
+        uint8_t hv_isolation;
+        uint8_t input_psu;
+        uint8_t charge_limit_enforce;
         uint8_t stale;
         uint32_t last_rx;
     } orion_errors;
@@ -351,6 +357,10 @@ typedef struct {
         uint32_t last_rx;
     } torque_request_main;
     struct {
+        uint8_t cmd;
+        uint32_t data;
+    } dashboard_bl_cmd;
+    struct {
         uint64_t daq_command;
     } daq_command_DASHBOARD;
 } can_data_t;
@@ -360,6 +370,7 @@ extern can_data_t can_data;
 
 /* BEGIN AUTO EXTERN CALLBACK */
 extern void daq_command_DASHBOARD_CALLBACK(CanMsgTypeDef_t* msg_header_a);
+extern void dashboard_bl_cmd_CALLBACK(CanParsedData_t* msg_data_a);
 /* END AUTO EXTERN CALLBACK */
 
 /* BEGIN AUTO EXTERN RX IRQ */

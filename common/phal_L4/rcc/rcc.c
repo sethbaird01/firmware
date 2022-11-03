@@ -30,6 +30,8 @@ uint8_t PHAL_configureClockRates(ClockRateConfig_t* config)
     switch(config->system_source)
     {
         case SYSTEM_CLOCK_SRC_PLL:
+            if (config->pll_src == PLL_SRC_MSI) 
+                ret_code |= !PHAL_configureMSIClock(config->msi_output_rate_target_hz);
             ret_code |= (!PHAL_configurePLLVCO(config->pll_src, config->vco_output_rate_target_hz)) << 7;
             ret_code |= (!PHAL_configurePLLSystemClock(config->system_clock_target_hz)) << 6;
             break;
