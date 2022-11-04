@@ -7,9 +7,9 @@
  *
  * Code generated for Simulink model 'Electronics'.
  *
- * Model version                  : 1.199
+ * Model version                  : 1.200
  * Simulink Coder version         : 9.7 (R2022a) 13-Nov-2021
- * C/C++ source code generated on : Thu Nov  3 19:42:22 2022
+ * C/C++ source code generated on : Thu Nov  3 22:12:24 2022
  *
  * Target selection: ert.tlc
  * Embedded hardware selection: ARM Compatible->ARM Cortex-M
@@ -20,72 +20,17 @@
  */
 
 #include "Electronics.h"
+#include "bigM_v2_func.h"
 #include "rtwtypes.h"
 #include <math.h>
 #include <stddef.h>
 #define NumBitsPerChar                 8U
-#ifndef UCHAR_MAX
-#include <limits.h>
-#endif
 
-#if ( UCHAR_MAX != (0xFFU) ) || ( SCHAR_MAX != (0x7F) )
-#error Code was generated for compiler with different sized uchar/char. \
-Consider adjusting Test hardware word size settings on the \
-Hardware Implementation pane to match your compiler word sizes as \
-defined in limits.h of the compiler. Alternatively, you can \
-select the Test hardware is the same as production hardware option and \
-select the Enable portable word sizes option on the Code Generation > \
-Verification pane for ERT based targets, which will disable the \
-preprocessor word size checks.
-#endif
-
-#if ( USHRT_MAX != (0xFFFFU) ) || ( SHRT_MAX != (0x7FFF) )
-#error Code was generated for compiler with different sized ushort/short. \
-Consider adjusting Test hardware word size settings on the \
-Hardware Implementation pane to match your compiler word sizes as \
-defined in limits.h of the compiler. Alternatively, you can \
-select the Test hardware is the same as production hardware option and \
-select the Enable portable word sizes option on the Code Generation > \
-Verification pane for ERT based targets, which will disable the \
-preprocessor word size checks.
-#endif
-
-#if ( UINT_MAX != (0xFFFFFFFFU) ) || ( INT_MAX != (0x7FFFFFFF) )
-#error Code was generated for compiler with different sized uint/int. \
-Consider adjusting Test hardware word size settings on the \
-Hardware Implementation pane to match your compiler word sizes as \
-defined in limits.h of the compiler. Alternatively, you can \
-select the Test hardware is the same as production hardware option and \
-select the Enable portable word sizes option on the Code Generation > \
-Verification pane for ERT based targets, which will disable the \
-preprocessor word size checks.
-#endif
-
-#if ( ULONG_MAX != (0xFFFFFFFFU) ) || ( LONG_MAX != (0x7FFFFFFF) )
-#error Code was generated for compiler with different sized ulong/long. \
-Consider adjusting Test hardware word size settings on the \
-Hardware Implementation pane to match your compiler word sizes as \
-defined in limits.h of the compiler. Alternatively, you can \
-select the Test hardware is the same as production hardware option and \
-select the Enable portable word sizes option on the Code Generation > \
-Verification pane for ERT based targets, which will disable the \
-preprocessor word size checks.
-#endif
-
-/* Skipping ulong_long/long_long check: insufficient preprocessor integer range. */
 static real_T look1_binlg(real_T u0, const real_T bp0[], const real_T table[],
   uint32_T maxIndex);
 static uint32_T plook_evenc(real_T u, real_T bp0, real_T bpSpace, uint32_T
   maxIndex, real_T *fraction);
 static real_T intrp1d_l(uint32_T bpIndex, real_T frac, const real_T table[]);
-static uint32_T plook_u32u32u32n31_even20c_gf(uint32_T u, uint32_T bp0, uint32_T
-  maxIndex, uint32_T *fraction);
-static int32_T intrp1d_s32s64s64u32u32n31l_f(uint32_T bpIndex, uint32_T frac,
-  const int32_T table[]);
-static uint32_T plook_u32u32u64n32_even20c_gf(uint32_T u, uint32_T bp0, uint32_T
-  maxIndex, uint64_T *fraction);
-static int32_T intrp1d_s32s64s64u32u64n32l_f(uint32_T bpIndex, uint64_T frac,
-  const int32_T table[]);
 static void Electronics_Init(DW_Electronics *localDW);
 static void Electronics_o(const real_T rtu_TVS_Information[4], const real_T
   rtu_TVS_Information_d[2], real_T rtu_TVS_Information_c, const real_T
@@ -391,88 +336,6 @@ static real_T intrp1d_l(uint32_T bpIndex, real_T frac, const real_T table[])
   return (table[bpIndex + 1U] - yL_0d0) * frac + yL_0d0;
 }
 
-static uint32_T plook_u32u32u32n31_even20c_gf(uint32_T u, uint32_T bp0, uint32_T
-  maxIndex, uint32_T *fraction)
-{
-  uint32_T bpIndex;
-  uint32_T uAdjust;
-
-  /* Prelookup - Index and Fraction
-     Index Search method: 'even'
-     Use previous index: 'off'
-     Use last breakpoint for index at or above upper limit: 'off'
-     Remove protection against out-of-range input in generated code: 'on'
-     Rounding mode: 'floor'
-   */
-  uAdjust = u - bp0;
-  bpIndex = uAdjust >> 20U;
-  if (bpIndex < maxIndex) {
-    *fraction = (uAdjust & 1048575U) << 11;
-  } else {
-    bpIndex = maxIndex - 1U;
-    *fraction = 2147483648U;
-  }
-
-  return bpIndex;
-}
-
-static int32_T intrp1d_s32s64s64u32u32n31l_f(uint32_T bpIndex, uint32_T frac,
-  const int32_T table[])
-{
-  int32_T yL_0d0;
-
-  /* Column-major Interpolation 1-D
-     Interpolation method: 'Linear point-slope'
-     Use last breakpoint for index at or above upper limit: 'off'
-     Rounding mode: 'floor'
-     Overflow mode: 'wrapping'
-   */
-  yL_0d0 = table[bpIndex];
-  return (int32_T)((((int64_T)table[bpIndex + 1U] - yL_0d0) * frac) >> 31) +
-    yL_0d0;
-}
-
-static uint32_T plook_u32u32u64n32_even20c_gf(uint32_T u, uint32_T bp0, uint32_T
-  maxIndex, uint64_T *fraction)
-{
-  uint32_T bpIndex;
-  uint32_T uAdjust;
-
-  /* Prelookup - Index and Fraction
-     Index Search method: 'even'
-     Use previous index: 'off'
-     Use last breakpoint for index at or above upper limit: 'off'
-     Remove protection against out-of-range input in generated code: 'on'
-     Rounding mode: 'floor'
-   */
-  uAdjust = u - bp0;
-  bpIndex = uAdjust >> 20U;
-  if (bpIndex < maxIndex) {
-    *fraction = (uint64_T)(uAdjust & 1048575U) << 12;
-  } else {
-    bpIndex = maxIndex - 1U;
-    *fraction = 4294967296ULL;
-  }
-
-  return bpIndex;
-}
-
-static int32_T intrp1d_s32s64s64u32u64n32l_f(uint32_T bpIndex, uint64_T frac,
-  const int32_T table[])
-{
-  int32_T yL_0d0;
-
-  /* Column-major Interpolation 1-D
-     Interpolation method: 'Linear point-slope'
-     Use last breakpoint for index at or above upper limit: 'off'
-     Rounding mode: 'floor'
-     Overflow mode: 'wrapping'
-   */
-  yL_0d0 = table[bpIndex];
-  return (int32_T)((((int64_T)table[bpIndex + 1U] - yL_0d0) * (int64_T)frac) >>
-                   32) + yL_0d0;
-}
-
 /* System initialize for atomic system: '<Root>/Electronics' */
 static void Electronics_Init(DW_Electronics *localDW)
 {
@@ -495,29 +358,26 @@ static void Electronics_o(const real_T rtu_TVS_Information[4], const real_T
   real_T rtb_Abs_m_idx_0;
   real_T rtb_Abs_m_idx_1;
   real_T rtb_UnitDelay_idx_0;
+  real_T rtb_UnitDelay_idx_1;
+  real_T rtb_UnitDelay_idx_2;
   int32_T i;
+  int32_T j;
   int32_T rtb_Abs1_tmp;
-  int32_T rtb_TmpSignalConversionAtDotP_0;
-  int32_T rtb_TmpSignalConversionAtDotP_1;
-  uint32_T frac;
-  uint32_T rtb_QuadHandle1b;
-  uint32_T rtb_QuadHandle1b_idx_0;
-  uint32_T rtb_QuadHandle1b_tmp;
-  boolean_T rtb_LTEp25_p_idx_0;
-  boolean_T rtb_LTEp50_m_idx_0;
+  int32_T rtb_Abs1_tmp_0;
+  uint32_T bpIdx;
   boolean_T rtb_LessThan_e;
   boolean_T rtb_LowerRelop1;
 
   /* Outputs for Atomic SubSystem: '<S1>/Fixed Point Sub' */
   /* Outputs for Atomic SubSystem: '<S2>/Torque Vectoring Micro Controller' */
   /* Sum: '<S12>/Subtract' */
-  localDW->rtb_Sum4_idx_1 = rtu_TVS_Information[0] - rtu_TVS_Information[0];
-  localDW->CCaller_o5 = rtu_TVS_Information[1] - rtu_TVS_Information[1];
+  localDW->CCaller_o5 = rtu_TVS_Information[0] - rtu_TVS_Information[0];
+  localDW->rtb_Sum4_idx_1 = rtu_TVS_Information[1] - rtu_TVS_Information[1];
   localDW->rtu_TVS_Information_idx_2 = rtu_TVS_Information[2] -
     rtu_TVS_Information[2];
   localDW->Square1 = rtu_TVS_Information[3] - rtu_TVS_Information[3];
-  rty_Tx[0] = localDW->rtb_Sum4_idx_1;
-  rty_Tx[1] = localDW->CCaller_o5;
+  rty_Tx[0] = localDW->CCaller_o5;
+  rty_Tx[1] = localDW->rtb_Sum4_idx_1;
   rty_Tx[2] = localDW->rtu_TVS_Information_idx_2;
   rty_Tx[3] = localDW->Square1;
 
@@ -528,12 +388,12 @@ static void Electronics_o(const real_T rtu_TVS_Information[4], const real_T
   rty_Tx[3] = fabs(rty_Tx[3]);
 
   /* Switch: '<S12>/Switch' */
-  localDW->rtb_Sum4_idx_1 = rtu_TVS_Information[0];
-  localDW->CCaller_o5 = rtu_TVS_Information[1];
+  localDW->CCaller_o5 = rtu_TVS_Information[0];
+  localDW->rtb_Sum4_idx_1 = rtu_TVS_Information[1];
   localDW->rtu_TVS_Information_idx_2 = rtu_TVS_Information[2];
   localDW->Square1 = rtu_TVS_Information[3];
-  rty_Tx[0] = localDW->rtb_Sum4_idx_1;
-  rty_Tx[1] = localDW->CCaller_o5;
+  rty_Tx[0] = localDW->CCaller_o5;
+  rty_Tx[1] = localDW->rtb_Sum4_idx_1;
   rty_Tx[2] = localDW->rtu_TVS_Information_idx_2;
   rty_Tx[3] = localDW->Square1;
 
@@ -554,19 +414,18 @@ static void Electronics_o(const real_T rtu_TVS_Information[4], const real_T
     /* Saturate: '<S15>/Saturation1' incorporates:
      *  Bias: '<S5>/Add Constant'
      */
-    localDW->rtb_Sum4_idx_1 = localDW->AddConstant[i];
-    if (localDW->rtb_Sum4_idx_1 > 106.0) {
-      localDW->rtb_Sum4_idx_1 = 106.0;
-    } else if (localDW->rtb_Sum4_idx_1 < 1.0) {
-      localDW->rtb_Sum4_idx_1 = 1.0;
+    localDW->CCaller_o5 = localDW->AddConstant[i];
+    if (localDW->CCaller_o5 > 106.0) {
+      localDW->CCaller_o5 = 106.0;
+    } else if (localDW->CCaller_o5 < 1.0) {
+      localDW->CCaller_o5 = 1.0;
     }
 
     /* Switch: '<S15>/Switch' incorporates:
      *  S-Function (sdspstatminmax): '<S15>/Minimum1'
      */
     localDW->Minimum1[i] = 1800.0;
-    for (rtb_TmpSignalConversionAtDotP_0 = 0; rtb_TmpSignalConversionAtDotP_0 <
-         51; rtb_TmpSignalConversionAtDotP_0++) {
+    for (j = 0; j < 51; j++) {
       /* Abs: '<S15>/Abs1' incorporates:
        *  Abs: '<S15>/Abs'
        *  Bias: '<S15>/Bias'
@@ -577,12 +436,10 @@ static void Electronics_o(const real_T rtu_TVS_Information[4], const real_T
        *  Selector: '<S15>/Selector1'
        *  Sum: '<S15>/Sum1'
        */
-      rtb_TmpSignalConversionAtDotP_1 = (int32_T)
-        rtConstP.pooled5[rtb_TmpSignalConversionAtDotP_0];
-      rtb_Abs1_tmp = 51 * i + rtb_TmpSignalConversionAtDotP_0;
-      localDW->Abs1[rtb_Abs1_tmp] = fabs(rtConstP.pooled9[(((int32_T)
-        (localDW->rtb_Sum4_idx_1 + 1.0) - 1) * 51 +
-        rtb_TmpSignalConversionAtDotP_1) - 1] - 1800.0);
+      rtb_Abs1_tmp = (int32_T)rtConstP.pooled5[j];
+      rtb_Abs1_tmp_0 = 51 * i + j;
+      localDW->Abs1[rtb_Abs1_tmp_0] = fabs(rtConstP.pooled9[(((int32_T)
+        (localDW->CCaller_o5 + 1.0) - 1) * 51 + rtb_Abs1_tmp) - 1] - 1800.0);
 
       /* Gain: '<S15>/Gain3' incorporates:
        *  Abs: '<S15>/Abs'
@@ -590,41 +447,36 @@ static void Electronics_o(const real_T rtu_TVS_Information[4], const real_T
        *  Selector: '<S15>/Selector'
        *  Sum: '<S15>/Sum'
        */
-      localDW->Abs_i[rtb_Abs1_tmp] = fabs(rtConstP.pooled9[(((int32_T)
-        localDW->rtb_Sum4_idx_1 - 1) * 51 + rtb_TmpSignalConversionAtDotP_1) - 1]
-        - 1800.0);
+      localDW->Abs_i[rtb_Abs1_tmp_0] = fabs(rtConstP.pooled9[(((int32_T)
+        localDW->CCaller_o5 - 1) * 51 + rtb_Abs1_tmp) - 1] - 1800.0);
     }
 
     /* Saturate: '<S15>/Saturation1' incorporates:
      *  Bias: '<S5>/Add Constant'
      */
-    localDW->AddConstant[i] = localDW->rtb_Sum4_idx_1;
+    localDW->AddConstant[i] = localDW->CCaller_o5;
   }
 
   /* S-Function (sdspstatminmax): '<S15>/Minimum1' incorporates:
    *  Abs: '<S15>/Abs1'
    */
-  rtb_TmpSignalConversionAtDotP_1 = 0;
   rtb_Abs1_tmp = 0;
+  rtb_Abs1_tmp_0 = 0;
   for (i = 0; i < 4; i++) {
-    localDW->Minimum1_Valdata[rtb_Abs1_tmp] = localDW->
-      Abs1[rtb_TmpSignalConversionAtDotP_1];
-    localDW->Minimum1[rtb_Abs1_tmp] = 1.0;
-    rtb_TmpSignalConversionAtDotP_1++;
-    for (rtb_TmpSignalConversionAtDotP_0 = 0; rtb_TmpSignalConversionAtDotP_0 <
-         50; rtb_TmpSignalConversionAtDotP_0++) {
-      if (localDW->Abs1[rtb_TmpSignalConversionAtDotP_1] <
-          localDW->Minimum1_Valdata[rtb_Abs1_tmp]) {
-        localDW->Minimum1_Valdata[rtb_Abs1_tmp] = localDW->
-          Abs1[rtb_TmpSignalConversionAtDotP_1];
-        localDW->Minimum1[rtb_Abs1_tmp] = (real_T)
-          rtb_TmpSignalConversionAtDotP_0 + 2.0;
+    localDW->Minimum1_Valdata[rtb_Abs1_tmp_0] = localDW->Abs1[rtb_Abs1_tmp];
+    localDW->Minimum1[rtb_Abs1_tmp_0] = 1.0;
+    rtb_Abs1_tmp++;
+    for (j = 0; j < 50; j++) {
+      if (localDW->Abs1[rtb_Abs1_tmp] < localDW->Minimum1_Valdata[rtb_Abs1_tmp_0])
+      {
+        localDW->Minimum1_Valdata[rtb_Abs1_tmp_0] = localDW->Abs1[rtb_Abs1_tmp];
+        localDW->Minimum1[rtb_Abs1_tmp_0] = (real_T)j + 2.0;
       }
 
-      rtb_TmpSignalConversionAtDotP_1++;
+      rtb_Abs1_tmp++;
     }
 
-    rtb_Abs1_tmp++;
+    rtb_Abs1_tmp_0++;
   }
 
   /* End of S-Function (sdspstatminmax): '<S15>/Minimum1' */
@@ -633,27 +485,23 @@ static void Electronics_o(const real_T rtu_TVS_Information[4], const real_T
    *  Abs: '<S15>/Abs'
    *  Gain: '<S16>/Gain8'
    */
-  rtb_TmpSignalConversionAtDotP_1 = 0;
   rtb_Abs1_tmp = 0;
+  rtb_Abs1_tmp_0 = 0;
   for (i = 0; i < 4; i++) {
-    localDW->Minimum_Valdata[rtb_Abs1_tmp] = localDW->
-      Abs_i[rtb_TmpSignalConversionAtDotP_1];
-    localDW->Gain8[rtb_Abs1_tmp] = 1.0;
-    rtb_TmpSignalConversionAtDotP_1++;
-    for (rtb_TmpSignalConversionAtDotP_0 = 0; rtb_TmpSignalConversionAtDotP_0 <
-         50; rtb_TmpSignalConversionAtDotP_0++) {
-      if (localDW->Abs_i[rtb_TmpSignalConversionAtDotP_1] <
-          localDW->Minimum_Valdata[rtb_Abs1_tmp]) {
-        localDW->Minimum_Valdata[rtb_Abs1_tmp] = localDW->
-          Abs_i[rtb_TmpSignalConversionAtDotP_1];
-        localDW->Gain8[rtb_Abs1_tmp] = (real_T)rtb_TmpSignalConversionAtDotP_0 +
-          2.0;
+    localDW->Minimum_Valdata[rtb_Abs1_tmp_0] = localDW->Abs_i[rtb_Abs1_tmp];
+    localDW->Gain8[rtb_Abs1_tmp_0] = 1.0;
+    rtb_Abs1_tmp++;
+    for (j = 0; j < 50; j++) {
+      if (localDW->Abs_i[rtb_Abs1_tmp] < localDW->Minimum_Valdata[rtb_Abs1_tmp_0])
+      {
+        localDW->Minimum_Valdata[rtb_Abs1_tmp_0] = localDW->Abs_i[rtb_Abs1_tmp];
+        localDW->Gain8[rtb_Abs1_tmp_0] = (real_T)j + 2.0;
       }
 
-      rtb_TmpSignalConversionAtDotP_1++;
+      rtb_Abs1_tmp++;
     }
 
-    rtb_Abs1_tmp++;
+    rtb_Abs1_tmp_0++;
   }
 
   /* End of S-Function (sdspstatminmax): '<S15>/Minimum' */
@@ -869,25 +717,25 @@ static void Electronics_o(const real_T rtu_TVS_Information[4], const real_T
   /* Gain: '<S11>/Gain' */
   localDW->CCaller_o5 *= 0.28194;
 
-  /* Math: '<S27>/Square1' */
+  /* Math: '<S21>/Square1' */
   localDW->Square1 = localDW->CCaller_o5 * localDW->CCaller_o5;
 
-  /* Product: '<S27>/Product' */
+  /* Product: '<S21>/Product' */
   localDW->Square1 *= localDW->CCaller_o5;
 
-  /* Gain: '<S27>/Gain' */
+  /* Gain: '<S21>/Gain' */
   localDW->Square1 *= 7.0E-5;
 
-  /* Math: '<S27>/Square' */
+  /* Math: '<S21>/Square' */
   localDW->Square = localDW->CCaller_o5 * localDW->CCaller_o5;
 
-  /* Gain: '<S27>/Gain1' */
+  /* Gain: '<S21>/Gain1' */
   localDW->Square *= 0.0038;
 
-  /* Gain: '<S27>/Gain2' */
+  /* Gain: '<S21>/Gain2' */
   localDW->CCaller_o2 = 0.6535 * localDW->CCaller_o5;
 
-  /* Sum: '<S27>/Sum of Elements' */
+  /* Sum: '<S21>/Sum of Elements' */
   localDW->AddConstant[0] = localDW->Square1;
   localDW->AddConstant[1] = localDW->Square;
   localDW->AddConstant[2] = localDW->CCaller_o2;
@@ -897,25 +745,25 @@ static void Electronics_o(const real_T rtu_TVS_Information[4], const real_T
   localDW->Square1 += localDW->AddConstant[2];
   localDW->Square1 += -0.1061;
 
-  /* Math: '<S28>/Square1' */
+  /* Math: '<S22>/Square1' */
   localDW->Square = localDW->CCaller_o5 * localDW->CCaller_o5;
 
-  /* Product: '<S28>/Product' */
+  /* Product: '<S22>/Product' */
   localDW->Square *= localDW->CCaller_o5;
 
-  /* Gain: '<S28>/Gain' */
+  /* Gain: '<S22>/Gain' */
   localDW->Square *= 7.0E-5;
 
-  /* Math: '<S28>/Square' */
+  /* Math: '<S22>/Square' */
   localDW->rtb_Sum4_idx_2 = localDW->CCaller_o5 * localDW->CCaller_o5;
 
-  /* Gain: '<S28>/Gain1' */
+  /* Gain: '<S22>/Gain1' */
   localDW->CCaller_o2 = -0.0038 * localDW->rtb_Sum4_idx_2;
 
-  /* Gain: '<S28>/Gain2' */
+  /* Gain: '<S22>/Gain2' */
   localDW->CCaller_o5 *= 0.6535;
 
-  /* Sum: '<S28>/Sum of Elements' */
+  /* Sum: '<S22>/Sum of Elements' */
   localDW->AddConstant[0] = localDW->Square;
   localDW->AddConstant[1] = localDW->CCaller_o2;
   localDW->AddConstant[2] = localDW->CCaller_o5;
@@ -948,8 +796,8 @@ static void Electronics_o(const real_T rtu_TVS_Information[4], const real_T
 
   /* Gain: '<S17>/Gain' */
   rtb_UnitDelay_idx_0 = 0.0 * localDW->Square;
-  localDW->rtb_UnitDelay_idx_1 = 0.0 * localDW->Square;
-  localDW->rtb_UnitDelay_idx_2 = localDW->Square;
+  rtb_UnitDelay_idx_1 = 0.0 * localDW->Square;
+  rtb_UnitDelay_idx_2 = localDW->Square;
   localDW->rtb_UnitDelay_idx_3 = localDW->Square;
 
   /* Gain: '<S17>/Gain2' */
@@ -961,8 +809,7 @@ static void Electronics_o(const real_T rtu_TVS_Information[4], const real_T
    *  Gain: '<S17>/Gain'
    *  Gain: '<S17>/Gain2'
    */
-  localDW->rtb_Gain6_idx_1 = localDW->rtb_Sum4_idx_2 +
-    localDW->rtb_UnitDelay_idx_2;
+  localDW->rtb_Gain6_idx_1 = localDW->rtb_Sum4_idx_2 + rtb_UnitDelay_idx_2;
 
   /* Saturate: '<S16>/Max Torque' incorporates:
    *  Gain: '<S16>/Gain8'
@@ -997,244 +844,35 @@ static void Electronics_o(const real_T rtu_TVS_Information[4], const real_T
    */
   localDW->Square = 0.15915494309189535 * fabs(localDW->Square1);
 
-  /* DataTypeConversion: '<S21>/CastU16En16' */
-  rtb_QuadHandle1b = (uint32_T)(localDW->Square * 4.294967296E+9);
-
-  /* RelationalOperator: '<S21>/LTEp25' */
-  rtb_LessThan_e = (rtb_QuadHandle1b <= 1073741824U);
-
-  /* RelationalOperator: '<S21>/GTEp75' */
-  rtb_LowerRelop1 = (rtb_QuadHandle1b >= 3221225472U);
-
-  /* Switch: '<S21>/QuadHandle2' incorporates:
-   *  Constant: '<S21>/Point75'
-   *  RelationalOperator: '<S21>/LTEp50'
-   *  Sum: '<S21>/p75mA'
-   *  Switch: '<S21>/QuadHandle1b'
-   */
-  if (rtb_QuadHandle1b <= 2147483648U) {
-    /* Switch: '<S21>/QuadHandle1a' incorporates:
-     *  Constant: '<S21>/Point25'
-     *  Sum: '<S21>/Amp25'
-     *  Sum: '<S21>/p25mA'
-     */
-    if (rtb_LessThan_e) {
-      rtb_QuadHandle1b = 1073741824U - rtb_QuadHandle1b;
-    } else {
-      rtb_QuadHandle1b -= 1073741824U;
-    }
-  } else if (rtb_LowerRelop1) {
-    /* Switch: '<S21>/QuadHandle1b' incorporates:
-     *  Constant: '<S21>/Point75'
-     *  Sum: '<S21>/Amp75'
-     */
-    rtb_QuadHandle1b -= 3221225472U;
-  } else {
-    rtb_QuadHandle1b = 3221225472U - rtb_QuadHandle1b;
-  }
-
-  /* Gain: '<S11>/Gain1' */
-  rtb_Abs_m_idx_0 = localDW->Square1;
-
-  /* RelationalOperator: '<S21>/LTEp25' */
-  rtb_LTEp25_p_idx_0 = rtb_LessThan_e;
-
-  /* RelationalOperator: '<S21>/GTEp75' */
-  rtb_LTEp50_m_idx_0 = rtb_LowerRelop1;
-
-  /* Gain: '<S11>/Gain1' */
-  localDW->Square1 = 0.01745329 * rtb_Abs_m_idx_1;
-
-  /* DataTypeConversion: '<S21>/CastU16En16' incorporates:
-   *  Abs: '<S13>/Abs'
-   *  DataTypeConversion: '<S23>/CastU16En16'
-   *  Gain: '<S13>/Gain'
-   */
-  rtb_QuadHandle1b_tmp = (uint32_T)(0.15915494309189535 * fabs(localDW->Square1)
-    * 4.294967296E+9);
-
-  /* RelationalOperator: '<S21>/LTEp25' incorporates:
-   *  DataTypeConversion: '<S21>/CastU16En16'
-   */
-  rtb_LessThan_e = (rtb_QuadHandle1b_tmp <= 1073741824U);
-
-  /* RelationalOperator: '<S21>/GTEp75' incorporates:
-   *  DataTypeConversion: '<S21>/CastU16En16'
-   */
-  rtb_LowerRelop1 = (rtb_QuadHandle1b_tmp >= 3221225472U);
-
-  /* Lookup_n-D: '<S20>/Look-Up Table' incorporates:
-   *  SignalConversion generated from: '<S13>/Dot Product2'
-   */
-  rtb_QuadHandle1b_idx_0 = plook_u32u32u32n31_even20c_gf(rtb_QuadHandle1b, 0U,
-    1024U, &frac);
-  rtb_TmpSignalConversionAtDotP_0 = intrp1d_s32s64s64u32u32n31l_f
-    (rtb_QuadHandle1b_idx_0, frac, rtConstP.pooled18);
-
-  /* Switch: '<S21>/QuadHandle2' incorporates:
-   *  Constant: '<S21>/Point75'
-   *  DataTypeConversion: '<S21>/CastU16En16'
-   *  RelationalOperator: '<S21>/LTEp50'
-   *  Sum: '<S21>/p75mA'
-   *  Switch: '<S21>/QuadHandle1b'
-   */
-  if (rtb_QuadHandle1b_tmp <= 2147483648U) {
-    /* Switch: '<S21>/QuadHandle1a' incorporates:
-     *  Constant: '<S21>/Point25'
-     *  Sum: '<S21>/Amp25'
-     *  Sum: '<S21>/p25mA'
-     */
-    if (rtb_LessThan_e) {
-      rtb_QuadHandle1b = 1073741824U - rtb_QuadHandle1b_tmp;
-    } else {
-      rtb_QuadHandle1b = rtb_QuadHandle1b_tmp - 1073741824U;
-    }
-  } else if (rtb_LowerRelop1) {
-    /* Switch: '<S21>/QuadHandle1b' incorporates:
-     *  Constant: '<S21>/Point75'
-     *  Sum: '<S21>/Amp75'
-     */
-    rtb_QuadHandle1b = rtb_QuadHandle1b_tmp - 3221225472U;
-  } else {
-    rtb_QuadHandle1b = 3221225472U - rtb_QuadHandle1b_tmp;
-  }
-
-  /* Lookup_n-D: '<S20>/Look-Up Table' incorporates:
-   *  SignalConversion generated from: '<S13>/Dot Product2'
-   */
-  rtb_QuadHandle1b_idx_0 = plook_u32u32u32n31_even20c_gf(rtb_QuadHandle1b, 0U,
-    1024U, &frac);
-  rtb_TmpSignalConversionAtDotP_1 = intrp1d_s32s64s64u32u32n31l_f
-    (rtb_QuadHandle1b_idx_0, frac, rtConstP.pooled18);
-
-  /* Switch: '<S21>/SignCorrected' incorporates:
-   *  Logic: '<S21>/1st or 4th Quad'
-   *  SignalConversion generated from: '<S13>/Dot Product2'
-   *  UnaryMinus: '<S21>/Negate'
-   */
-  i = rtb_TmpSignalConversionAtDotP_0;
-  if ((!rtb_LTEp25_p_idx_0) && (!rtb_LTEp50_m_idx_0)) {
-    i = -rtb_TmpSignalConversionAtDotP_0;
-  }
-
-  /* DataTypeConversion: '<S23>/CastU16En16' */
-  rtb_QuadHandle1b = (uint32_T)(localDW->Square * 4.294967296E+9);
-
-  /* RelationalOperator: '<S23>/LTEp50' */
-  rtb_LTEp25_p_idx_0 = (rtb_QuadHandle1b <= 2147483648U);
-
-  /* Switch: '<S23>/QuadHandle1' incorporates:
-   *  Constant: '<S23>/Point50'
-   *  Sum: '<S23>/Amp50'
-   */
-  if (!rtb_LTEp25_p_idx_0) {
-    rtb_QuadHandle1b -= 2147483648U;
-  }
-
-  /* Switch: '<S23>/QuadHandle2' incorporates:
-   *  Constant: '<S23>/Point50'
-   *  RelationalOperator: '<S23>/LTEp25'
-   *  Sum: '<S23>/p50mA'
-   */
-  if (rtb_QuadHandle1b > 1073741824U) {
-    rtb_QuadHandle1b = 2147483648U - rtb_QuadHandle1b;
-  }
-
-  /* RelationalOperator: '<S23>/LTEp50' */
-  rtb_LTEp50_m_idx_0 = rtb_LTEp25_p_idx_0;
-
-  /* Switch: '<S21>/SignCorrected' incorporates:
-   *  SignalConversion generated from: '<S13>/Dot Product2'
-   */
-  rtb_TmpSignalConversionAtDotP_0 = i;
-
-  /* DataTypeConversion: '<S23>/CastU16En16' incorporates:
-   *  Switch: '<S23>/QuadHandle2'
-   */
-  rtb_QuadHandle1b_idx_0 = rtb_QuadHandle1b;
-
-  /* Switch: '<S21>/SignCorrected' incorporates:
-   *  Logic: '<S21>/1st or 4th Quad'
-   *  SignalConversion generated from: '<S13>/Dot Product2'
-   *  UnaryMinus: '<S21>/Negate'
-   */
-  i = rtb_TmpSignalConversionAtDotP_1;
-  if ((!rtb_LessThan_e) && (!rtb_LowerRelop1)) {
-    i = -rtb_TmpSignalConversionAtDotP_1;
-  }
-
-  /* DataTypeConversion: '<S23>/CastU16En16' */
-  rtb_QuadHandle1b = rtb_QuadHandle1b_tmp;
-
-  /* RelationalOperator: '<S23>/LTEp50' */
-  rtb_LTEp25_p_idx_0 = (rtb_QuadHandle1b_tmp <= 2147483648U);
-
-  /* Switch: '<S23>/QuadHandle1' incorporates:
-   *  Constant: '<S23>/Point50'
-   *  Sum: '<S23>/Amp50'
-   */
-  if (!rtb_LTEp25_p_idx_0) {
-    rtb_QuadHandle1b = rtb_QuadHandle1b_tmp - 2147483648U;
-  }
-
-  /* Switch: '<S23>/QuadHandle2' incorporates:
-   *  Constant: '<S23>/Point50'
-   *  RelationalOperator: '<S23>/LTEp25'
-   *  Sum: '<S23>/p50mA'
-   */
-  if (rtb_QuadHandle1b > 1073741824U) {
-    rtb_QuadHandle1b = 2147483648U - rtb_QuadHandle1b;
-  }
-
-  /* Lookup_n-D: '<S22>/Look-Up Table' incorporates:
-   *  SignalConversion generated from: '<S13>/Dot Product1'
-   *  Switch: '<S23>/QuadHandle2'
-   */
-  rtb_QuadHandle1b_idx_0 = plook_u32u32u64n32_even20c_gf(rtb_QuadHandle1b_idx_0,
-    0U, 1024U, &localDW->frac);
-  rtb_TmpSignalConversionAtDotP_1 = intrp1d_s32s64s64u32u64n32l_f
-    (rtb_QuadHandle1b_idx_0, localDW->frac, rtConstP.pooled18);
-  rtb_QuadHandle1b_idx_0 = plook_u32u32u64n32_even20c_gf(rtb_QuadHandle1b, 0U,
-    1024U, &localDW->frac);
-
-  /* Switch: '<S23>/SignCorrected' incorporates:
-   *  SignalConversion generated from: '<S13>/Dot Product1'
-   *  UnaryMinus: '<S23>/Negate'
-   */
-  if (!rtb_LTEp50_m_idx_0) {
-    rtb_TmpSignalConversionAtDotP_1 = -rtb_TmpSignalConversionAtDotP_1;
-  }
+  /* Trigonometry: '<S13>/Cos' */
+  localDW->CCaller_o2 = cos(localDW->Square);
 
   /* Signum: '<S13>/Sign' */
-  if (rtIsNaN(rtb_Abs_m_idx_0)) {
-    localDW->CCaller_o2 = rtb_Abs_m_idx_0;
-  } else if (rtb_Abs_m_idx_0 < 0.0) {
-    localDW->CCaller_o2 = -1.0;
+  if (rtIsNaN(localDW->Square1)) {
+  } else if (localDW->Square1 < 0.0) {
+    localDW->Square1 = -1.0;
   } else {
-    localDW->CCaller_o2 = (rtb_Abs_m_idx_0 > 0.0);
+    localDW->Square1 = (localDW->Square1 > 0.0);
   }
+
+  /* Gain: '<S11>/Gain1' incorporates:
+   *  Product: '<S13>/Product1'
+   *  Trigonometry: '<S13>/Sin'
+   */
+  rtb_Abs_m_idx_0 = sin(localDW->Square) * localDW->Square1;
+  localDW->Square1 = 0.01745329 * rtb_Abs_m_idx_1;
+
+  /* Gain: '<S13>/Gain' incorporates:
+   *  Abs: '<S13>/Abs'
+   */
+  localDW->Square = 0.15915494309189535 * fabs(localDW->Square1);
 
   /* DotProduct: '<S13>/Dot Product1' incorporates:
    *  Constant: '<S13>/Constant5'
-   *  Product: '<S13>/Product1'
    *  SignalConversion generated from: '<S13>/Dot Product1'
    */
-  localDW->rtb_TmpSignalConversionAtDotP_m = (real_T)(int32_T)floor((real_T)
-    rtb_TmpSignalConversionAtDotP_1 * 9.3132257461547852E-10 *
-    localDW->CCaller_o2 * 1.073741824E+9) * 9.3132257461547852E-10 * 0.7922471 +
-    (real_T)rtb_TmpSignalConversionAtDotP_0 * 9.3132257461547852E-10 * 0.647895;
-
-  /* Switch: '<S23>/SignCorrected' incorporates:
-   *  Lookup_n-D: '<S22>/Look-Up Table'
-   *  UnaryMinus: '<S23>/Negate'
-   */
-  if (rtb_LTEp25_p_idx_0) {
-    rtb_TmpSignalConversionAtDotP_0 = intrp1d_s32s64s64u32u64n32l_f
-      (rtb_QuadHandle1b_idx_0, localDW->frac, rtConstP.pooled18);
-  } else {
-    rtb_TmpSignalConversionAtDotP_0 = -intrp1d_s32s64s64u32u64n32l_f
-      (rtb_QuadHandle1b_idx_0, localDW->frac, rtConstP.pooled18);
-  }
+  localDW->rtb_TmpSignalConversionAtDotP_m = localDW->CCaller_o2 * 0.647895 +
+    rtb_Abs_m_idx_0 * 0.7922471;
 
   /* Signum: '<S13>/Sign' */
   if (rtIsNaN(localDW->Square1)) {
@@ -1247,11 +885,11 @@ static void Electronics_o(const real_T rtu_TVS_Information[4], const real_T
   /* DotProduct: '<S13>/Dot Product2' incorporates:
    *  Constant: '<S13>/Constant6'
    *  Product: '<S13>/Product1'
+   *  Trigonometry: '<S13>/Cos'
+   *  Trigonometry: '<S13>/Sin'
    */
-  localDW->CCaller_o2 = (real_T)(int32_T)floor((real_T)
-    rtb_TmpSignalConversionAtDotP_0 * 9.3132257461547852E-10 * localDW->Square1 *
-    1.073741824E+9) * 9.3132257461547852E-10 * 0.7922471 + (real_T)i *
-    9.3132257461547852E-10 * -0.647895;
+  localDW->CCaller_o2 = sin(localDW->Square) * localDW->Square1 * 0.7922471 +
+    cos(localDW->Square) * -0.647895;
 
   /* Math: '<S10>/Square' */
   rtb_Abs_m_idx_0 = rtu_TVS_Information_d[0] * rtu_TVS_Information_d[0];
@@ -1273,9 +911,8 @@ static void Electronics_o(const real_T rtu_TVS_Information[4], const real_T
   /* Lookup_n-D: '<S10>/1-D Lookup Table' incorporates:
    *  CCaller: '<S5>/C Caller'
    */
-  rtb_QuadHandle1b_idx_0 = plook_evenc(localDW->Square, 0.0, 3.0, 9U,
-    &rtb_Abs_m_idx_0);
-  localDW->Square = intrp1d_l(rtb_QuadHandle1b_idx_0, rtb_Abs_m_idx_0,
+  bpIdx = plook_evenc(localDW->Square, 0.0, 3.0, 9U, &rtb_Abs_m_idx_0);
+  localDW->Square = intrp1d_l(bpIdx, rtb_Abs_m_idx_0,
     rtConstP.uDLookupTable_tableData_h);
 
   /* Gain: '<S11>/Gain2' */
@@ -1324,27 +961,27 @@ static void Electronics_o(const real_T rtu_TVS_Information[4], const real_T
    *  Gain: '<S17>/Gain7'
    *  Product: '<S17>/Product1'
    *  Sum: '<S17>/Add'
-   *  Switch: '<S25>/Switch'
+   *  Switch: '<S19>/Switch'
    */
   if (rtb_Abs_m_idx_0 != 0.0) {
     localDW->AddConstant[0] = (localDW->rtb_Sum4_idx_0 + rtb_UnitDelay_idx_0) *
       localDW->rtb_TmpSignalConversionAtDotP_m * 0.38765914066666662;
-    localDW->AddConstant[1] = localDW->CCaller_o2 * localDW->rtb_UnitDelay_idx_1
-      * 0.38765914066666662;
+    localDW->AddConstant[1] = localDW->CCaller_o2 * rtb_UnitDelay_idx_1 *
+      0.38765914066666662;
 
-    /* Switch: '<S25>/Switch2' incorporates:
+    /* Switch: '<S19>/Switch2' incorporates:
      *  Bias: '<S5>/Add Constant'
      *  DotProduct: '<S13>/Dot Product1'
      *  Gain: '<S17>/Gain'
      *  Gain: '<S17>/Gain2'
      *  Gain: '<S17>/Gain7'
      *  Product: '<S17>/Product1'
-     *  RelationalOperator: '<S25>/LowerRelop1'
-     *  RelationalOperator: '<S25>/UpperRelop'
+     *  RelationalOperator: '<S19>/LowerRelop1'
+     *  RelationalOperator: '<S19>/UpperRelop'
      *  Saturate: '<S16>/Max Torque'
      *  Sum: '<S17>/Add'
      *  Switch: '<S16>/Switch1'
-     *  Switch: '<S25>/Switch'
+     *  Switch: '<S19>/Switch'
      */
     if (localDW->rtb_Gain6_idx_1 > localDW->rtb_Gain8_tmp) {
       localDW->rtb_Gain6_idx_1 = localDW->rtb_Gain8_tmp;
@@ -1354,21 +991,21 @@ static void Electronics_o(const real_T rtu_TVS_Information[4], const real_T
 
     localDW->AddConstant[2] = 0.62102 * localDW->rtb_Gain6_idx_1 * 0.387634;
 
-    /* Switch: '<S25>/Switch2' incorporates:
+    /* Switch: '<S19>/Switch2' incorporates:
      *  Bias: '<S5>/Add Constant'
      *  Constant: '<S13>/Constant3'
      *  Gain: '<S17>/Gain7'
      *  Product: '<S17>/Product1'
-     *  RelationalOperator: '<S25>/LowerRelop1'
-     *  RelationalOperator: '<S25>/UpperRelop'
+     *  RelationalOperator: '<S19>/LowerRelop1'
+     *  RelationalOperator: '<S19>/UpperRelop'
      *  Saturate: '<S16>/Max Torque'
      *  Switch: '<S16>/Switch1'
-     *  Switch: '<S25>/Switch'
+     *  Switch: '<S19>/Switch'
      */
     if (localDW->rtb_UnitDelay_idx_3 > localDW->rtu_TVS_Information_idx_2) {
       localDW->CCaller_o5 = localDW->rtu_TVS_Information_idx_2;
     } else if (localDW->rtb_UnitDelay_idx_3 < localDW->Minimum1[3]) {
-      /* Switch: '<S25>/Switch' incorporates:
+      /* Switch: '<S19>/Switch' incorporates:
        *  Switch: '<S16>/Switch1'
        */
       localDW->CCaller_o5 = localDW->Minimum1[3];
@@ -1458,10 +1095,10 @@ static void Electronics_o(const real_T rtu_TVS_Information[4], const real_T
   localDW->CCaller_o5 += localDW->AddConstant[2];
   localDW->CCaller_o5 += localDW->AddConstant[3];
 
-  /* RelationalOperator: '<S24>/LowerRelop1' */
+  /* RelationalOperator: '<S18>/LowerRelop1' */
   rtb_LowerRelop1 = (localDW->Sum7 > localDW->CCaller_o5);
 
-  /* Switch: '<S24>/Switch2' */
+  /* Switch: '<S18>/Switch2' */
   if (!rtb_LowerRelop1) {
     /* Switch: '<S17>/Switch2' incorporates:
      *  Constant: '<S13>/Constant3'
@@ -1473,54 +1110,53 @@ static void Electronics_o(const real_T rtu_TVS_Information[4], const real_T
      *  Gain: '<S17>/Gain2'
      *  Product: '<S17>/Product2'
      *  Sum: '<S17>/Add'
-     *  Switch: '<S26>/Switch'
+     *  Switch: '<S20>/Switch'
      */
     if (rtb_Abs_m_idx_0 != 0.0) {
       localDW->AddConstant[0] = localDW->rtb_TmpSignalConversionAtDotP_m *
         rtb_UnitDelay_idx_0 * 0.38765914066666662;
-      localDW->AddConstant[1] = (localDW->rtb_Sum4_idx_1 +
-        localDW->rtb_UnitDelay_idx_1) * localDW->CCaller_o2 *
-        0.38765914066666662;
+      localDW->AddConstant[1] = (localDW->rtb_Sum4_idx_1 + rtb_UnitDelay_idx_1) *
+        localDW->CCaller_o2 * 0.38765914066666662;
 
-      /* Switch: '<S26>/Switch2' incorporates:
+      /* Switch: '<S20>/Switch2' incorporates:
        *  DotProduct: '<S13>/Dot Product1'
        *  Gain: '<S17>/Gain'
        *  Gain: '<S17>/Gain1'
        *  Gain: '<S17>/Gain2'
        *  Product: '<S17>/Product2'
-       *  RelationalOperator: '<S26>/LowerRelop1'
-       *  RelationalOperator: '<S26>/UpperRelop'
+       *  RelationalOperator: '<S20>/LowerRelop1'
+       *  RelationalOperator: '<S20>/UpperRelop'
        *  Saturate: '<S16>/Max Torque'
        *  Sum: '<S17>/Add'
        *  Switch: '<S16>/Switch1'
        *  Switch: '<S17>/Switch2'
-       *  Switch: '<S26>/Switch'
+       *  Switch: '<S20>/Switch'
        */
-      if (localDW->rtb_UnitDelay_idx_2 > localDW->rtb_Gain8_tmp) {
+      if (rtb_UnitDelay_idx_2 > localDW->rtb_Gain8_tmp) {
         localDW->CCaller_o5 = localDW->rtb_Gain8_tmp;
-      } else if (localDW->rtb_UnitDelay_idx_2 < localDW->Minimum1[2]) {
+      } else if (rtb_UnitDelay_idx_2 < localDW->Minimum1[2]) {
         localDW->CCaller_o5 = localDW->Minimum1[2];
       } else {
-        localDW->CCaller_o5 = localDW->rtb_UnitDelay_idx_2;
+        localDW->CCaller_o5 = rtb_UnitDelay_idx_2;
       }
 
       localDW->AddConstant[2] = 0.62102 * localDW->CCaller_o5 * 0.387634;
 
-      /* Switch: '<S26>/Switch2' incorporates:
+      /* Switch: '<S20>/Switch2' incorporates:
        *  Constant: '<S13>/Constant3'
        *  Gain: '<S17>/Gain1'
        *  Product: '<S17>/Product2'
-       *  RelationalOperator: '<S26>/LowerRelop1'
-       *  RelationalOperator: '<S26>/UpperRelop'
+       *  RelationalOperator: '<S20>/LowerRelop1'
+       *  RelationalOperator: '<S20>/UpperRelop'
        *  Saturate: '<S16>/Max Torque'
        *  Switch: '<S16>/Switch1'
        *  Switch: '<S17>/Switch2'
-       *  Switch: '<S26>/Switch'
+       *  Switch: '<S20>/Switch'
        */
       if (localDW->rtb_Sum4_idx_2 > localDW->rtu_TVS_Information_idx_2) {
         localDW->rtb_Sum4_idx_2 = localDW->rtu_TVS_Information_idx_2;
       } else if (localDW->rtb_Sum4_idx_2 < localDW->Minimum1[3]) {
-        /* Switch: '<S26>/Switch' incorporates:
+        /* Switch: '<S20>/Switch' incorporates:
          *  Switch: '<S16>/Switch1'
          */
         localDW->rtb_Sum4_idx_2 = localDW->Minimum1[3];
@@ -1542,8 +1178,8 @@ static void Electronics_o(const real_T rtu_TVS_Information[4], const real_T
     localDW->rtb_Sum4_idx_1 = ((localDW->AddConstant[0] + localDW->AddConstant[1])
       + localDW->AddConstant[2]) + localDW->AddConstant[3];
 
-    /* Switch: '<S24>/Switch' incorporates:
-     *  RelationalOperator: '<S24>/UpperRelop'
+    /* Switch: '<S18>/Switch' incorporates:
+     *  RelationalOperator: '<S18>/UpperRelop'
      */
     if (localDW->Sum7 < localDW->rtb_Sum4_idx_1) {
       localDW->CCaller_o5 = localDW->rtb_Sum4_idx_1;
@@ -1551,10 +1187,10 @@ static void Electronics_o(const real_T rtu_TVS_Information[4], const real_T
       localDW->CCaller_o5 = localDW->Sum7;
     }
 
-    /* End of Switch: '<S24>/Switch' */
+    /* End of Switch: '<S18>/Switch' */
   }
 
-  /* End of Switch: '<S24>/Switch2' */
+  /* End of Switch: '<S18>/Switch2' */
 
   /* Abs: '<S17>/Abs3' */
   localDW->Square1 = fabs(localDW->CCaller_o5);
@@ -1836,41 +1472,41 @@ static void Electronics_o(const real_T rtu_TVS_Information[4], const real_T
   localDW->AddConstant[2] = rty_Tx[2] - localDW->PrevY[2];
   localDW->AddConstant[3] = rty_Tx[3] - localDW->PrevY[3];
   if (localDW->AddConstant[0] > 1.875) {
-    localDW->rtb_Sum4_idx_1 = localDW->PrevY[0] + 1.875;
+    localDW->CCaller_o5 = localDW->PrevY[0] + 1.875;
   } else if (localDW->AddConstant[0] < -4.5) {
-    localDW->rtb_Sum4_idx_1 = localDW->PrevY[0] + -4.5;
+    localDW->CCaller_o5 = localDW->PrevY[0] + -4.5;
   } else {
-    localDW->rtb_Sum4_idx_1 = rty_Tx[0];
+    localDW->CCaller_o5 = rty_Tx[0];
   }
 
-  rty_Tx[0] = localDW->rtb_Sum4_idx_1;
+  rty_Tx[0] = localDW->CCaller_o5;
   if (localDW->AddConstant[1] > 1.875) {
-    localDW->rtb_Sum4_idx_1 = localDW->PrevY[1] + 1.875;
+    localDW->CCaller_o5 = localDW->PrevY[1] + 1.875;
   } else if (localDW->AddConstant[1] < -4.5) {
-    localDW->rtb_Sum4_idx_1 = localDW->PrevY[1] + -4.5;
+    localDW->CCaller_o5 = localDW->PrevY[1] + -4.5;
   } else {
-    localDW->rtb_Sum4_idx_1 = rty_Tx[1];
+    localDW->CCaller_o5 = rty_Tx[1];
   }
 
-  rty_Tx[1] = localDW->rtb_Sum4_idx_1;
+  rty_Tx[1] = localDW->CCaller_o5;
   if (localDW->AddConstant[2] > 1.875) {
-    localDW->rtb_Sum4_idx_1 = localDW->PrevY[2] + 1.875;
+    localDW->CCaller_o5 = localDW->PrevY[2] + 1.875;
   } else if (localDW->AddConstant[2] < -4.5) {
-    localDW->rtb_Sum4_idx_1 = localDW->PrevY[2] + -4.5;
+    localDW->CCaller_o5 = localDW->PrevY[2] + -4.5;
   } else {
-    localDW->rtb_Sum4_idx_1 = rty_Tx[2];
+    localDW->CCaller_o5 = rty_Tx[2];
   }
 
-  rty_Tx[2] = localDW->rtb_Sum4_idx_1;
+  rty_Tx[2] = localDW->CCaller_o5;
   if (localDW->AddConstant[3] > 1.875) {
-    localDW->rtb_Sum4_idx_1 = localDW->PrevY[3] + 1.875;
+    localDW->CCaller_o5 = localDW->PrevY[3] + 1.875;
   } else if (localDW->AddConstant[3] < -4.5) {
-    localDW->rtb_Sum4_idx_1 = localDW->PrevY[3] + -4.5;
+    localDW->CCaller_o5 = localDW->PrevY[3] + -4.5;
   } else {
-    localDW->rtb_Sum4_idx_1 = rty_Tx[3];
+    localDW->CCaller_o5 = rty_Tx[3];
   }
 
-  rty_Tx[3] = localDW->rtb_Sum4_idx_1;
+  rty_Tx[3] = localDW->CCaller_o5;
   localDW->PrevY[0] = rty_Tx[0];
   localDW->PrevY[1] = rty_Tx[1];
   localDW->PrevY[2] = rty_Tx[2];

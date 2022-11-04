@@ -7,9 +7,9 @@
  *
  * Code generated for Simulink model 'Electronics'.
  *
- * Model version                  : 1.199
+ * Model version                  : 1.200
  * Simulink Coder version         : 9.7 (R2022a) 13-Nov-2021
- * C/C++ source code generated on : Thu Nov  3 19:42:22 2022
+ * C/C++ source code generated on : Thu Nov  3 22:12:24 2022
  *
  * Target selection: ert.tlc
  * Embedded hardware selection: ARM Compatible->ARM Cortex-M
@@ -52,8 +52,8 @@ typedef struct {
   real_T UnitDelay1_DSTATE;            /* '<S17>/Unit Delay1' */
   real_T UnitDelay5_DSTATE;            /* '<S17>/Unit Delay5' */
   real_T CCaller_o5;                   /* '<S5>/C Caller' */
-  real_T Square1;                      /* '<S27>/Square1' */
-  real_T Square;                       /* '<S27>/Square' */
+  real_T Square1;                      /* '<S21>/Square1' */
+  real_T Square;                       /* '<S21>/Square' */
   real_T CCaller_o2;                   /* '<S5>/C Caller' */
   real_T Sum7;                         /* '<S9>/Sum7' */
   real_T rtb_Sum4_idx_0;
@@ -66,9 +66,6 @@ typedef struct {
   real_T rtb_TmpSignalConversionAtDotP_m;
   real_T rtb_Gain8_tmp;
   real_T rtb_UnitDelay_idx_3;
-  real_T rtb_UnitDelay_idx_2;
-  real_T rtb_UnitDelay_idx_1;
-  uint64_T frac;
   int8_T DiscreteTimeIntegrator_PrevRese;/* '<S9>/Discrete-Time Integrator' */
   boolean_T UnitDelay_DSTATE_e;        /* '<S17>/Unit Delay' */
   boolean_T UnitDelay4_DSTATE;         /* '<S17>/Unit Delay4' */
@@ -116,13 +113,6 @@ typedef struct {
    * Referenced by: '<S10>/1-D Lookup Table'
    */
   real_T uDLookupTable_tableData_h[10];
-
-  /* Pooled Parameter (Expression: YData)
-   * Referenced by:
-   *   '<S20>/Look-Up Table'
-   *   '<S22>/Look-Up Table'
-   */
-  int32_T pooled18[1025];
 } ConstP;
 
 /* External inputs (root inport signals with default storage) */
@@ -189,12 +179,12 @@ void rt_OneStep(RT_MODEL *const rtM);
 /*-
  * These blocks were eliminated from the model due to optimizations:
  *
- * Block '<S24>/Data Type Duplicate' : Unused code path elimination
- * Block '<S24>/Data Type Propagation' : Unused code path elimination
- * Block '<S25>/Data Type Duplicate' : Unused code path elimination
- * Block '<S25>/Data Type Propagation' : Unused code path elimination
- * Block '<S26>/Data Type Duplicate' : Unused code path elimination
- * Block '<S26>/Data Type Propagation' : Unused code path elimination
+ * Block '<S18>/Data Type Duplicate' : Unused code path elimination
+ * Block '<S18>/Data Type Propagation' : Unused code path elimination
+ * Block '<S19>/Data Type Duplicate' : Unused code path elimination
+ * Block '<S19>/Data Type Propagation' : Unused code path elimination
+ * Block '<S20>/Data Type Duplicate' : Unused code path elimination
+ * Block '<S20>/Data Type Propagation' : Unused code path elimination
  * Block '<S9>/Constant1' : Unused code path elimination
  * Block '<S9>/Constant2' : Unused code path elimination
  * Block '<S9>/Product2' : Unused code path elimination
@@ -243,17 +233,11 @@ void rt_OneStep(RT_MODEL *const rtM);
  * '<S15>'  : 'complete_plant_v6/Electronics/Fixed Point Sub/Torque Vectoring Micro Controller/Constraint Generation/Power Limit Fixed'
  * '<S16>'  : 'complete_plant_v6/Electronics/Fixed Point Sub/Torque Vectoring Micro Controller/Constraint Generation/Torque Boundary Fixed'
  * '<S17>'  : 'complete_plant_v6/Electronics/Fixed Point Sub/Torque Vectoring Micro Controller/Constraint Generation/Yaw Constraint Fixed'
- * '<S18>'  : 'complete_plant_v6/Electronics/Fixed Point Sub/Torque Vectoring Micro Controller/Constraint Generation/Moment Arm Fixed/Cosine Lookup'
- * '<S19>'  : 'complete_plant_v6/Electronics/Fixed Point Sub/Torque Vectoring Micro Controller/Constraint Generation/Moment Arm Fixed/Sine Lookup'
- * '<S20>'  : 'complete_plant_v6/Electronics/Fixed Point Sub/Torque Vectoring Micro Controller/Constraint Generation/Moment Arm Fixed/Cosine Lookup/Cosine'
- * '<S21>'  : 'complete_plant_v6/Electronics/Fixed Point Sub/Torque Vectoring Micro Controller/Constraint Generation/Moment Arm Fixed/Cosine Lookup/Cosine/Handle Quarter Symmetry Cosine'
- * '<S22>'  : 'complete_plant_v6/Electronics/Fixed Point Sub/Torque Vectoring Micro Controller/Constraint Generation/Moment Arm Fixed/Sine Lookup/Sine'
- * '<S23>'  : 'complete_plant_v6/Electronics/Fixed Point Sub/Torque Vectoring Micro Controller/Constraint Generation/Moment Arm Fixed/Sine Lookup/Sine/Handle Quarter Symmetry Sine'
- * '<S24>'  : 'complete_plant_v6/Electronics/Fixed Point Sub/Torque Vectoring Micro Controller/Constraint Generation/Yaw Constraint Fixed/Saturation Dynamic'
- * '<S25>'  : 'complete_plant_v6/Electronics/Fixed Point Sub/Torque Vectoring Micro Controller/Constraint Generation/Yaw Constraint Fixed/Saturation Dynamic1'
- * '<S26>'  : 'complete_plant_v6/Electronics/Fixed Point Sub/Torque Vectoring Micro Controller/Constraint Generation/Yaw Constraint Fixed/Saturation Dynamic2'
- * '<S27>'  : 'complete_plant_v6/Electronics/Fixed Point Sub/Torque Vectoring Micro Controller/Steering Model Fixed/left_steering'
- * '<S28>'  : 'complete_plant_v6/Electronics/Fixed Point Sub/Torque Vectoring Micro Controller/Steering Model Fixed/right_steering'
+ * '<S18>'  : 'complete_plant_v6/Electronics/Fixed Point Sub/Torque Vectoring Micro Controller/Constraint Generation/Yaw Constraint Fixed/Saturation Dynamic'
+ * '<S19>'  : 'complete_plant_v6/Electronics/Fixed Point Sub/Torque Vectoring Micro Controller/Constraint Generation/Yaw Constraint Fixed/Saturation Dynamic1'
+ * '<S20>'  : 'complete_plant_v6/Electronics/Fixed Point Sub/Torque Vectoring Micro Controller/Constraint Generation/Yaw Constraint Fixed/Saturation Dynamic2'
+ * '<S21>'  : 'complete_plant_v6/Electronics/Fixed Point Sub/Torque Vectoring Micro Controller/Steering Model Fixed/left_steering'
+ * '<S22>'  : 'complete_plant_v6/Electronics/Fixed Point Sub/Torque Vectoring Micro Controller/Steering Model Fixed/right_steering'
  */
 #endif                                 /* RTW_HEADER_Electronics_h_ */
 

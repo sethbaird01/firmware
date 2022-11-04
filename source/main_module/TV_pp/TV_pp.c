@@ -63,6 +63,6 @@ rtU->ang[2] = CLAMP(0.0 * ANGLE_CALIBRATION, MIN_ANG, MAX_ANG);
 
 rtU->battery_voltage = CLAMP(200.0, MIN_VOLTAGE, MAX_VOLTAGE);
 
-rtU->power_limits[0] = CLAMP(10000.0, 0.0, MAX_BATTERY_POWER);
-rtU->power_limits[1] = CLAMP(10000.0, 0.0, MIN_BATTERY_POWER);
+rtU->power_limits[0] = CLAMP(500.0, 0.0, MAX_BATTERY_POWER);
+rtU->power_limits[1] = CLAMP(500.0, 0.0, MIN_BATTERY_POWER);
 }

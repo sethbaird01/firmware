@@ -43,7 +43,7 @@ bool carInit()
     mot_left_req = mot_right_req = 0;
 
     /* Pack model data into RTM */
-    //rtM->dwork = &rtDW;
+    rtM->dwork = &rtDW;
 
     /* Initialize model */
     Electronics_initialize(rtM);
@@ -168,6 +168,7 @@ void carPeriodic()
 
         // SEND_TORQUE_REQUEST_MAIN(q_tx_can, t_req, t_req, t_req, t_req);
         
+        can_data.raw_throttle_brake.throttle = 4095 * 0.15;
 
         // t_temp = (t_temp > 469) ? 0 : t_temp + 1;
 
@@ -184,14 +185,14 @@ void carPeriodic()
         torque_r.torque_right = (int16_t)(rtY.Tx[3]*(4095.0/25.0));
 
         // check torque request (FSAE rule)
-        if(torque_r.torque_left > t_req)
-        {
-            torque_r.torque_left = t_req;
-        }
-        if(torque_r.torque_right > t_req)
-        {
-            torque_r.torque_right = t_req;
-        }
+        // if(torque_r.torque_left > t_req)
+        // {
+        //     torque_r.torque_left = t_req;
+        // }
+        // if(torque_r.torque_right > t_req)
+        // {
+        //     torque_r.torque_right = t_req;
+        // }
 
         // No regen :(
         // if (torque_r.torque_left < 0) torque_r.torque_left = 0;

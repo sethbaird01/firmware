@@ -83,8 +83,8 @@ dma_init_t adc_dma_config = ADC1_DMA_CONT_CONFIG((uint32_t) &adc_readings,
 #define TargetCoreClockrateHz 80000000
 ClockRateConfig_t clock_config = {
     .system_source              =SYSTEM_CLOCK_SRC_PLL,
-    .pll_src                    =PLL_SRC_MSI,
-    .msi_output_rate_target_hz  =16000000,
+    .pll_src                    =PLL_SRC_HSI16,
+    // .msi_output_rate_target_hz  =16000000,
     .vco_output_rate_target_hz  =160000000,
     .system_clock_target_hz     =TargetCoreClockrateHz,
     .ahb_clock_target_hz        =(TargetCoreClockrateHz / 1),
