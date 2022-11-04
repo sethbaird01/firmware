@@ -7,9 +7,9 @@
  *
  * Code generated for Simulink model 'Electronics'.
  *
- * Model version                  : 1.131
+ * Model version                  : 1.199
  * Simulink Coder version         : 9.7 (R2022a) 13-Nov-2021
- * C/C++ source code generated on : Fri Oct 28 19:01:23 2022
+ * C/C++ source code generated on : Thu Nov  3 19:42:22 2022
  *
  * Target selection: ert.tlc
  * Embedded hardware selection: ARM Compatible->ARM Cortex-M

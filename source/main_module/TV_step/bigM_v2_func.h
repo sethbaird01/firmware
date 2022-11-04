@@ -8,13 +8,13 @@
 #include <math.h>
 #include <assert.h>
 
-#define M 25
-#define N 25
+#define MN 25
+#define NN 25
 #define bM 10000000
 
 typedef struct {
   int m, n; // m=rows, n=columns, mat[m x n]
-  double mat[M][N];
+  double mat[MN][NN];
 } Tableau;
 
 void pivot_on(Tableau *tab, int row, int col);

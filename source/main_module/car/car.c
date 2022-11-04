@@ -1,6 +1,7 @@
 #include "car.h"
 #include "Electronics.h" 
 #include "TV_pp.h"
+#include "bigM_v2_func.h"
 
 uint16_t mot_left_req;  // 0 - 4095 value
 uint16_t mot_right_req; // 0 - 4095 value
@@ -42,7 +43,7 @@ bool carInit()
     mot_left_req = mot_right_req = 0;
 
     /* Pack model data into RTM */
-    rtM->dwork = &rtDW;
+    //rtM->dwork = &rtDW;
 
     /* Initialize model */
     Electronics_initialize(rtM);
