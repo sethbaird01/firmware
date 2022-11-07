@@ -7,9 +7,9 @@
  *
  * Code generated for Simulink model 'MC_PL0'.
  *
- * Model version                  : 1.6
+ * Model version                  : 1.223
  * Simulink Coder version         : 9.7 (R2022a) 13-Nov-2021
- * C/C++ source code generated on : Sat Oct 22 12:32:00 2022
+ * C/C++ source code generated on : Sun Nov  6 18:42:13 2022
  *
  * Target selection: ert.tlc
  * Embedded hardware selection: ARM Compatible->ARM Cortex-M

@@ -7,9 +7,9 @@
  *
  * Code generated for Simulink model 'Electronics'.
  *
- * Model version                  : 1.200
+ * Model version                  : 1.223
  * Simulink Coder version         : 9.7 (R2022a) 13-Nov-2021
- * C/C++ source code generated on : Thu Nov  3 22:12:24 2022
+ * C/C++ source code generated on : Sun Nov  6 18:26:17 2022
  *
  * Target selection: ert.tlc
  * Embedded hardware selection: ARM Compatible->ARM Cortex-M
@@ -40,32 +40,32 @@
 /* Block signals and states (default storage) for system '<Root>/Electronics' */
 typedef struct {
   real_T UnitDelay_DSTATE[4];          /* '<S2>/Unit Delay' */
-  real_T Minimum1_Valdata[4];          /* '<S15>/Minimum1' */
   real_T Minimum_Valdata[4];           /* '<S15>/Minimum' */
+  real_T Minimum1_Valdata[4];          /* '<S15>/Minimum1' */
   real_T PrevY[4];                     /* '<S6>/Rate Limiter' */
-  real_T Abs_i[204];                   /* '<S15>/Abs' */
-  real_T Abs1[204];                    /* '<S15>/Abs1' */
+  real_T Abs_i[644];                   /* '<S15>/Abs' */
+  real_T Abs1[644];                    /* '<S15>/Abs1' */
   real_T AddConstant[4];               /* '<S5>/Add Constant' */
-  real_T Minimum1[4];                  /* '<S15>/Minimum1' */
   real_T Gain8[4];                     /* '<S16>/Gain8' */
-  real_T DiscreteTimeIntegrator_DSTATE;/* '<S9>/Discrete-Time Integrator' */
-  real_T UnitDelay1_DSTATE;            /* '<S17>/Unit Delay1' */
   real_T UnitDelay5_DSTATE;            /* '<S17>/Unit Delay5' */
-  real_T CCaller_o5;                   /* '<S5>/C Caller' */
-  real_T Square1;                      /* '<S21>/Square1' */
-  real_T Square;                       /* '<S21>/Square' */
-  real_T CCaller_o2;                   /* '<S5>/C Caller' */
-  real_T Sum7;                         /* '<S9>/Sum7' */
-  real_T rtb_Sum4_idx_0;
-  real_T rtb_Sum4_idx_2;
-  real_T rtb_Gain6_idx_1;
-  real_T rtb_Sum4_idx_1;
+  real_T UnitDelay1_DSTATE;            /* '<S17>/Unit Delay1' */
+  real_T DiscreteTimeIntegrator_DSTATE;/* '<S9>/Discrete-Time Integrator' */
+  real_T Square1;                      /* '<S22>/Square1' */
+  real_T CCaller_o3;                   /* '<S5>/C Caller' */
+  real_T DotProduct2;                  /* '<S13>/Dot Product2' */
+  real_T avg_steering_angle;           /* '<S11>/Gain2' */
+  real_T Abs;                          /* '<S17>/Abs' */
+  real_T Sum2;                         /* '<S17>/Sum2' */
+  real_T DiscreteTimeIntegrator;
+  real_T rtb_Gain1_idx_0;
+  real_T rtb_Gain1_idx_1;
+  real_T rtb_Gain1_idx_2;
+  real_T rtb_Gain1_idx_3;
+  real_T rtb_Gain5_idx_1;
   real_T rtb_Gain5_idx_2;
   real_T rtb_Gain5_idx_3;
-  real_T rtu_TVS_Information_idx_2;
   real_T rtb_TmpSignalConversionAtDotP_m;
-  real_T rtb_Gain8_tmp;
-  real_T rtb_UnitDelay_idx_3;
+  real_T rtb_UnitDelay_g_idx_3;
   int8_T DiscreteTimeIntegrator_PrevRese;/* '<S9>/Discrete-Time Integrator' */
   boolean_T UnitDelay_DSTATE_e;        /* '<S17>/Unit Delay' */
   boolean_T UnitDelay4_DSTATE;         /* '<S17>/Unit Delay4' */
@@ -78,26 +78,26 @@ typedef struct {
 
 /* Constant parameters (default storage) */
 typedef struct {
-  /* Pooled Parameter (Expression: [1:51])
+  /* Pooled Parameter (Expression: [1:161])
    * Referenced by:
    *   '<S15>/Constant3'
    *   '<S15>/Constant5'
    */
-  real_T pooled5[51];
+  real_T pooled5[161];
 
   /* Pooled Parameter (Expression: torque_sweep)
    * Referenced by:
    *   '<S15>/Constant7'
    *   '<S15>/Constant8'
    */
-  real_T pooled6[51];
+  real_T pooled6[161];
 
   /* Pooled Parameter (Expression: power_loss_grid)
    * Referenced by:
    *   '<S15>/Constant1'
    *   '<S15>/Constant4'
    */
-  real_T pooled9[5457];
+  real_T pooled9[17227];
 
   /* Expression: max_torque
    * Referenced by: '<S15>/1-D Lookup Table'
@@ -137,8 +137,17 @@ typedef struct {
 
 /* External outputs (root outports fed by signals with default storage) */
 typedef struct {
-  int32_T bigM_flag;                   /* '<Root>/bigM_flag' */
   real_T Tx[4];                        /* '<Root>/Tx' */
+  int32_T bigM_flag;                   /* '<Root>/bigM_flag' */
+  real_T Control_Signal;               /* '<Root>/Control_Signal' */
+  boolean_T windup;                    /* '<Root>/windup' */
+  boolean_T reset;                     /* '<Root>/reset' */
+  real_T ref_yaw;                      /* '<Root>/ref_yaw' */
+  real_T obj_gain[4];                  /* '<Root>/obj_gain' */
+  real_T ub[4];                        /* '<Root>/ub' */
+  real_T lb[4];                        /* '<Root>/lb' */
+  real_T b;                            /* '<Root>/b' */
+  real_T beq;                          /* '<Root>/beq' */
 } ExtY;
 
 /* Parameters (default storage) */
@@ -172,7 +181,7 @@ extern P rtP;
 extern const ConstP rtConstP;
 
 /* Model entry point functions */
-extern void Electronics_initialize(RT_MODEL *const rtM);
+extern void Electronics_initialize(RT_MODEL *const rtM, ExtY *rtY);
 extern void Electronics_step(RT_MODEL *const rtM, ExtU *rtU, ExtY *rtY);
 void rt_OneStep(RT_MODEL *const rtM);
 
@@ -185,6 +194,8 @@ void rt_OneStep(RT_MODEL *const rtM);
  * Block '<S19>/Data Type Propagation' : Unused code path elimination
  * Block '<S20>/Data Type Duplicate' : Unused code path elimination
  * Block '<S20>/Data Type Propagation' : Unused code path elimination
+ * Block '<S21>/Data Type Duplicate' : Unused code path elimination
+ * Block '<S21>/Data Type Propagation' : Unused code path elimination
  * Block '<S9>/Constant1' : Unused code path elimination
  * Block '<S9>/Constant2' : Unused code path elimination
  * Block '<S9>/Product2' : Unused code path elimination
@@ -233,11 +244,12 @@ void rt_OneStep(RT_MODEL *const rtM);
  * '<S15>'  : 'complete_plant_v6/Electronics/Fixed Point Sub/Torque Vectoring Micro Controller/Constraint Generation/Power Limit Fixed'
  * '<S16>'  : 'complete_plant_v6/Electronics/Fixed Point Sub/Torque Vectoring Micro Controller/Constraint Generation/Torque Boundary Fixed'
  * '<S17>'  : 'complete_plant_v6/Electronics/Fixed Point Sub/Torque Vectoring Micro Controller/Constraint Generation/Yaw Constraint Fixed'
- * '<S18>'  : 'complete_plant_v6/Electronics/Fixed Point Sub/Torque Vectoring Micro Controller/Constraint Generation/Yaw Constraint Fixed/Saturation Dynamic'
- * '<S19>'  : 'complete_plant_v6/Electronics/Fixed Point Sub/Torque Vectoring Micro Controller/Constraint Generation/Yaw Constraint Fixed/Saturation Dynamic1'
- * '<S20>'  : 'complete_plant_v6/Electronics/Fixed Point Sub/Torque Vectoring Micro Controller/Constraint Generation/Yaw Constraint Fixed/Saturation Dynamic2'
- * '<S21>'  : 'complete_plant_v6/Electronics/Fixed Point Sub/Torque Vectoring Micro Controller/Steering Model Fixed/left_steering'
- * '<S22>'  : 'complete_plant_v6/Electronics/Fixed Point Sub/Torque Vectoring Micro Controller/Steering Model Fixed/right_steering'
+ * '<S18>'  : 'complete_plant_v6/Electronics/Fixed Point Sub/Torque Vectoring Micro Controller/Constraint Generation/Power Limit Fixed/Saturation Dynamic'
+ * '<S19>'  : 'complete_plant_v6/Electronics/Fixed Point Sub/Torque Vectoring Micro Controller/Constraint Generation/Yaw Constraint Fixed/Saturation Dynamic'
+ * '<S20>'  : 'complete_plant_v6/Electronics/Fixed Point Sub/Torque Vectoring Micro Controller/Constraint Generation/Yaw Constraint Fixed/Saturation Dynamic1'
+ * '<S21>'  : 'complete_plant_v6/Electronics/Fixed Point Sub/Torque Vectoring Micro Controller/Constraint Generation/Yaw Constraint Fixed/Saturation Dynamic2'
+ * '<S22>'  : 'complete_plant_v6/Electronics/Fixed Point Sub/Torque Vectoring Micro Controller/Steering Model Fixed/left_steering'
+ * '<S23>'  : 'complete_plant_v6/Electronics/Fixed Point Sub/Torque Vectoring Micro Controller/Steering Model Fixed/right_steering'
  */
 #endif                                 /* RTW_HEADER_Electronics_h_ */
 

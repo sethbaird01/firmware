@@ -56,5 +56,3 @@
 #define I2C          (I2C1)
 
 #endif
-
-void rt_OneStep(void);

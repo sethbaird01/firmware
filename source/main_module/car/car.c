@@ -46,7 +46,7 @@ bool carInit()
     rtM->dwork = &rtDW;
 
     /* Initialize model */
-    Electronics_initialize(rtM);
+    Electronics_initialize(rtM, &rtY);
 
 }
 

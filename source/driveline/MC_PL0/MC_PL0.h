@@ -7,9 +7,9 @@
  *
  * Code generated for Simulink model 'MC_PL0'.
  *
- * Model version                  : 1.6
+ * Model version                  : 1.223
  * Simulink Coder version         : 9.7 (R2022a) 13-Nov-2021
- * C/C++ source code generated on : Sat Oct 22 12:32:00 2022
+ * C/C++ source code generated on : Sun Nov  6 18:42:13 2022
  *
  * Target selection: ert.tlc
  * Embedded hardware selection: ARM Compatible->ARM Cortex-M
@@ -37,55 +37,95 @@
 #define rtmSetErrorStatus(rtm, val)    ((rtm)->errorStatus = (val))
 #endif
 
+/* Block signals and states (default storage) for system '<Root>' */
+typedef struct {
+  real_T Minimum1_Valdata[4];          /* '<S3>/Minimum1' */
+  real_T PrevY[4];                     /* '<S3>/Rate Limiter' */
+  real_T Abs[644];                     /* '<S3>/Abs' */
+  real_T Abs1[644];                    /* '<S3>/Abs1' */
+  real_T dv[8];
+  real_T Switch_o[4];                  /* '<S6>/Switch' */
+  real_T RateLimiter[4];               /* '<S3>/Rate Limiter' */
+  real_T Switch[4];                    /* '<S5>/Switch' */
+  real_T Divide_l[4];                  /* '<S4>/Divide' */
+  real_T Minimum_o1[4];                /* '<S3>/Minimum' */
+  real_T Minimum_o2[4];                /* '<S3>/Minimum' */
+  real_T Minimum1[4];                  /* '<S3>/Minimum1' */
+  real_T fractions[2];
+  real_T fractions_m[2];
+  real_T Sum1;                         /* '<S2>/Sum1' */
+  uint32_T bpIndices[2];
+  uint32_T bpIndices_c[2];
+} DW;
+
 /* Constant parameters (default storage) */
 typedef struct {
-  /* Expression: max_rpm
-   * Referenced by: '<S1>/MATLAB Function'
+  /* Pooled Parameter (Expression: [1:161])
+   * Referenced by:
+   *   '<S3>/Constant3'
+   *   '<S3>/Constant5'
    */
-  float MATLABFunction_max_rpm[68];
+  real_T pooled3[161];
+
+  /* Pooled Parameter (Expression: power_input_grid)
+   * Referenced by:
+   *   '<S2>/2-D Lookup Table'
+   *   '<S3>/Constant1'
+   *   '<S3>/Constant4'
+   */
+  real_T pooled4[17227];
+
+  /* Pooled Parameter (Expression: torque_sweep)
+   * Referenced by:
+   *   '<S2>/2-D Lookup Table'
+   *   '<S3>/Constant7'
+   *   '<S3>/Constant8'
+   *   '<S4>/2-D Lookup Table1'
+   */
+  real_T pooled6[161];
 
   /* Expression: max_torque
-   * Referenced by: '<S1>/MATLAB Function'
+   * Referenced by: '<S3>/1-D Lookup Table'
    */
-  float MATLABFunction_max_torque[68];
+  real_T uDLookupTable_tableData[68];
 
-  /* Expression: power_input_grid
-   * Referenced by: '<S1>/MATLAB Function'
+  /* Expression: max_rpm
+   * Referenced by: '<S3>/1-D Lookup Table'
    */
-  unsigned short MATLABFunction_power_input_grid[26857];
-
-  /* Expression: rpm_sweep
-   * Referenced by: '<S1>/MATLAB Function'
-   */
-  float MATLABFunction_rpm_sweep[107];
-
-  /* Expression: torque_sweep
-   * Referenced by: '<S1>/MATLAB Function'
-   */
-  float MATLABFunction_torque_sweep[251];
+  real_T uDLookupTable_bp01Data[68];
 
   /* Expression: voltage_grid
-   * Referenced by: '<S1>/MATLAB Function'
+   * Referenced by: '<S4>/2-D Lookup Table1'
    */
-  unsigned short MATLABFunction_voltage_grid[26857];
+  real_T uDLookupTable1_tableData[17227];
+
+  /* Pooled Parameter (Expression: )
+   * Referenced by:
+   *   '<S2>/2-D Lookup Table'
+   *   '<S4>/2-D Lookup Table1'
+   */
+  uint32_T pooled9[2];
+
+  /* Computed Parameter: Gain4_Gain
+   * Referenced by: '<S3>/Gain4'
+   */
+  uint8_T Gain4_Gain[4];
 } ConstP;
 
 /* External inputs (root inport signals with default storage) */
 typedef struct {
-  real_T Wxx;                          /* '<Root>/Wxx' */
-  real_T Woo[2];                       /* '<Root>/Woo' */
-  real_T Txx;                          /* '<Root>/Txx' */
-  real_T Too[2];                       /* '<Root>/Too' */
-  real_T Pmax;                         /* '<Root>/Pmax' */
-  real_T Pmin;                         /* '<Root>/Pmin' */
+  real_T Wx[4];                        /* '<Root>/Wx' */
+  real_T Tx[4];                        /* '<Root>/Tx' */
+  real_T motor_T[4];                   /* '<Root>/motor_T' */
+  real_T power_limits[2];              /* '<Root>/power_limits' */
   real_T Vbatt;                        /* '<Root>/Vbatt' */
 } ExtU;
 
 /* External outputs (root outports fed by signals with default storage) */
 typedef struct {
-  real_T Wxxb;                         /* '<Root>/Wxxb' */
-  real_T T;                            /* '<Root>/T' */
-  real_T k;                            /* '<Root>/k' */
+  real_T k[4];                         /* '<Root>/k' */
+  real_T P_b[4];                       /* '<Root>/P' */
+  real_T T[4];                         /* '<Root>/T' */
 } ExtY;
 
 /* Code_Instrumentation_Declarations_Placeholder */
@@ -93,14 +133,26 @@ typedef struct {
 /* Real-time Model Data Structure */
 struct tag_RTM {
   const char_T * volatile errorStatus;
+  DW *dwork;
 };
 
 /* Constant parameters (default storage) */
 extern const ConstP rtConstP;
 
 /* Model entry point functions */
-extern void MC_PL0_initialize(void);
-extern void MC_PL0_step(ExtU* rtU, ExtY* rtY);
+extern void MC_PL0_initialize(RT_MODEL *const rtM);
+extern void MC_PL0_step(RT_MODEL *const rtM, ExtU *rtU, ExtY *rtY);
+void rt_OneStep(RT_MODEL *const rtM);
+
+/*-
+ * These blocks were eliminated from the model due to optimizations:
+ *
+ * Block '<S5>/Data Type Duplicate' : Unused code path elimination
+ * Block '<S5>/Data Type Propagation' : Unused code path elimination
+ * Block '<S3>/Dot Product' : Unused code path elimination
+ * Block '<S6>/Data Type Duplicate' : Unused code path elimination
+ * Block '<S6>/Data Type Propagation' : Unused code path elimination
+ */
 
 /*-
  * The generated code includes comments that allow you to trace directly
@@ -114,14 +166,18 @@ extern void MC_PL0_step(ExtU* rtU, ExtY* rtY);
  * MATLAB hilite_system command to trace the generated code back
  * to the parent model.  For example,
  *
- * hilite_system('mc_pl/MC_PL')    - opens subsystem mc_pl/MC_PL
- * hilite_system('mc_pl/MC_PL/Kp') - opens and selects block Kp
+ * hilite_system('complete_plant_v6/Vehicle Model/Powertrain/Motor and Battery/MC_PL')    - opens subsystem complete_plant_v6/Vehicle Model/Powertrain/Motor and Battery/MC_PL
+ * hilite_system('complete_plant_v6/Vehicle Model/Powertrain/Motor and Battery/MC_PL/Kp') - opens and selects block Kp
  *
  * Here is the system hierarchy for this model
  *
- * '<Root>' : 'mc_pl'
- * '<S1>'   : 'mc_pl/MC_PL'
- * '<S2>'   : 'mc_pl/MC_PL/MATLAB Function'
+ * '<Root>' : 'complete_plant_v6/Vehicle Model/Powertrain/Motor and Battery'
+ * '<S1>'   : 'complete_plant_v6/Vehicle Model/Powertrain/Motor and Battery/MC_PL'
+ * '<S2>'   : 'complete_plant_v6/Vehicle Model/Powertrain/Motor and Battery/MC_PL/Power Limiting'
+ * '<S3>'   : 'complete_plant_v6/Vehicle Model/Powertrain/Motor and Battery/MC_PL/Torque Limiting'
+ * '<S4>'   : 'complete_plant_v6/Vehicle Model/Powertrain/Motor and Battery/MC_PL/Voltage Limiting'
+ * '<S5>'   : 'complete_plant_v6/Vehicle Model/Powertrain/Motor and Battery/MC_PL/Power Limiting/Saturation Dynamic'
+ * '<S6>'   : 'complete_plant_v6/Vehicle Model/Powertrain/Motor and Battery/MC_PL/Torque Limiting/Saturation Dynamic1'
  */
 #endif                                 /* RTW_HEADER_MC_PL0_h_ */
 

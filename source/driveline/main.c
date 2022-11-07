@@ -340,21 +340,22 @@ void commandTorquePeriodic()
     //pow_left  = pow_left  * 100.0 / 4095.0;
     //pow_right = pow_right * 100.0 / 4095.0;
 
+    //rtU.Txx = can_data.torque_request_main.rear_left * (25.0 / 4095.0);
+    //rtU.Wxx = can_data.rear_wheel_data.left_speed * (1.0/100.0 * 0.278);
+    MC_PL_pp(&rtU);
+    rt_OneStep(rtM);
+    pow_left = rtY.k[3];
+    pow_right = rtY.k[4];
+
+    //rtU.Txx = can_data.torque_request_main.rear_right * (25.0 / 4095.0);
+    //rtU.Wxx = can_data.rear_wheel_data.right_speed * (1.0/100.0 * 0.278);
+    //MC_PL_pp(&rtU);
+    //rt_OneStep();
+    //pow_right = 100*rtY.k;
+
     // Prevent regenerative braking, functionality not yet implemented
     if (pow_left < 0)  pow_left  = 0.0;
     if (pow_right < 0) pow_right = 0.0;
-
-    rtU.Txx = can_data.torque_request_main.rear_left * (25.0 / 4095.0);
-    rtU.Wxx = can_data.rear_wheel_data.left_speed * (1.0/100.0 * 0.278);
-    MC_PL_pp(&rtU);
-    rt_OneStep();
-    pow_left = 100*rtY.k;
-
-    rtU.Txx = can_data.torque_request_main.rear_right * (25.0 / 4095.0);
-    rtU.Wxx = can_data.rear_wheel_data.right_speed * (1.0/100.0 * 0.278);
-    MC_PL_pp(&rtU);
-    rt_OneStep();
-    pow_right = 100*rtY.k;
 
     // Only drive if ready
     if (can_data.main_hb.car_state != CAR_STATE_READY2DRIVE || 
@@ -551,7 +552,7 @@ void HardFault_Handler()
     }
 }
 
-void rt_OneStep(void)
+void rt_OneStep(RT_MODEL *const rtM)
 {
   static boolean_T OverrunFlag = false;
 
@@ -570,7 +571,7 @@ void rt_OneStep(void)
   /* Set model inputs here */
 
   /* Step the model */
-  MC_PL0_step(&rtU, &rtY);
+  MC_PL0_step(rtM, &rtU, &rtY);
 
   /* Get model outputs here */
 

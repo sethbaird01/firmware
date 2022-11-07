@@ -7,9 +7,9 @@
  *
  * Code generated for Simulink model 'MC_PL0'.
  *
- * Model version                  : 1.6
+ * Model version                  : 1.223
  * Simulink Coder version         : 9.7 (R2022a) 13-Nov-2021
- * C/C++ source code generated on : Sat Oct 22 12:32:00 2022
+ * C/C++ source code generated on : Sun Nov  6 18:42:13 2022
  *
  * Target selection: ert.tlc
  * Embedded hardware selection: ARM Compatible->ARM Cortex-M
@@ -59,14 +59,14 @@ typedef unsigned int uint32_T;
 typedef long long int64_T;
 typedef unsigned long long uint64_T;
 typedef float real32_T;
-typedef double real64_T;
+typedef float real64_T;
 
 /*===========================================================================*
  * Generic type definitions: boolean_T, char_T, byte_T, int_T, uint_T,       *
  *                           real_T, time_T, ulong_T, ulonglong_T.           *
  *===========================================================================*/
-typedef double real_T;
-typedef double time_T;
+typedef float real_T;
+typedef float time_T;
 typedef unsigned char boolean_T;
 typedef int int_T;
 typedef unsigned int uint_T;

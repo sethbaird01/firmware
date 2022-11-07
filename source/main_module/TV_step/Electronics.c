@@ -7,9 +7,9 @@
  *
  * Code generated for Simulink model 'Electronics'.
  *
- * Model version                  : 1.200
+ * Model version                  : 1.223
  * Simulink Coder version         : 9.7 (R2022a) 13-Nov-2021
- * C/C++ source code generated on : Thu Nov  3 22:12:24 2022
+ * C/C++ source code generated on : Sun Nov  6 18:26:17 2022
  *
  * Target selection: ert.tlc
  * Embedded hardware selection: ARM Compatible->ARM Cortex-M
@@ -32,11 +32,13 @@ static uint32_T plook_evenc(real_T u, real_T bp0, real_T bpSpace, uint32_T
   maxIndex, real_T *fraction);
 static real_T intrp1d_l(uint32_T bpIndex, real_T frac, const real_T table[]);
 static void Electronics_Init(DW_Electronics *localDW);
-static void Electronics_o(const real_T rtu_TVS_Information[4], const real_T
-  rtu_TVS_Information_d[2], real_T rtu_TVS_Information_c, const real_T
-  rtu_TVS_Information_b[3], real_T rtu_TVS_Information_i, const real_T
-  rtu_TVS_Information_k[2], int32_T *rty_bigM_flag, real_T rty_Tx[4],
-  DW_Electronics *localDW);
+static void Electronics_o(const real_T rtu_TVS_Input[4], const real_T
+  rtu_TVS_Input_d[2], real_T rtu_TVS_Input_c, real_T rtu_TVS_Input_b, const
+  real_T rtu_TVS_Input_i[3], const real_T rtu_TVS_Input_k[2], real_T
+  rty_TVS_Output[4], int32_T *rty_TVS_Output_j, real_T *rty_TVS_Output_d,
+  boolean_T *rty_TVS_Output_c, boolean_T *rty_TVS_Output_b, real_T
+  *rty_TVS_Output_i, real_T rty_TVS_Output_k[4], real_T rty_TVS_Output_e[4],
+  real_T *rty_TVS_Output_m, real_T *rty_TVS_Output_ba, DW_Electronics *localDW);
 static real_T rtGetNaN(void);
 static real32_T rtGetNaNF(void);
 extern real_T rtInf;
@@ -349,83 +351,85 @@ static void Electronics_Init(DW_Electronics *localDW)
 }
 
 /* Output and update for atomic system: '<Root>/Electronics' */
-static void Electronics_o(const real_T rtu_TVS_Information[4], const real_T
-  rtu_TVS_Information_d[2], real_T rtu_TVS_Information_c, const real_T
-  rtu_TVS_Information_b[3], real_T rtu_TVS_Information_i, const real_T
-  rtu_TVS_Information_k[2], int32_T *rty_bigM_flag, real_T rty_Tx[4],
-  DW_Electronics *localDW)
+static void Electronics_o(const real_T rtu_TVS_Input[4], const real_T
+  rtu_TVS_Input_d[2], real_T rtu_TVS_Input_c, real_T rtu_TVS_Input_b, const
+  real_T rtu_TVS_Input_i[3], const real_T rtu_TVS_Input_k[2], real_T
+  rty_TVS_Output[4], int32_T *rty_TVS_Output_j, real_T *rty_TVS_Output_d,
+  boolean_T *rty_TVS_Output_c, boolean_T *rty_TVS_Output_b, real_T
+  *rty_TVS_Output_i, real_T rty_TVS_Output_k[4], real_T rty_TVS_Output_e[4],
+  real_T *rty_TVS_Output_m, real_T *rty_TVS_Output_ba, DW_Electronics *localDW)
 {
   real_T rtb_Abs_m_idx_0;
-  real_T rtb_Abs_m_idx_1;
-  real_T rtb_UnitDelay_idx_0;
-  real_T rtb_UnitDelay_idx_1;
-  real_T rtb_UnitDelay_idx_2;
-  int32_T i;
+  real_T rtb_UnitDelay_g_idx_0;
+  real_T rtb_UnitDelay_g_idx_1;
+  real_T rtb_UnitDelay_g_idx_2;
   int32_T j;
   int32_T rtb_Abs1_tmp;
   int32_T rtb_Abs1_tmp_0;
+  int32_T sigIdx;
   uint32_T bpIdx;
-  boolean_T rtb_LessThan_e;
-  boolean_T rtb_LowerRelop1;
+  boolean_T rtb_LowerRelop1_i_idx_0;
+  boolean_T rtb_LowerRelop1_i_idx_1;
+  boolean_T rtb_LowerRelop1_i_idx_2;
+  boolean_T rtb_LowerRelop1_i_idx_3;
+  boolean_T rtb_UpperRelop_n_idx_0;
+  boolean_T rtb_UpperRelop_n_idx_1;
+  boolean_T rtb_UpperRelop_n_idx_2;
+  boolean_T rtb_UpperRelop_n_idx_3;
 
   /* Outputs for Atomic SubSystem: '<S1>/Fixed Point Sub' */
   /* Outputs for Atomic SubSystem: '<S2>/Torque Vectoring Micro Controller' */
   /* Sum: '<S12>/Subtract' */
-  localDW->CCaller_o5 = rtu_TVS_Information[0] - rtu_TVS_Information[0];
-  localDW->rtb_Sum4_idx_1 = rtu_TVS_Information[1] - rtu_TVS_Information[1];
-  localDW->rtu_TVS_Information_idx_2 = rtu_TVS_Information[2] -
-    rtu_TVS_Information[2];
-  localDW->Square1 = rtu_TVS_Information[3] - rtu_TVS_Information[3];
-  rty_Tx[0] = localDW->CCaller_o5;
-  rty_Tx[1] = localDW->rtb_Sum4_idx_1;
-  rty_Tx[2] = localDW->rtu_TVS_Information_idx_2;
-  rty_Tx[3] = localDW->Square1;
+  localDW->rtb_Gain1_idx_0 = rtu_TVS_Input[0] - rtu_TVS_Input[0];
+  localDW->rtb_Gain1_idx_1 = rtu_TVS_Input[1] - rtu_TVS_Input[1];
+  localDW->rtb_Gain1_idx_3 = rtu_TVS_Input[2] - rtu_TVS_Input[2];
+  localDW->rtb_Gain1_idx_2 = rtu_TVS_Input[3] - rtu_TVS_Input[3];
+  rty_TVS_Output[0] = localDW->rtb_Gain1_idx_0;
+  rty_TVS_Output[1] = localDW->rtb_Gain1_idx_1;
+  rty_TVS_Output[2] = localDW->rtb_Gain1_idx_3;
+  rty_TVS_Output[3] = localDW->rtb_Gain1_idx_2;
 
   /* Abs: '<S12>/Abs' */
-  rty_Tx[0] = fabs(rty_Tx[0]);
-  rty_Tx[1] = fabs(rty_Tx[1]);
-  rty_Tx[2] = fabs(rty_Tx[2]);
-  rty_Tx[3] = fabs(rty_Tx[3]);
+  rty_TVS_Output[0] = fabs(rty_TVS_Output[0]);
+  rty_TVS_Output[1] = fabs(rty_TVS_Output[1]);
+  rty_TVS_Output[2] = fabs(rty_TVS_Output[2]);
+  rty_TVS_Output[3] = fabs(rty_TVS_Output[3]);
 
   /* Switch: '<S12>/Switch' */
-  localDW->CCaller_o5 = rtu_TVS_Information[0];
-  localDW->rtb_Sum4_idx_1 = rtu_TVS_Information[1];
-  localDW->rtu_TVS_Information_idx_2 = rtu_TVS_Information[2];
-  localDW->Square1 = rtu_TVS_Information[3];
-  rty_Tx[0] = localDW->CCaller_o5;
-  rty_Tx[1] = localDW->rtb_Sum4_idx_1;
-  rty_Tx[2] = localDW->rtu_TVS_Information_idx_2;
-  rty_Tx[3] = localDW->Square1;
+  localDW->rtb_Gain1_idx_0 = rtu_TVS_Input[0];
+  localDW->rtb_Gain1_idx_1 = rtu_TVS_Input[1];
+  localDW->rtb_Gain1_idx_3 = rtu_TVS_Input[2];
+  localDW->rtb_Gain1_idx_2 = rtu_TVS_Input[3];
+  rty_TVS_Output[0] = localDW->rtb_Gain1_idx_0;
+  rty_TVS_Output[1] = localDW->rtb_Gain1_idx_1;
+  rty_TVS_Output[2] = localDW->rtb_Gain1_idx_3;
+  rty_TVS_Output[3] = localDW->rtb_Gain1_idx_2;
 
   /* Gain: '<S14>/Gain1' */
-  rty_Tx[0] *= 6.63043;
-  rty_Tx[1] *= 6.63043;
-  rty_Tx[2] *= 6.63;
-  rty_Tx[3] *= 6.63;
+  rty_TVS_Output[0] *= 6.63043;
+  rty_TVS_Output[1] *= 6.63043;
+  rty_TVS_Output[2] *= 6.63;
+  rty_TVS_Output[3] *= 6.63;
 
   /* Gain: '<S15>/Gain' incorporates:
    *  Bias: '<S5>/Add Constant'
    */
-  localDW->AddConstant[0] = 0.095492965964253843 * rty_Tx[0];
-  localDW->AddConstant[1] = 0.095492965964253843 * rty_Tx[1];
-  localDW->AddConstant[2] = 0.095492965964253843 * rty_Tx[2];
-  localDW->AddConstant[3] = 0.095492965964253843 * rty_Tx[3];
-  for (i = 0; i < 4; i++) {
+  localDW->AddConstant[0] = 0.095492965964253843 * rty_TVS_Output[0];
+  localDW->AddConstant[1] = 0.095492965964253843 * rty_TVS_Output[1];
+  localDW->AddConstant[2] = 0.095492965964253843 * rty_TVS_Output[2];
+  localDW->AddConstant[3] = 0.095492965964253843 * rty_TVS_Output[3];
+  for (sigIdx = 0; sigIdx < 4; sigIdx++) {
     /* Saturate: '<S15>/Saturation1' incorporates:
      *  Bias: '<S5>/Add Constant'
      */
-    localDW->CCaller_o5 = localDW->AddConstant[i];
-    if (localDW->CCaller_o5 > 106.0) {
-      localDW->CCaller_o5 = 106.0;
-    } else if (localDW->CCaller_o5 < 1.0) {
-      localDW->CCaller_o5 = 1.0;
+    localDW->avg_steering_angle = localDW->AddConstant[sigIdx];
+    if (localDW->avg_steering_angle > 106.0) {
+      localDW->avg_steering_angle = 106.0;
+    } else if (localDW->avg_steering_angle < 1.0) {
+      localDW->avg_steering_angle = 1.0;
     }
 
-    /* Switch: '<S15>/Switch' incorporates:
-     *  S-Function (sdspstatminmax): '<S15>/Minimum1'
-     */
-    localDW->Minimum1[i] = 1800.0;
-    for (j = 0; j < 51; j++) {
+    for (j = 0; j < 161; j++) {
       /* Abs: '<S15>/Abs1' incorporates:
        *  Abs: '<S15>/Abs'
        *  Bias: '<S15>/Bias'
@@ -437,9 +441,10 @@ static void Electronics_o(const real_T rtu_TVS_Information[4], const real_T
        *  Sum: '<S15>/Sum1'
        */
       rtb_Abs1_tmp = (int32_T)rtConstP.pooled5[j];
-      rtb_Abs1_tmp_0 = 51 * i + j;
+      rtb_Abs1_tmp_0 = 161 * sigIdx + j;
       localDW->Abs1[rtb_Abs1_tmp_0] = fabs(rtConstP.pooled9[(((int32_T)
-        (localDW->CCaller_o5 + 1.0) - 1) * 51 + rtb_Abs1_tmp) - 1] - 1800.0);
+        (localDW->avg_steering_angle + 1.0) - 1) * 161 + rtb_Abs1_tmp) - 1] -
+        1800.0);
 
       /* Gain: '<S15>/Gain3' incorporates:
        *  Abs: '<S15>/Abs'
@@ -448,54 +453,30 @@ static void Electronics_o(const real_T rtu_TVS_Information[4], const real_T
        *  Sum: '<S15>/Sum'
        */
       localDW->Abs_i[rtb_Abs1_tmp_0] = fabs(rtConstP.pooled9[(((int32_T)
-        localDW->CCaller_o5 - 1) * 51 + rtb_Abs1_tmp) - 1] - 1800.0);
+        localDW->avg_steering_angle - 1) * 161 + rtb_Abs1_tmp) - 1] - 1800.0);
     }
 
     /* Saturate: '<S15>/Saturation1' incorporates:
      *  Bias: '<S5>/Add Constant'
      */
-    localDW->AddConstant[i] = localDW->CCaller_o5;
+    localDW->AddConstant[sigIdx] = localDW->avg_steering_angle;
   }
-
-  /* S-Function (sdspstatminmax): '<S15>/Minimum1' incorporates:
-   *  Abs: '<S15>/Abs1'
-   */
-  rtb_Abs1_tmp = 0;
-  rtb_Abs1_tmp_0 = 0;
-  for (i = 0; i < 4; i++) {
-    localDW->Minimum1_Valdata[rtb_Abs1_tmp_0] = localDW->Abs1[rtb_Abs1_tmp];
-    localDW->Minimum1[rtb_Abs1_tmp_0] = 1.0;
-    rtb_Abs1_tmp++;
-    for (j = 0; j < 50; j++) {
-      if (localDW->Abs1[rtb_Abs1_tmp] < localDW->Minimum1_Valdata[rtb_Abs1_tmp_0])
-      {
-        localDW->Minimum1_Valdata[rtb_Abs1_tmp_0] = localDW->Abs1[rtb_Abs1_tmp];
-        localDW->Minimum1[rtb_Abs1_tmp_0] = (real_T)j + 2.0;
-      }
-
-      rtb_Abs1_tmp++;
-    }
-
-    rtb_Abs1_tmp_0++;
-  }
-
-  /* End of S-Function (sdspstatminmax): '<S15>/Minimum1' */
 
   /* S-Function (sdspstatminmax): '<S15>/Minimum' incorporates:
    *  Abs: '<S15>/Abs'
-   *  Gain: '<S16>/Gain8'
+   *  Bias: '<S5>/Add Constant'
    */
   rtb_Abs1_tmp = 0;
   rtb_Abs1_tmp_0 = 0;
-  for (i = 0; i < 4; i++) {
+  for (sigIdx = 0; sigIdx < 4; sigIdx++) {
     localDW->Minimum_Valdata[rtb_Abs1_tmp_0] = localDW->Abs_i[rtb_Abs1_tmp];
-    localDW->Gain8[rtb_Abs1_tmp_0] = 1.0;
+    localDW->AddConstant[rtb_Abs1_tmp_0] = 1.0;
     rtb_Abs1_tmp++;
-    for (j = 0; j < 50; j++) {
+    for (j = 0; j < 160; j++) {
       if (localDW->Abs_i[rtb_Abs1_tmp] < localDW->Minimum_Valdata[rtb_Abs1_tmp_0])
       {
         localDW->Minimum_Valdata[rtb_Abs1_tmp_0] = localDW->Abs_i[rtb_Abs1_tmp];
-        localDW->Gain8[rtb_Abs1_tmp_0] = (real_T)j + 2.0;
+        localDW->AddConstant[rtb_Abs1_tmp_0] = (real_T)j + 2.0;
       }
 
       rtb_Abs1_tmp++;
@@ -506,281 +487,294 @@ static void Electronics_o(const real_T rtu_TVS_Information[4], const real_T
 
   /* End of S-Function (sdspstatminmax): '<S15>/Minimum' */
 
-  /* Selector: '<S15>/Selector2' incorporates:
+  /* S-Function (sdspstatminmax): '<S15>/Minimum1' incorporates:
+   *  Abs: '<S15>/Abs1'
+   *  Bias: '<S5>/Add Constant'
    *  Constant: '<S15>/Constant7'
    *  Gain: '<S16>/Gain8'
+   *  Selector: '<S15>/Selector2'
    */
-  localDW->rtb_Gain8_tmp = rtConstP.pooled6[(int32_T)localDW->Gain8[0] - 1];
-  localDW->rtu_TVS_Information_idx_2 = rtConstP.pooled6[(int32_T)localDW->Gain8
-    [1] - 1];
-  localDW->CCaller_o2 = rtConstP.pooled6[(int32_T)localDW->Gain8[2] - 1];
-  localDW->Square = rtConstP.pooled6[(int32_T)localDW->Gain8[3] - 1];
+  rtb_Abs1_tmp = 0;
+  rtb_Abs1_tmp_0 = 0;
+  for (sigIdx = 0; sigIdx < 4; sigIdx++) {
+    localDW->Minimum1_Valdata[rtb_Abs1_tmp_0] = localDW->Abs1[rtb_Abs1_tmp];
+    localDW->Gain8[rtb_Abs1_tmp_0] = 1.0;
+    rtb_Abs1_tmp++;
+    for (j = 0; j < 160; j++) {
+      if (localDW->Abs1[rtb_Abs1_tmp] < localDW->Minimum1_Valdata[rtb_Abs1_tmp_0])
+      {
+        localDW->Minimum1_Valdata[rtb_Abs1_tmp_0] = localDW->Abs1[rtb_Abs1_tmp];
+        localDW->Gain8[rtb_Abs1_tmp_0] = (real_T)j + 2.0;
+      }
+
+      rtb_Abs1_tmp++;
+    }
+
+    rtb_Abs1_tmp_0++;
+    localDW->AddConstant[sigIdx] = rtConstP.pooled6[(int32_T)
+      localDW->AddConstant[sigIdx] - 1];
+  }
+
+  /* End of S-Function (sdspstatminmax): '<S15>/Minimum1' */
+
+  /* Gain: '<S15>/Gain1' */
+  localDW->rtb_Gain1_idx_0 = 0.095492965964253843 * rty_TVS_Output[0];
+  localDW->rtb_Gain1_idx_1 = 0.095492965964253843 * rty_TVS_Output[1];
+  localDW->rtb_Gain1_idx_2 = 0.095492965964253843 * rty_TVS_Output[2];
+  localDW->rtb_Gain1_idx_3 = 0.095492965964253843 * rty_TVS_Output[3];
 
   /* Sum: '<S15>/Sum4' incorporates:
-   *  Bias: '<S15>/Bias3'
-   *  Bias: '<S5>/Add Constant'
    *  Gain: '<S15>/Gain1'
+   *  Gain: '<S15>/Gain2'
+   *  Rounding: '<S15>/Floor'
    */
-  localDW->rtb_Sum4_idx_0 = rty_Tx[0] - (localDW->AddConstant[0] + -1.0) *
-    10.4719755;
-  localDW->rtb_Sum4_idx_1 = rty_Tx[1] - (localDW->AddConstant[1] + -1.0) *
-    10.4719755;
-  localDW->rtb_Sum4_idx_2 = rty_Tx[2] - (localDW->AddConstant[2] + -1.0) *
-    10.4719755;
-  localDW->Square1 = rty_Tx[3] - (localDW->AddConstant[3] + -1.0) * 10.4719755;
+  localDW->rtb_Gain5_idx_1 = rty_TVS_Output[0] - 10.4719755 * floor
+    (localDW->rtb_Gain1_idx_0);
+  localDW->rtb_Gain1_idx_0 = rty_TVS_Output[1] - 10.4719755 * floor
+    (localDW->rtb_Gain1_idx_1);
+  localDW->rtb_Gain1_idx_2 = rty_TVS_Output[2] - 10.4719755 * floor
+    (localDW->rtb_Gain1_idx_2);
+  localDW->rtb_Gain1_idx_3 = rty_TVS_Output[3] - 10.4719755 * floor
+    (localDW->rtb_Gain1_idx_3);
+
+  /* Sum: '<S15>/Sum2' incorporates:
+   *  Constant: '<S15>/Constant8'
+   *  Constant: '<S15>/Constant9'
+   *  Gain: '<S16>/Gain8'
+   *  Product: '<S15>/Divide'
+   *  Product: '<S15>/Product1'
+   *  Selector: '<S15>/Selector3'
+   *  Sum: '<S15>/Sum3'
+   */
+  localDW->rtb_Gain1_idx_1 = (rtConstP.pooled6[(int32_T)localDW->Gain8[0] - 1] -
+    localDW->AddConstant[0]) * (localDW->rtb_Gain5_idx_1 / 10.4719755) +
+    localDW->AddConstant[0];
+  localDW->rtb_Gain1_idx_0 = (rtConstP.pooled6[(int32_T)localDW->Gain8[1] - 1] -
+    localDW->AddConstant[1]) * (localDW->rtb_Gain1_idx_0 / 10.4719755) +
+    localDW->AddConstant[1];
+  localDW->rtb_Gain1_idx_2 = (rtConstP.pooled6[(int32_T)localDW->Gain8[2] - 1] -
+    localDW->AddConstant[2]) * (localDW->rtb_Gain1_idx_2 / 10.4719755) +
+    localDW->AddConstant[2];
+  localDW->rtb_Gain1_idx_3 = (rtConstP.pooled6[(int32_T)localDW->Gain8[3] - 1] -
+    localDW->AddConstant[3]) * (localDW->rtb_Gain1_idx_3 / 10.4719755) +
+    localDW->AddConstant[3];
 
   /* Lookup_n-D: '<S15>/1-D Lookup Table' incorporates:
-   *  Bias: '<S5>/Add Constant'
-   */
-  localDW->CCaller_o5 = rty_Tx[0];
-  localDW->AddConstant[0] = look1_binlg(localDW->CCaller_o5,
-    rtConstP.uDLookupTable_bp01Data, rtConstP.uDLookupTable_tableData, 67U);
-  localDW->CCaller_o5 = rty_Tx[1];
-  localDW->AddConstant[1] = look1_binlg(localDW->CCaller_o5,
-    rtConstP.uDLookupTable_bp01Data, rtConstP.uDLookupTable_tableData, 67U);
-  localDW->CCaller_o5 = rty_Tx[2];
-  localDW->AddConstant[2] = look1_binlg(localDW->CCaller_o5,
-    rtConstP.uDLookupTable_bp01Data, rtConstP.uDLookupTable_tableData, 67U);
-  localDW->CCaller_o5 = rty_Tx[3];
-  localDW->AddConstant[3] = look1_binlg(localDW->CCaller_o5,
-    rtConstP.uDLookupTable_bp01Data, rtConstP.uDLookupTable_tableData, 67U);
-
-  /* Selector: '<S15>/Selector3' incorporates:
-   *  Constant: '<S15>/Constant8'
-   *  S-Function (sdspstatminmax): '<S15>/Minimum1'
-   *  Sum: '<S15>/Sum2'
-   */
-  localDW->CCaller_o5 = rtConstP.pooled6[(int32_T)localDW->Minimum1[0] - 1];
-
-  /* Switch: '<S15>/Switch2' incorporates:
-   *  Bias: '<S5>/Add Constant'
-   *  Constant: '<S15>/Constant7'
-   *  Constant: '<S15>/Constant8'
-   *  Gain: '<S15>/Gain2'
    *  Gain: '<S16>/Gain8'
-   *  Product: '<S15>/Product1'
-   *  Selector: '<S15>/Selector2'
-   *  Selector: '<S15>/Selector3'
-   *  Sum: '<S15>/Sum2'
-   *  Sum: '<S15>/Sum3'
-   *  Sum: '<S15>/Sum4'
    */
-  localDW->Gain8[0] = localDW->rtb_Gain8_tmp - (localDW->rtb_Gain8_tmp -
-    localDW->CCaller_o5) * localDW->rtb_Sum4_idx_0 * 0.095492965964253843;
-  if (!(localDW->rtb_Gain8_tmp - (localDW->rtb_Gain8_tmp - localDW->CCaller_o5) *
-        localDW->rtb_Sum4_idx_0 * 0.095492965964253843 > 1.0)) {
-    localDW->Gain8[0] = localDW->AddConstant[0];
+  localDW->avg_steering_angle = rty_TVS_Output[0];
+  localDW->Gain8[0] = look1_binlg(localDW->avg_steering_angle,
+    rtConstP.uDLookupTable_bp01Data, rtConstP.uDLookupTable_tableData, 67U);
+  localDW->avg_steering_angle = rty_TVS_Output[1];
+  localDW->Gain8[1] = look1_binlg(localDW->avg_steering_angle,
+    rtConstP.uDLookupTable_bp01Data, rtConstP.uDLookupTable_tableData, 67U);
+  localDW->avg_steering_angle = rty_TVS_Output[2];
+  localDW->Gain8[2] = look1_binlg(localDW->avg_steering_angle,
+    rtConstP.uDLookupTable_bp01Data, rtConstP.uDLookupTable_tableData, 67U);
+  localDW->avg_steering_angle = rty_TVS_Output[3];
+  localDW->Gain8[3] = look1_binlg(localDW->avg_steering_angle,
+    rtConstP.uDLookupTable_bp01Data, rtConstP.uDLookupTable_tableData, 67U);
+
+  /* Switch: '<S18>/Switch2' incorporates:
+   *  Bias: '<S5>/Add Constant'
+   *  Gain: '<S15>/Gain4'
+   *  Gain: '<S16>/Gain8'
+   *  RelationalOperator: '<S18>/LowerRelop1'
+   *  RelationalOperator: '<S18>/UpperRelop'
+   *  Switch: '<S18>/Switch'
+   */
+  if (localDW->rtb_Gain1_idx_1 > localDW->Gain8[0]) {
+    localDW->rtb_Gain1_idx_1 = localDW->Gain8[0];
+  } else if (localDW->rtb_Gain1_idx_1 < -localDW->Gain8[0]) {
+    /* Switch: '<S18>/Switch' */
+    localDW->rtb_Gain1_idx_1 = -localDW->Gain8[0];
   }
 
-  /* Sum: '<S15>/Sum2' incorporates:
-   *  Constant: '<S15>/Constant8'
-   *  Gain: '<S15>/Gain2'
-   *  Product: '<S15>/Product1'
-   *  S-Function (sdspstatminmax): '<S15>/Minimum1'
-   *  Selector: '<S15>/Selector3'
-   *  Sum: '<S15>/Sum3'
-   *  Sum: '<S15>/Sum4'
-   */
-  localDW->rtb_Gain8_tmp = localDW->rtu_TVS_Information_idx_2 -
-    (localDW->rtu_TVS_Information_idx_2 - rtConstP.pooled6[(int32_T)
-     localDW->Minimum1[1] - 1]) * localDW->rtb_Sum4_idx_1 * 0.095492965964253843;
+  localDW->AddConstant[0] = localDW->rtb_Gain1_idx_1;
 
-  /* Switch: '<S15>/Switch2' incorporates:
+  /* Sum: '<S15>/Sum2' */
+  localDW->rtb_Gain1_idx_1 = localDW->rtb_Gain1_idx_0;
+
+  /* Switch: '<S18>/Switch2' incorporates:
    *  Bias: '<S5>/Add Constant'
+   *  Gain: '<S15>/Gain4'
    *  Gain: '<S16>/Gain8'
-   *  Sum: '<S15>/Sum2'
+   *  RelationalOperator: '<S18>/LowerRelop1'
+   *  RelationalOperator: '<S18>/UpperRelop'
+   *  Switch: '<S18>/Switch'
    */
-  localDW->Gain8[1] = localDW->rtb_Gain8_tmp;
-  if (!(localDW->rtb_Gain8_tmp > 1.0)) {
-    localDW->Gain8[1] = localDW->AddConstant[1];
+  if (localDW->rtb_Gain1_idx_0 > localDW->Gain8[1]) {
+    localDW->rtb_Gain1_idx_1 = localDW->Gain8[1];
+  } else if (localDW->rtb_Gain1_idx_0 < -localDW->Gain8[1]) {
+    /* Switch: '<S18>/Switch' */
+    localDW->rtb_Gain1_idx_1 = -localDW->Gain8[1];
   }
 
-  /* Selector: '<S15>/Selector3' incorporates:
-   *  Constant: '<S15>/Constant8'
-   *  S-Function (sdspstatminmax): '<S15>/Minimum1'
-   *  Sum: '<S15>/Sum2'
-   */
-  localDW->rtb_Gain8_tmp = rtConstP.pooled6[(int32_T)localDW->Minimum1[2] - 1];
+  localDW->AddConstant[1] = localDW->rtb_Gain1_idx_1;
 
-  /* Switch: '<S15>/Switch2' incorporates:
+  /* Sum: '<S15>/Sum2' */
+  localDW->rtb_Gain1_idx_1 = localDW->rtb_Gain1_idx_2;
+
+  /* Switch: '<S18>/Switch2' incorporates:
    *  Bias: '<S5>/Add Constant'
-   *  Constant: '<S15>/Constant7'
-   *  Constant: '<S15>/Constant8'
-   *  Gain: '<S15>/Gain2'
+   *  Gain: '<S15>/Gain4'
    *  Gain: '<S16>/Gain8'
-   *  Product: '<S15>/Product1'
-   *  Selector: '<S15>/Selector2'
-   *  Selector: '<S15>/Selector3'
-   *  Sum: '<S15>/Sum2'
-   *  Sum: '<S15>/Sum3'
-   *  Sum: '<S15>/Sum4'
+   *  RelationalOperator: '<S18>/LowerRelop1'
+   *  RelationalOperator: '<S18>/UpperRelop'
+   *  Switch: '<S18>/Switch'
    */
-  localDW->Gain8[2] = localDW->CCaller_o2 - (localDW->CCaller_o2 -
-    localDW->rtb_Gain8_tmp) * localDW->rtb_Sum4_idx_2 * 0.095492965964253843;
-  if (!(localDW->CCaller_o2 - (localDW->CCaller_o2 - localDW->rtb_Gain8_tmp) *
-        localDW->rtb_Sum4_idx_2 * 0.095492965964253843 > 1.0)) {
-    localDW->Gain8[2] = localDW->AddConstant[2];
+  if (localDW->rtb_Gain1_idx_2 > localDW->Gain8[2]) {
+    localDW->rtb_Gain1_idx_1 = localDW->Gain8[2];
+  } else if (localDW->rtb_Gain1_idx_2 < -localDW->Gain8[2]) {
+    /* Switch: '<S18>/Switch' */
+    localDW->rtb_Gain1_idx_1 = -localDW->Gain8[2];
   }
 
-  /* Selector: '<S15>/Selector3' incorporates:
-   *  Constant: '<S15>/Constant8'
-   *  S-Function (sdspstatminmax): '<S15>/Minimum1'
-   *  Sum: '<S15>/Sum2'
-   */
-  localDW->rtb_Gain8_tmp = rtConstP.pooled6[(int32_T)localDW->Minimum1[3] - 1];
+  localDW->AddConstant[2] = localDW->rtb_Gain1_idx_1;
 
-  /* Sum: '<S15>/Sum2' incorporates:
-   *  Constant: '<S15>/Constant8'
-   *  Gain: '<S15>/Gain2'
-   *  Product: '<S15>/Product1'
-   *  Selector: '<S15>/Selector3'
-   *  Sum: '<S15>/Sum3'
-   *  Sum: '<S15>/Sum4'
-   */
-  localDW->rtu_TVS_Information_idx_2 = localDW->Square - (localDW->Square -
-    localDW->rtb_Gain8_tmp) * localDW->Square1 * 0.095492965964253843;
+  /* Sum: '<S15>/Sum2' */
+  localDW->rtb_Gain1_idx_1 = localDW->rtb_Gain1_idx_3;
 
-  /* Switch: '<S15>/Switch2' incorporates:
-   *  Bias: '<S5>/Add Constant'
-   *  Constant: '<S15>/Constant7'
-   *  Gain: '<S15>/Gain2'
+  /* Switch: '<S18>/Switch2' incorporates:
+   *  Gain: '<S15>/Gain4'
    *  Gain: '<S16>/Gain8'
-   *  Product: '<S15>/Product1'
-   *  Selector: '<S15>/Selector2'
-   *  Sum: '<S15>/Sum2'
-   *  Sum: '<S15>/Sum3'
-   *  Sum: '<S15>/Sum4'
+   *  RelationalOperator: '<S18>/LowerRelop1'
+   *  RelationalOperator: '<S18>/UpperRelop'
+   *  Switch: '<S18>/Switch'
    */
-  if (!(localDW->Square - (localDW->Square - localDW->rtb_Gain8_tmp) *
-        localDW->Square1 * 0.095492965964253843 > 1.0)) {
-    localDW->rtu_TVS_Information_idx_2 = localDW->AddConstant[3];
+  if (localDW->rtb_Gain1_idx_3 > localDW->Gain8[3]) {
+    localDW->rtb_Gain1_idx_1 = localDW->Gain8[3];
+  } else if (localDW->rtb_Gain1_idx_3 < -localDW->Gain8[3]) {
+    /* Switch: '<S18>/Switch' */
+    localDW->rtb_Gain1_idx_1 = -localDW->Gain8[3];
   }
 
   /* Switch: '<S16>/Switch1' incorporates:
    *  Constant: '<S16>/Constant'
    */
-  if (rtu_TVS_Information_d[0] >= 1.4) {
+  if (rtu_TVS_Input_d[0] >= 1.4) {
     /* Saturate: '<S16>/Min Torque' incorporates:
      *  Gain: '<S16>/Gain4'
-     *  Switch: '<S15>/Switch2'
-     *  Switch: '<S16>/Switch1'
+     *  Switch: '<S18>/Switch2'
      */
-    if (-0.0 * localDW->Gain8[0] > -0.01) {
-      localDW->Minimum1[0] = -0.01;
+    if (-0.0 * localDW->AddConstant[0] > -0.01) {
+      rty_TVS_Output_e[0] = -0.01;
     } else {
-      localDW->Minimum1[0] = (rtNaN);
+      rty_TVS_Output_e[0] = (rtNaN);
     }
 
-    if (-0.0 * localDW->Gain8[1] > -0.01) {
-      localDW->Minimum1[1] = -0.01;
+    if (-0.0 * localDW->AddConstant[1] > -0.01) {
+      rty_TVS_Output_e[1] = -0.01;
     } else {
-      localDW->Minimum1[1] = (rtNaN);
+      rty_TVS_Output_e[1] = (rtNaN);
     }
 
-    if (-localDW->Gain8[2] > -0.01) {
-      localDW->Minimum1[2] = -0.01;
-    } else if (-localDW->Gain8[2] < -0.01) {
-      localDW->Minimum1[2] = -0.01;
+    if (-localDW->AddConstant[2] > -0.01) {
+      rty_TVS_Output_e[2] = -0.01;
+    } else if (-localDW->AddConstant[2] < -0.01) {
+      rty_TVS_Output_e[2] = -0.01;
     } else {
-      localDW->Minimum1[2] = -localDW->Gain8[2];
+      rty_TVS_Output_e[2] = -localDW->AddConstant[2];
     }
 
-    if (-localDW->rtu_TVS_Information_idx_2 > -0.01) {
-      localDW->Minimum1[3] = -0.01;
-    } else if (-localDW->rtu_TVS_Information_idx_2 < -0.01) {
-      localDW->Minimum1[3] = -0.01;
+    if (-localDW->rtb_Gain1_idx_1 > -0.01) {
+      rty_TVS_Output_e[3] = -0.01;
+    } else if (-localDW->rtb_Gain1_idx_1 < -0.01) {
+      rty_TVS_Output_e[3] = -0.01;
     } else {
-      localDW->Minimum1[3] = -localDW->rtu_TVS_Information_idx_2;
+      rty_TVS_Output_e[3] = -localDW->rtb_Gain1_idx_1;
     }
 
     /* End of Saturate: '<S16>/Min Torque' */
   } else {
-    localDW->Minimum1[0] = 0.0;
-    localDW->Minimum1[1] = 0.0;
-    localDW->Minimum1[2] = 0.0;
-    localDW->Minimum1[3] = 0.0;
+    rty_TVS_Output_e[0] = 0.0;
+    rty_TVS_Output_e[1] = 0.0;
+    rty_TVS_Output_e[2] = 0.0;
+    rty_TVS_Output_e[3] = 0.0;
   }
 
   /* End of Switch: '<S16>/Switch1' */
 
   /* DeadZone: '<S11>/Dead Zone' */
-  if (rtu_TVS_Information_c > rtP.deadband_angle) {
-    localDW->CCaller_o5 = rtu_TVS_Information_c - rtP.deadband_angle;
-  } else if (rtu_TVS_Information_c >= -rtP.deadband_angle) {
-    localDW->CCaller_o5 = 0.0;
+  if (rtu_TVS_Input_c > rtP.deadband_angle) {
+    localDW->avg_steering_angle = rtu_TVS_Input_c - rtP.deadband_angle;
+  } else if (rtu_TVS_Input_c >= -rtP.deadband_angle) {
+    localDW->avg_steering_angle = 0.0;
   } else {
-    localDW->CCaller_o5 = rtu_TVS_Information_c - (-rtP.deadband_angle);
+    localDW->avg_steering_angle = rtu_TVS_Input_c - (-rtP.deadband_angle);
   }
 
   /* End of DeadZone: '<S11>/Dead Zone' */
 
   /* Gain: '<S11>/Gain' */
-  localDW->CCaller_o5 *= 0.28194;
-
-  /* Math: '<S21>/Square1' */
-  localDW->Square1 = localDW->CCaller_o5 * localDW->CCaller_o5;
-
-  /* Product: '<S21>/Product' */
-  localDW->Square1 *= localDW->CCaller_o5;
-
-  /* Gain: '<S21>/Gain' */
-  localDW->Square1 *= 7.0E-5;
-
-  /* Math: '<S21>/Square' */
-  localDW->Square = localDW->CCaller_o5 * localDW->CCaller_o5;
-
-  /* Gain: '<S21>/Gain1' */
-  localDW->Square *= 0.0038;
-
-  /* Gain: '<S21>/Gain2' */
-  localDW->CCaller_o2 = 0.6535 * localDW->CCaller_o5;
-
-  /* Sum: '<S21>/Sum of Elements' */
-  localDW->AddConstant[0] = localDW->Square1;
-  localDW->AddConstant[1] = localDW->Square;
-  localDW->AddConstant[2] = localDW->CCaller_o2;
-  localDW->Square1 = -0.0;
-  localDW->Square1 += localDW->AddConstant[0];
-  localDW->Square1 += localDW->AddConstant[1];
-  localDW->Square1 += localDW->AddConstant[2];
-  localDW->Square1 += -0.1061;
+  localDW->avg_steering_angle *= 0.28194;
 
   /* Math: '<S22>/Square1' */
-  localDW->Square = localDW->CCaller_o5 * localDW->CCaller_o5;
+  localDW->Square1 = localDW->avg_steering_angle * localDW->avg_steering_angle;
 
   /* Product: '<S22>/Product' */
-  localDW->Square *= localDW->CCaller_o5;
+  localDW->Square1 *= localDW->avg_steering_angle;
 
   /* Gain: '<S22>/Gain' */
-  localDW->Square *= 7.0E-5;
+  localDW->Square1 *= 7.0E-5;
 
   /* Math: '<S22>/Square' */
-  localDW->rtb_Sum4_idx_2 = localDW->CCaller_o5 * localDW->CCaller_o5;
+  localDW->rtb_Gain1_idx_3 = localDW->avg_steering_angle *
+    localDW->avg_steering_angle;
 
   /* Gain: '<S22>/Gain1' */
-  localDW->CCaller_o2 = -0.0038 * localDW->rtb_Sum4_idx_2;
+  localDW->CCaller_o3 = 0.0038 * localDW->rtb_Gain1_idx_3;
 
   /* Gain: '<S22>/Gain2' */
-  localDW->CCaller_o5 *= 0.6535;
+  localDW->rtb_Gain1_idx_3 = 0.6535 * localDW->avg_steering_angle;
 
   /* Sum: '<S22>/Sum of Elements' */
-  localDW->AddConstant[0] = localDW->Square;
-  localDW->AddConstant[1] = localDW->CCaller_o2;
-  localDW->AddConstant[2] = localDW->CCaller_o5;
-  localDW->Square = -0.0;
-  localDW->Square += localDW->AddConstant[0];
-  localDW->Square += localDW->AddConstant[1];
-  localDW->Square += localDW->AddConstant[2];
-  localDW->Square += 0.1061;
+  localDW->Gain8[0] = localDW->Square1;
+  localDW->Gain8[1] = localDW->CCaller_o3;
+  localDW->Gain8[2] = localDW->rtb_Gain1_idx_3;
+  localDW->Square1 = -0.0;
+  localDW->Square1 += localDW->Gain8[0];
+  localDW->Square1 += localDW->Gain8[1];
+  localDW->Square1 += localDW->Gain8[2];
+  localDW->Square1 += -0.1061;
+
+  /* Math: '<S23>/Square1' */
+  localDW->rtb_Gain1_idx_3 = localDW->avg_steering_angle *
+    localDW->avg_steering_angle;
+
+  /* Product: '<S23>/Product' */
+  localDW->rtb_Gain1_idx_3 *= localDW->avg_steering_angle;
+
+  /* Gain: '<S23>/Gain' */
+  localDW->CCaller_o3 = 7.0E-5 * localDW->rtb_Gain1_idx_3;
+
+  /* Math: '<S23>/Square' */
+  localDW->rtb_Gain1_idx_3 = localDW->avg_steering_angle *
+    localDW->avg_steering_angle;
+
+  /* Gain: '<S23>/Gain1' */
+  localDW->rtb_Gain1_idx_3 *= -0.0038;
+
+  /* Gain: '<S23>/Gain2' */
+  localDW->avg_steering_angle *= 0.6535;
+
+  /* Sum: '<S23>/Sum of Elements' */
+  localDW->Gain8[0] = localDW->CCaller_o3;
+  localDW->Gain8[1] = localDW->rtb_Gain1_idx_3;
+  localDW->Gain8[2] = localDW->avg_steering_angle;
+  localDW->CCaller_o3 = -0.0;
+  localDW->CCaller_o3 += localDW->Gain8[0];
+  localDW->CCaller_o3 += localDW->Gain8[1];
+  localDW->CCaller_o3 += localDW->Gain8[2];
+  localDW->CCaller_o3 += 0.1061;
 
   /* SignalConversion generated from: '<S11>/Mean' */
   rtb_Abs_m_idx_0 = localDW->Square1;
-  rtb_Abs_m_idx_1 = localDW->Square;
 
   /* S-Function (sdspstatfcns): '<S11>/Mean' */
-  localDW->CCaller_o5 = rtb_Abs_m_idx_0;
-  localDW->CCaller_o5 += rtb_Abs_m_idx_1;
-  localDW->CCaller_o5 /= 2.0;
+  localDW->avg_steering_angle = rtb_Abs_m_idx_0;
+  localDW->avg_steering_angle += localDW->CCaller_o3;
+  localDW->avg_steering_angle /= 2.0;
 
   /* S-Function (sdspstatfcns): '<S17>/Mean' incorporates:
    *  UnitDelay: '<S2>/Unit Delay'
@@ -792,94 +786,109 @@ static void Electronics_o(const real_T rtu_TVS_Information[4], const real_T
   localDW->Square1 /= 4.0;
 
   /* Product: '<S17>/Divide' */
-  localDW->Square = localDW->Square1 / 2.0;
+  localDW->rtb_Gain1_idx_3 = localDW->Square1 / 2.0;
 
   /* Gain: '<S17>/Gain' */
-  rtb_UnitDelay_idx_0 = 0.0 * localDW->Square;
-  rtb_UnitDelay_idx_1 = 0.0 * localDW->Square;
-  rtb_UnitDelay_idx_2 = localDW->Square;
-  localDW->rtb_UnitDelay_idx_3 = localDW->Square;
+  rtb_UnitDelay_g_idx_0 = 0.0 * localDW->rtb_Gain1_idx_3;
+  rtb_UnitDelay_g_idx_1 = 0.0 * localDW->rtb_Gain1_idx_3;
+  rtb_UnitDelay_g_idx_2 = localDW->rtb_Gain1_idx_3;
+  localDW->rtb_UnitDelay_g_idx_3 = localDW->rtb_Gain1_idx_3;
 
   /* Gain: '<S17>/Gain2' */
-  localDW->rtb_Sum4_idx_0 = 0.0 * localDW->Square1;
-  localDW->rtb_Sum4_idx_1 = 0.0 * localDW->Square1;
-  localDW->rtb_Sum4_idx_2 = localDW->Square1;
+  localDW->Gain8[0] = 0.0 * localDW->Square1;
+  localDW->Gain8[1] = 0.0 * localDW->Square1;
+  localDW->Gain8[2] = localDW->Square1;
+  localDW->Gain8[3] = localDW->Square1;
 
   /* Sum: '<S17>/Add' incorporates:
    *  Gain: '<S17>/Gain'
    *  Gain: '<S17>/Gain2'
    */
-  localDW->rtb_Gain6_idx_1 = localDW->rtb_Sum4_idx_2 + rtb_UnitDelay_idx_2;
+  localDW->rtb_Gain1_idx_0 = localDW->Gain8[0] + rtb_UnitDelay_g_idx_0;
+  localDW->Sum2 = localDW->Gain8[1] + rtb_UnitDelay_g_idx_1;
+  localDW->rtb_Gain1_idx_2 = localDW->Gain8[2] + rtb_UnitDelay_g_idx_2;
+  localDW->DotProduct2 = localDW->Gain8[3] + localDW->rtb_UnitDelay_g_idx_3;
 
   /* Saturate: '<S16>/Max Torque' incorporates:
    *  Gain: '<S16>/Gain8'
-   *  Switch: '<S15>/Switch2'
+   *  Switch: '<S18>/Switch2'
    */
-  if (localDW->Gain8[2] > 25.0) {
-    localDW->rtb_Gain8_tmp = 25.0;
-  } else if (localDW->Gain8[2] < 0.01) {
-    localDW->rtb_Gain8_tmp = 0.01;
+  if (0.0 * localDW->AddConstant[0] < 0.01) {
+    rty_TVS_Output_k[0] = 0.01;
   } else {
-    localDW->rtb_Gain8_tmp = localDW->Gain8[2];
+    rty_TVS_Output_k[0] = (rtNaN);
   }
 
-  /* Sum: '<S17>/Add' incorporates:
-   *  Gain: '<S17>/Gain'
-   *  Gain: '<S17>/Gain2'
-   */
-  localDW->rtb_Sum4_idx_2 = localDW->Square1 + localDW->rtb_UnitDelay_idx_3;
-
-  /* Saturate: '<S16>/Max Torque' */
-  if (localDW->rtu_TVS_Information_idx_2 > 25.0) {
-    localDW->rtu_TVS_Information_idx_2 = 25.0;
-  } else if (localDW->rtu_TVS_Information_idx_2 < 0.01) {
-    localDW->rtu_TVS_Information_idx_2 = 0.01;
+  if (0.0 * localDW->AddConstant[1] < 0.01) {
+    rty_TVS_Output_k[1] = 0.01;
+  } else {
+    rty_TVS_Output_k[1] = (rtNaN);
   }
+
+  if (localDW->AddConstant[2] > 25.0) {
+    rty_TVS_Output_k[2] = 25.0;
+  } else if (localDW->AddConstant[2] < 0.01) {
+    rty_TVS_Output_k[2] = 0.01;
+  } else {
+    rty_TVS_Output_k[2] = localDW->AddConstant[2];
+  }
+
+  if (localDW->rtb_Gain1_idx_1 > 25.0) {
+    rty_TVS_Output_k[3] = 25.0;
+  } else if (localDW->rtb_Gain1_idx_1 < 0.01) {
+    rty_TVS_Output_k[3] = 0.01;
+  } else {
+    rty_TVS_Output_k[3] = localDW->rtb_Gain1_idx_1;
+  }
+
+  /* End of Saturate: '<S16>/Max Torque' */
 
   /* Gain: '<S11>/Gain1' */
-  localDW->Square1 = 0.01745329 * rtb_Abs_m_idx_0;
+  localDW->rtb_Gain1_idx_1 = 0.01745329 * rtb_Abs_m_idx_0;
 
   /* Gain: '<S13>/Gain' incorporates:
    *  Abs: '<S13>/Abs'
    */
-  localDW->Square = 0.15915494309189535 * fabs(localDW->Square1);
+  localDW->rtb_Gain5_idx_1 = 0.15915494309189535 * fabs(localDW->rtb_Gain1_idx_1);
 
   /* Trigonometry: '<S13>/Cos' */
-  localDW->CCaller_o2 = cos(localDW->Square);
+  localDW->rtb_Gain1_idx_3 = cos(localDW->rtb_Gain5_idx_1);
 
   /* Signum: '<S13>/Sign' */
-  if (rtIsNaN(localDW->Square1)) {
-  } else if (localDW->Square1 < 0.0) {
-    localDW->Square1 = -1.0;
-  } else {
-    localDW->Square1 = (localDW->Square1 > 0.0);
+  if (!rtIsNaN(localDW->rtb_Gain1_idx_1)) {
+    if (localDW->rtb_Gain1_idx_1 < 0.0) {
+      localDW->rtb_Gain1_idx_1 = -1.0;
+    } else {
+      localDW->rtb_Gain1_idx_1 = (localDW->rtb_Gain1_idx_1 > 0.0);
+    }
   }
 
   /* Gain: '<S11>/Gain1' incorporates:
    *  Product: '<S13>/Product1'
    *  Trigonometry: '<S13>/Sin'
    */
-  rtb_Abs_m_idx_0 = sin(localDW->Square) * localDW->Square1;
-  localDW->Square1 = 0.01745329 * rtb_Abs_m_idx_1;
+  rtb_Abs_m_idx_0 = sin(localDW->rtb_Gain5_idx_1) * localDW->rtb_Gain1_idx_1;
+  localDW->rtb_Gain1_idx_1 = 0.01745329 * localDW->CCaller_o3;
 
   /* Gain: '<S13>/Gain' incorporates:
    *  Abs: '<S13>/Abs'
    */
-  localDW->Square = 0.15915494309189535 * fabs(localDW->Square1);
+  localDW->rtb_Gain5_idx_1 = 0.15915494309189535 * fabs(localDW->rtb_Gain1_idx_1);
 
   /* DotProduct: '<S13>/Dot Product1' incorporates:
    *  Constant: '<S13>/Constant5'
    *  SignalConversion generated from: '<S13>/Dot Product1'
    */
-  localDW->rtb_TmpSignalConversionAtDotP_m = localDW->CCaller_o2 * 0.647895 +
+  localDW->rtb_Gain1_idx_3 = localDW->rtb_Gain1_idx_3 * 0.647895 +
     rtb_Abs_m_idx_0 * 0.7922471;
 
   /* Signum: '<S13>/Sign' */
-  if (rtIsNaN(localDW->Square1)) {
-  } else if (localDW->Square1 < 0.0) {
-    localDW->Square1 = -1.0;
-  } else {
-    localDW->Square1 = (localDW->Square1 > 0.0);
+  if (!rtIsNaN(localDW->rtb_Gain1_idx_1)) {
+    if (localDW->rtb_Gain1_idx_1 < 0.0) {
+      localDW->rtb_Gain1_idx_1 = -1.0;
+    } else {
+      localDW->rtb_Gain1_idx_1 = (localDW->rtb_Gain1_idx_1 > 0.0);
+    }
   }
 
   /* DotProduct: '<S13>/Dot Product2' incorporates:
@@ -888,51 +897,53 @@ static void Electronics_o(const real_T rtu_TVS_Information[4], const real_T
    *  Trigonometry: '<S13>/Cos'
    *  Trigonometry: '<S13>/Sin'
    */
-  localDW->CCaller_o2 = sin(localDW->Square) * localDW->Square1 * 0.7922471 +
-    cos(localDW->Square) * -0.647895;
+  localDW->rtb_TmpSignalConversionAtDotP_m = sin(localDW->rtb_Gain5_idx_1) *
+    localDW->rtb_Gain1_idx_1 * 0.7922471 + cos(localDW->rtb_Gain5_idx_1) *
+    -0.647895;
 
   /* Math: '<S10>/Square' */
-  rtb_Abs_m_idx_0 = rtu_TVS_Information_d[0] * rtu_TVS_Information_d[0];
-  rtb_Abs_m_idx_1 = rtu_TVS_Information_d[1] * rtu_TVS_Information_d[1];
+  rtb_Abs_m_idx_0 = rtu_TVS_Input_d[0] * rtu_TVS_Input_d[0];
+  localDW->CCaller_o3 = rtu_TVS_Input_d[1] * rtu_TVS_Input_d[1];
 
   /* Sum: '<S10>/Sum' incorporates:
    *  Math: '<S10>/Square'
    */
   localDW->Square1 = -0.0;
   localDW->Square1 += rtb_Abs_m_idx_0;
-  localDW->Square1 += rtb_Abs_m_idx_1;
+  localDW->Square1 += localDW->CCaller_o3;
 
   /* Sqrt: '<S10>/Sqrt' */
   localDW->Square1 = sqrt(localDW->Square1);
 
   /* Gain: '<S10>/Gain' */
-  localDW->Square = rtP.Ku * localDW->Square1;
+  localDW->CCaller_o3 = rtP.Ku * localDW->Square1;
 
   /* Lookup_n-D: '<S10>/1-D Lookup Table' incorporates:
    *  CCaller: '<S5>/C Caller'
    */
-  bpIdx = plook_evenc(localDW->Square, 0.0, 3.0, 9U, &rtb_Abs_m_idx_0);
-  localDW->Square = intrp1d_l(bpIdx, rtb_Abs_m_idx_0,
+  bpIdx = plook_evenc(localDW->CCaller_o3, 0.0, 3.0, 9U, &rtb_Abs_m_idx_0);
+  localDW->CCaller_o3 = intrp1d_l(bpIdx, rtb_Abs_m_idx_0,
     rtConstP.uDLookupTable_tableData_h);
 
   /* Gain: '<S11>/Gain2' */
-  localDW->CCaller_o5 *= 0.01745329;
+  localDW->avg_steering_angle *= 0.01745329;
 
   /* Product: '<S10>/Divide1' incorporates:
    *  Constant: '<S10>/Constant1'
    */
-  localDW->Square1 = localDW->Square1 * localDW->CCaller_o5 *
+  localDW->Square1 = localDW->Square1 * localDW->avg_steering_angle *
     0.63488032505872649;
 
   /* Abs: '<S10>/Abs' */
-  rtb_Abs_m_idx_0 = localDW->Square;
-  rtb_Abs_m_idx_1 = fabs(localDW->Square1);
+  rtb_Abs_m_idx_0 = localDW->CCaller_o3;
+  localDW->CCaller_o3 = fabs(localDW->Square1);
 
   /* MinMax: '<S10>/Min of Elements' */
-  localDW->CCaller_o5 = rtb_Abs_m_idx_0;
-  if ((localDW->CCaller_o5 <= rtb_Abs_m_idx_1) || rtIsNaN(rtb_Abs_m_idx_1)) {
+  localDW->avg_steering_angle = rtb_Abs_m_idx_0;
+  if ((localDW->avg_steering_angle <= localDW->CCaller_o3) || rtIsNaN
+      (localDW->CCaller_o3)) {
   } else {
-    localDW->CCaller_o5 = rtb_Abs_m_idx_1;
+    localDW->avg_steering_angle = localDW->CCaller_o3;
   }
 
   /* End of MinMax: '<S10>/Min of Elements' */
@@ -948,72 +959,97 @@ static void Electronics_o(const real_T rtu_TVS_Information[4], const real_T
   /* End of Signum: '<S10>/Sign' */
 
   /* Product: '<S10>/Product' */
-  rtb_Abs_m_idx_0 = localDW->CCaller_o5 * localDW->Square1;
+  *rty_TVS_Output_i = localDW->avg_steering_angle * localDW->Square1;
 
   /* Switch: '<S17>/Switch1' incorporates:
    *  Bias: '<S5>/Add Constant'
    *  Constant: '<S13>/Constant3'
    *  Constant: '<S13>/Constant4'
    *  Constant: '<S17>/Constant'
-   *  DotProduct: '<S13>/Dot Product1'
-   *  Gain: '<S17>/Gain'
-   *  Gain: '<S17>/Gain2'
+   *  DotProduct: '<S13>/Dot Product2'
    *  Gain: '<S17>/Gain7'
    *  Product: '<S17>/Product1'
-   *  Sum: '<S17>/Add'
-   *  Switch: '<S19>/Switch'
    */
-  if (rtb_Abs_m_idx_0 != 0.0) {
-    localDW->AddConstant[0] = (localDW->rtb_Sum4_idx_0 + rtb_UnitDelay_idx_0) *
-      localDW->rtb_TmpSignalConversionAtDotP_m * 0.38765914066666662;
-    localDW->AddConstant[1] = localDW->CCaller_o2 * rtb_UnitDelay_idx_1 *
-      0.38765914066666662;
+  if (*rty_TVS_Output_i != 0.0) {
+    /* RelationalOperator: '<S20>/LowerRelop1' */
+    rtb_LowerRelop1_i_idx_0 = (localDW->rtb_Gain1_idx_0 > rty_TVS_Output_k[0]);
+    rtb_LowerRelop1_i_idx_1 = (rtb_UnitDelay_g_idx_1 > rty_TVS_Output_k[1]);
+    rtb_LowerRelop1_i_idx_2 = (localDW->rtb_Gain1_idx_2 > rty_TVS_Output_k[2]);
+    rtb_LowerRelop1_i_idx_3 = (localDW->rtb_UnitDelay_g_idx_3 >
+      rty_TVS_Output_k[3]);
 
-    /* Switch: '<S19>/Switch2' incorporates:
-     *  Bias: '<S5>/Add Constant'
-     *  DotProduct: '<S13>/Dot Product1'
-     *  Gain: '<S17>/Gain'
-     *  Gain: '<S17>/Gain2'
-     *  Gain: '<S17>/Gain7'
-     *  Product: '<S17>/Product1'
-     *  RelationalOperator: '<S19>/LowerRelop1'
-     *  RelationalOperator: '<S19>/UpperRelop'
-     *  Saturate: '<S16>/Max Torque'
-     *  Sum: '<S17>/Add'
-     *  Switch: '<S16>/Switch1'
-     *  Switch: '<S19>/Switch'
+    /* RelationalOperator: '<S20>/UpperRelop' */
+    rtb_UpperRelop_n_idx_0 = (localDW->rtb_Gain1_idx_0 < rty_TVS_Output_e[0]);
+    rtb_UpperRelop_n_idx_1 = (rtb_UnitDelay_g_idx_1 < rty_TVS_Output_e[1]);
+    rtb_UpperRelop_n_idx_2 = (localDW->rtb_Gain1_idx_2 < rty_TVS_Output_e[2]);
+    rtb_UpperRelop_n_idx_3 = (localDW->rtb_UnitDelay_g_idx_3 < rty_TVS_Output_e
+      [3]);
+
+    /* Switch: '<S20>/Switch' incorporates:
+     *  RelationalOperator: '<S20>/UpperRelop'
      */
-    if (localDW->rtb_Gain6_idx_1 > localDW->rtb_Gain8_tmp) {
-      localDW->rtb_Gain6_idx_1 = localDW->rtb_Gain8_tmp;
-    } else if (localDW->rtb_Gain6_idx_1 < localDW->Minimum1[2]) {
-      localDW->rtb_Gain6_idx_1 = localDW->Minimum1[2];
-    }
-
-    localDW->AddConstant[2] = 0.62102 * localDW->rtb_Gain6_idx_1 * 0.387634;
-
-    /* Switch: '<S19>/Switch2' incorporates:
-     *  Bias: '<S5>/Add Constant'
-     *  Constant: '<S13>/Constant3'
-     *  Gain: '<S17>/Gain7'
-     *  Product: '<S17>/Product1'
-     *  RelationalOperator: '<S19>/LowerRelop1'
-     *  RelationalOperator: '<S19>/UpperRelop'
-     *  Saturate: '<S16>/Max Torque'
-     *  Switch: '<S16>/Switch1'
-     *  Switch: '<S19>/Switch'
-     */
-    if (localDW->rtb_UnitDelay_idx_3 > localDW->rtu_TVS_Information_idx_2) {
-      localDW->CCaller_o5 = localDW->rtu_TVS_Information_idx_2;
-    } else if (localDW->rtb_UnitDelay_idx_3 < localDW->Minimum1[3]) {
-      /* Switch: '<S19>/Switch' incorporates:
-       *  Switch: '<S16>/Switch1'
+    if (rtb_UpperRelop_n_idx_0) {
+      /* Switch: '<S20>/Switch2' incorporates:
+       *  Product: '<S17>/Product1'
        */
-      localDW->CCaller_o5 = localDW->Minimum1[3];
-    } else {
-      localDW->CCaller_o5 = localDW->rtb_UnitDelay_idx_3;
+      localDW->rtb_Gain1_idx_0 = rty_TVS_Output_e[0];
     }
 
-    localDW->AddConstant[3] = -0.62102 * localDW->CCaller_o5 * 0.387634;
+    if (rtb_UpperRelop_n_idx_1) {
+      /* Switch: '<S20>/Switch2' incorporates:
+       *  Product: '<S17>/Product1'
+       */
+      localDW->rtb_Gain1_idx_1 = rty_TVS_Output_e[1];
+    } else {
+      /* Switch: '<S20>/Switch2' incorporates:
+       *  Product: '<S17>/Product1'
+       */
+      localDW->rtb_Gain1_idx_1 = rtb_UnitDelay_g_idx_1;
+    }
+
+    if (rtb_UpperRelop_n_idx_2) {
+      /* Switch: '<S20>/Switch2' incorporates:
+       *  Product: '<S17>/Product1'
+       */
+      localDW->rtb_Gain1_idx_2 = rty_TVS_Output_e[2];
+    }
+
+    if (rtb_UpperRelop_n_idx_3) {
+      localDW->rtb_Gain5_idx_1 = rty_TVS_Output_e[3];
+    } else {
+      localDW->rtb_Gain5_idx_1 = localDW->rtb_UnitDelay_g_idx_3;
+    }
+
+    /* End of Switch: '<S20>/Switch' */
+
+    /* Switch: '<S20>/Switch2' incorporates:
+     *  RelationalOperator: '<S20>/LowerRelop1'
+     */
+    if (rtb_LowerRelop1_i_idx_0) {
+      /* Product: '<S17>/Product1' */
+      localDW->rtb_Gain1_idx_0 = rty_TVS_Output_k[0];
+    }
+
+    if (rtb_LowerRelop1_i_idx_1) {
+      /* Product: '<S17>/Product1' */
+      localDW->rtb_Gain1_idx_1 = rty_TVS_Output_k[1];
+    }
+
+    if (rtb_LowerRelop1_i_idx_2) {
+      /* Product: '<S17>/Product1' */
+      localDW->rtb_Gain1_idx_2 = rty_TVS_Output_k[2];
+    }
+
+    if (rtb_LowerRelop1_i_idx_3) {
+      localDW->rtb_Gain5_idx_1 = rty_TVS_Output_k[3];
+    }
+
+    localDW->AddConstant[0] = localDW->rtb_Gain1_idx_3 *
+      localDW->rtb_Gain1_idx_0 * 0.38765914066666662;
+    localDW->AddConstant[1] = localDW->rtb_TmpSignalConversionAtDotP_m *
+      localDW->rtb_Gain1_idx_1 * 0.38765914066666662;
+    localDW->AddConstant[2] = 0.62102 * localDW->rtb_Gain1_idx_2 * 0.387634;
+    localDW->AddConstant[3] = -0.62102 * localDW->rtb_Gain5_idx_1 * 0.387634;
   } else {
     localDW->AddConstant[0] = 0.0;
     localDW->AddConstant[1] = 0.0;
@@ -1024,150 +1060,282 @@ static void Electronics_o(const real_T rtu_TVS_Information[4], const real_T
   /* End of Switch: '<S17>/Switch1' */
 
   /* Gain: '<S17>/Gain6' incorporates:
-   *  DotProduct: '<S13>/Dot Product1'
+   *  DotProduct: '<S13>/Dot Product2'
    */
-  localDW->rtb_Sum4_idx_0 = 0.38765914066666662 *
+  localDW->rtb_Gain1_idx_0 = 0.38765914066666662 * localDW->rtb_Gain1_idx_3;
+  localDW->rtb_Gain1_idx_1 = 0.38765914066666662 *
     localDW->rtb_TmpSignalConversionAtDotP_m;
-  localDW->rtb_Gain6_idx_1 = 0.38765914066666662 * localDW->CCaller_o2;
 
   /* Gain: '<S14>/Gain5' */
-  localDW->rtb_UnitDelay_idx_3 = 0.95 * rty_Tx[0];
-  rtb_Abs_m_idx_1 = 0.95 * rty_Tx[1];
-  localDW->rtb_Gain5_idx_2 = 0.95 * rty_Tx[2];
-  localDW->rtb_Gain5_idx_3 = 0.95 * rty_Tx[3];
+  localDW->rtb_Gain1_idx_2 = 0.95 * rty_TVS_Output[0];
+  localDW->rtb_Gain5_idx_1 = 0.95 * rty_TVS_Output[1];
+  localDW->rtb_Gain5_idx_2 = 0.95 * rty_TVS_Output[2];
+  localDW->rtb_Gain5_idx_3 = 0.95 * rty_TVS_Output[3];
+
+  /* DotProduct: '<S14>/Dot Product' */
+  localDW->avg_steering_angle = rty_TVS_Output[0];
+  localDW->CCaller_o3 = rty_TVS_Output[1];
+  localDW->Square1 = rty_TVS_Output[2];
+  rtb_Abs_m_idx_0 = rty_TVS_Output[3];
+
+  /* Switch: '<S14>/Switch' incorporates:
+   *  Product: '<S14>/Product'
+   *  Product: '<S14>/Product1'
+   *  SignalConversion generated from: '<S4>/driver_input'
+   */
+  if (rtu_TVS_Input_b > 0.0) {
+    /* DotProduct: '<S14>/Dot Product' incorporates:
+     *  Constant: '<S14>/Constant'
+     */
+    localDW->avg_steering_angle = ((0.0 * localDW->avg_steering_angle + 0.0 *
+      localDW->CCaller_o3) + 26.315789473684212 * localDW->Square1) +
+      26.315789473684212 * rtb_Abs_m_idx_0;
+
+    /* MinMax: '<S14>/Min' incorporates:
+     *  DotProduct: '<S14>/Dot Product'
+     */
+    localDW->CCaller_o3 = rtu_TVS_Input_k[0];
+    if ((localDW->CCaller_o3 <= localDW->avg_steering_angle) || rtIsNaN
+        (localDW->avg_steering_angle)) {
+      localDW->avg_steering_angle = localDW->CCaller_o3;
+    }
+
+    /* End of MinMax: '<S14>/Min' */
+
+    /* Saturate: '<S14>/Discharge Limits' */
+    if (localDW->avg_steering_angle > 75000.0) {
+      localDW->avg_steering_angle = 75000.0;
+    } else if (localDW->avg_steering_angle < 0.0) {
+      localDW->avg_steering_angle = 0.0;
+    }
+
+    /* End of Saturate: '<S14>/Discharge Limits' */
+    *rty_TVS_Output_m = localDW->avg_steering_angle * rtu_TVS_Input_b;
+  } else {
+    /* DotProduct: '<S14>/Dot Product' incorporates:
+     *  Constant: '<S14>/Constant'
+     */
+    localDW->CCaller_o3 = ((0.0 * localDW->avg_steering_angle + 0.0 *
+      localDW->CCaller_o3) + 26.315789473684212 * localDW->Square1) +
+      26.315789473684212 * rtb_Abs_m_idx_0;
+
+    /* MinMax: '<S14>/Min1' incorporates:
+     *  DotProduct: '<S14>/Dot Product'
+     */
+    localDW->avg_steering_angle = rtu_TVS_Input_k[1];
+    if ((localDW->CCaller_o3 <= localDW->avg_steering_angle) || rtIsNaN
+        (localDW->avg_steering_angle)) {
+      localDW->avg_steering_angle = localDW->CCaller_o3;
+    }
+
+    /* End of MinMax: '<S14>/Min1' */
+
+    /* Saturate: '<S14>/Charge Limits' */
+    if (localDW->avg_steering_angle > 0.0) {
+      localDW->avg_steering_angle = 0.0;
+    } else if (localDW->avg_steering_angle < 0.0) {
+      localDW->avg_steering_angle = 0.0;
+    }
+
+    /* End of Saturate: '<S14>/Charge Limits' */
+    *rty_TVS_Output_m = rtu_TVS_Input_b * localDW->avg_steering_angle;
+  }
+
+  /* End of Switch: '<S14>/Switch' */
+
+  /* Signum: '<S17>/Sign' */
+  localDW->CCaller_o3 = *rty_TVS_Output_m;
+  if (rtIsNaN(localDW->CCaller_o3)) {
+  } else if (localDW->CCaller_o3 < 0.0) {
+    localDW->CCaller_o3 = -1.0;
+  } else {
+    localDW->CCaller_o3 = (localDW->CCaller_o3 > 0.0);
+  }
+
+  /* End of Signum: '<S17>/Sign' */
+
+  /* UnitDelay: '<S17>/Unit Delay5' */
+  localDW->avg_steering_angle = localDW->UnitDelay5_DSTATE;
+
+  /* Signum: '<S17>/Sign2' */
+  if (rtIsNaN(localDW->avg_steering_angle)) {
+    rtb_Abs_m_idx_0 = localDW->avg_steering_angle;
+  } else if (localDW->avg_steering_angle < 0.0) {
+    rtb_Abs_m_idx_0 = -1.0;
+  } else {
+    rtb_Abs_m_idx_0 = (localDW->avg_steering_angle > 0.0);
+  }
+
+  /* End of Signum: '<S17>/Sign2' */
+
+  /* Abs: '<S17>/Abs' */
+  localDW->Abs = fabs(*rty_TVS_Output_i);
+
+  /* UnitDelay: '<S17>/Unit Delay1' */
+  localDW->avg_steering_angle = localDW->UnitDelay1_DSTATE;
+
+  /* RelationalOperator: '<S17>/GreaterThan1' incorporates:
+   *  Constant: '<S17>/Constant1'
+   */
+  rtb_UpperRelop_n_idx_0 = (localDW->avg_steering_angle > 0.05);
+
+  /* UnitDelay: '<S17>/Unit Delay' */
+  *rty_TVS_Output_c = localDW->UnitDelay_DSTATE_e;
 
   /* Sum: '<S9>/Sum1' */
-  localDW->CCaller_o5 = rtb_Abs_m_idx_0 - rtu_TVS_Information_b[2];
+  localDW->avg_steering_angle = *rty_TVS_Output_i - rtu_TVS_Input_i[2];
 
   /* Abs: '<S9>/Abs' */
-  localDW->Square1 = fabs(localDW->CCaller_o5);
+  localDW->Square1 = fabs(localDW->avg_steering_angle);
 
   /* RelationalOperator: '<S9>/Less Than' incorporates:
    *  Constant: '<S9>/Constant'
    */
-  rtb_LessThan_e = (localDW->Square1 < 0.5);
+  *rty_TVS_Output_b = (localDW->Square1 < 0.5);
 
-  /* Product: '<S9>/Product' incorporates:
-   *  UnitDelay: '<S17>/Unit Delay'
-   */
-  localDW->Square1 = (localDW->UnitDelay_DSTATE_e ? (real_T)rtb_LessThan_e : 0.0)
-    * localDW->CCaller_o5;
+  /* Product: '<S9>/Product' */
+  localDW->Square1 = (*rty_TVS_Output_c ? (real_T)*rty_TVS_Output_b : 0.0) *
+    localDW->avg_steering_angle;
 
   /* Gain: '<S9>/Gain' */
   localDW->Square1 *= rtP.I;
 
   /* UnitDelay: '<S17>/Unit Delay4' */
-  rtb_LessThan_e = localDW->UnitDelay4_DSTATE;
+  *rty_TVS_Output_b = localDW->UnitDelay4_DSTATE;
 
-  /* DiscreteIntegrator: '<S9>/Discrete-Time Integrator' incorporates:
-   *  UnitDelay: '<S17>/Unit Delay4'
-   */
-  if (localDW->UnitDelay4_DSTATE || (localDW->DiscreteTimeIntegrator_PrevRese !=
-       0)) {
+  /* DiscreteIntegrator: '<S9>/Discrete-Time Integrator' */
+  if ((*rty_TVS_Output_b) || (localDW->DiscreteTimeIntegrator_PrevRese != 0)) {
     localDW->DiscreteTimeIntegrator_DSTATE = 0.0;
   }
 
   /* DiscreteIntegrator: '<S9>/Discrete-Time Integrator' */
-  localDW->Square = 0.015 * localDW->Square1 +
+  localDW->DiscreteTimeIntegrator = 0.015 * localDW->Square1 +
     localDW->DiscreteTimeIntegrator_DSTATE;
 
   /* DiscreteIntegrator: '<S9>/Discrete-Time Integrator' */
-  if (localDW->Square >= 1.0) {
+  if (localDW->DiscreteTimeIntegrator >= 1.0) {
     /* DiscreteIntegrator: '<S9>/Discrete-Time Integrator' */
-    localDW->Square = 1.0;
-  } else if (localDW->Square <= -1.0) {
+    localDW->DiscreteTimeIntegrator = 1.0;
+  } else if (localDW->DiscreteTimeIntegrator <= -1.0) {
     /* DiscreteIntegrator: '<S9>/Discrete-Time Integrator' */
-    localDW->Square = -1.0;
+    localDW->DiscreteTimeIntegrator = -1.0;
   }
 
   /* Gain: '<S9>/P' */
-  localDW->Square1 = rtP.P * localDW->CCaller_o5;
+  localDW->Square1 = rtP.P * localDW->avg_steering_angle;
 
   /* Sum: '<S9>/Sum7' */
-  localDW->Sum7 = localDW->Square + localDW->Square1;
+  *rty_TVS_Output_d = localDW->DiscreteTimeIntegrator + localDW->Square1;
 
   /* Sum: '<S17>/Sum1' incorporates:
    *  Bias: '<S5>/Add Constant'
    */
-  localDW->CCaller_o5 = -0.0;
-  localDW->CCaller_o5 += localDW->AddConstant[0];
-  localDW->CCaller_o5 += localDW->AddConstant[1];
-  localDW->CCaller_o5 += localDW->AddConstant[2];
-  localDW->CCaller_o5 += localDW->AddConstant[3];
+  localDW->avg_steering_angle = -0.0;
+  localDW->avg_steering_angle += localDW->AddConstant[0];
+  localDW->avg_steering_angle += localDW->AddConstant[1];
+  localDW->avg_steering_angle += localDW->AddConstant[2];
+  localDW->avg_steering_angle += localDW->AddConstant[3];
 
-  /* RelationalOperator: '<S18>/LowerRelop1' */
-  rtb_LowerRelop1 = (localDW->Sum7 > localDW->CCaller_o5);
+  /* RelationalOperator: '<S19>/LowerRelop1' */
+  rtb_LowerRelop1_i_idx_0 = (*rty_TVS_Output_d > localDW->avg_steering_angle);
 
-  /* Switch: '<S18>/Switch2' */
-  if (!rtb_LowerRelop1) {
+  /* Switch: '<S19>/Switch2' */
+  if (!rtb_LowerRelop1_i_idx_0) {
     /* Switch: '<S17>/Switch2' incorporates:
      *  Constant: '<S13>/Constant3'
      *  Constant: '<S13>/Constant4'
      *  Constant: '<S17>/Constant'
-     *  DotProduct: '<S13>/Dot Product1'
-     *  Gain: '<S17>/Gain'
+     *  DotProduct: '<S13>/Dot Product2'
      *  Gain: '<S17>/Gain1'
-     *  Gain: '<S17>/Gain2'
      *  Product: '<S17>/Product2'
-     *  Sum: '<S17>/Add'
-     *  Switch: '<S20>/Switch'
+     *  RelationalOperator: '<S21>/LowerRelop1'
+     *  Switch: '<S21>/Switch2'
      */
-    if (rtb_Abs_m_idx_0 != 0.0) {
-      localDW->AddConstant[0] = localDW->rtb_TmpSignalConversionAtDotP_m *
-        rtb_UnitDelay_idx_0 * 0.38765914066666662;
-      localDW->AddConstant[1] = (localDW->rtb_Sum4_idx_1 + rtb_UnitDelay_idx_1) *
-        localDW->CCaller_o2 * 0.38765914066666662;
-
-      /* Switch: '<S20>/Switch2' incorporates:
-       *  DotProduct: '<S13>/Dot Product1'
-       *  Gain: '<S17>/Gain'
-       *  Gain: '<S17>/Gain1'
-       *  Gain: '<S17>/Gain2'
-       *  Product: '<S17>/Product2'
-       *  RelationalOperator: '<S20>/LowerRelop1'
-       *  RelationalOperator: '<S20>/UpperRelop'
-       *  Saturate: '<S16>/Max Torque'
-       *  Sum: '<S17>/Add'
-       *  Switch: '<S16>/Switch1'
-       *  Switch: '<S17>/Switch2'
-       *  Switch: '<S20>/Switch'
+    if (*rty_TVS_Output_i != 0.0) {
+      /* RelationalOperator: '<S21>/UpperRelop' incorporates:
+       *  RelationalOperator: '<S21>/LowerRelop1'
        */
-      if (rtb_UnitDelay_idx_2 > localDW->rtb_Gain8_tmp) {
-        localDW->CCaller_o5 = localDW->rtb_Gain8_tmp;
-      } else if (rtb_UnitDelay_idx_2 < localDW->Minimum1[2]) {
-        localDW->CCaller_o5 = localDW->Minimum1[2];
+      rtb_LowerRelop1_i_idx_0 = (rtb_UnitDelay_g_idx_0 < rty_TVS_Output_e[0]);
+      rtb_LowerRelop1_i_idx_1 = (localDW->Sum2 < rty_TVS_Output_e[1]);
+      rtb_LowerRelop1_i_idx_2 = (rtb_UnitDelay_g_idx_2 < rty_TVS_Output_e[2]);
+      rtb_LowerRelop1_i_idx_3 = (localDW->DotProduct2 < rty_TVS_Output_e[3]);
+
+      /* Switch: '<S21>/Switch' incorporates:
+       *  Product: '<S17>/Product2'
+       *  RelationalOperator: '<S21>/LowerRelop1'
+       */
+      if (rtb_LowerRelop1_i_idx_0) {
+        localDW->AddConstant[0] = rty_TVS_Output_e[0];
       } else {
-        localDW->CCaller_o5 = rtb_UnitDelay_idx_2;
+        localDW->AddConstant[0] = rtb_UnitDelay_g_idx_0;
       }
 
-      localDW->AddConstant[2] = 0.62102 * localDW->CCaller_o5 * 0.387634;
+      if (rtb_LowerRelop1_i_idx_1) {
+        localDW->AddConstant[1] = rty_TVS_Output_e[1];
+      } else {
+        localDW->AddConstant[1] = localDW->Sum2;
+      }
 
-      /* Switch: '<S20>/Switch2' incorporates:
-       *  Constant: '<S13>/Constant3'
-       *  Gain: '<S17>/Gain1'
-       *  Product: '<S17>/Product2'
-       *  RelationalOperator: '<S20>/LowerRelop1'
-       *  RelationalOperator: '<S20>/UpperRelop'
-       *  Saturate: '<S16>/Max Torque'
-       *  Switch: '<S16>/Switch1'
-       *  Switch: '<S17>/Switch2'
-       *  Switch: '<S20>/Switch'
+      if (rtb_LowerRelop1_i_idx_2) {
+        localDW->AddConstant[2] = rty_TVS_Output_e[2];
+      } else {
+        localDW->AddConstant[2] = rtb_UnitDelay_g_idx_2;
+      }
+
+      if (rtb_LowerRelop1_i_idx_3) {
+        localDW->AddConstant[3] = rty_TVS_Output_e[3];
+      } else {
+        localDW->AddConstant[3] = localDW->DotProduct2;
+      }
+
+      /* End of Switch: '<S21>/Switch' */
+
+      /* RelationalOperator: '<S21>/LowerRelop1' */
+      rtb_LowerRelop1_i_idx_0 = (rtb_UnitDelay_g_idx_0 > rty_TVS_Output_k[0]);
+      rtb_LowerRelop1_i_idx_1 = (localDW->Sum2 > rty_TVS_Output_k[1]);
+      rtb_LowerRelop1_i_idx_2 = (rtb_UnitDelay_g_idx_2 > rty_TVS_Output_k[2]);
+      rtb_LowerRelop1_i_idx_3 = (localDW->DotProduct2 > rty_TVS_Output_k[3]);
+
+      /* Switch: '<S21>/Switch2' incorporates:
+       *  RelationalOperator: '<S21>/LowerRelop1'
        */
-      if (localDW->rtb_Sum4_idx_2 > localDW->rtu_TVS_Information_idx_2) {
-        localDW->rtb_Sum4_idx_2 = localDW->rtu_TVS_Information_idx_2;
-      } else if (localDW->rtb_Sum4_idx_2 < localDW->Minimum1[3]) {
-        /* Switch: '<S20>/Switch' incorporates:
-         *  Switch: '<S16>/Switch1'
-         */
-        localDW->rtb_Sum4_idx_2 = localDW->Minimum1[3];
+      if (rtb_LowerRelop1_i_idx_0) {
+        /* Product: '<S17>/Product2' */
+        localDW->AddConstant[0] = rty_TVS_Output_k[0];
       }
 
-      localDW->AddConstant[3] = -0.62102 * localDW->rtb_Sum4_idx_2 * 0.387634;
+      if (rtb_LowerRelop1_i_idx_1) {
+        /* Product: '<S17>/Product2' */
+        localDW->AddConstant[1] = rty_TVS_Output_k[1];
+      }
+
+      if (rtb_LowerRelop1_i_idx_2) {
+        /* Product: '<S17>/Product2' */
+        localDW->AddConstant[2] = rty_TVS_Output_k[2];
+      }
+
+      localDW->avg_steering_angle = localDW->AddConstant[3];
+
+      /* Switch: '<S21>/Switch2' incorporates:
+       *  Product: '<S17>/Product2'
+       *  RelationalOperator: '<S21>/LowerRelop1'
+       */
+      if (rtb_LowerRelop1_i_idx_3) {
+        localDW->avg_steering_angle = rty_TVS_Output_k[3];
+      }
+
+      rtb_UnitDelay_g_idx_0 = localDW->rtb_Gain1_idx_3 * localDW->AddConstant[0]
+        * 0.38765914066666662;
+      rtb_UnitDelay_g_idx_1 = localDW->rtb_TmpSignalConversionAtDotP_m *
+        localDW->AddConstant[1] * 0.38765914066666662;
+      rtb_UnitDelay_g_idx_2 = 0.62102 * localDW->AddConstant[2] * 0.387634;
+      localDW->rtb_UnitDelay_g_idx_3 = -0.62102 * localDW->avg_steering_angle *
+        0.387634;
     } else {
-      localDW->AddConstant[0] = 0.0;
-      localDW->AddConstant[1] = 0.0;
-      localDW->AddConstant[2] = 0.0;
-      localDW->AddConstant[3] = 0.0;
+      rtb_UnitDelay_g_idx_0 = 0.0;
+      rtb_UnitDelay_g_idx_1 = 0.0;
+      rtb_UnitDelay_g_idx_2 = 0.0;
+      localDW->rtb_UnitDelay_g_idx_3 = 0.0;
     }
 
     /* End of Switch: '<S17>/Switch2' */
@@ -1175,36 +1343,37 @@ static void Electronics_o(const real_T rtu_TVS_Information[4], const real_T
     /* Sum: '<S17>/Sum2' incorporates:
      *  Switch: '<S17>/Switch2'
      */
-    localDW->rtb_Sum4_idx_1 = ((localDW->AddConstant[0] + localDW->AddConstant[1])
-      + localDW->AddConstant[2]) + localDW->AddConstant[3];
+    localDW->Sum2 = ((rtb_UnitDelay_g_idx_0 + rtb_UnitDelay_g_idx_1) +
+                     rtb_UnitDelay_g_idx_2) + localDW->rtb_UnitDelay_g_idx_3;
 
-    /* Switch: '<S18>/Switch' incorporates:
-     *  RelationalOperator: '<S18>/UpperRelop'
-     */
-    if (localDW->Sum7 < localDW->rtb_Sum4_idx_1) {
-      localDW->CCaller_o5 = localDW->rtb_Sum4_idx_1;
+    /* RelationalOperator: '<S19>/UpperRelop' */
+    rtb_LowerRelop1_i_idx_0 = (*rty_TVS_Output_d < localDW->Sum2);
+
+    /* Switch: '<S19>/Switch' */
+    if (rtb_LowerRelop1_i_idx_0) {
+      localDW->avg_steering_angle = localDW->Sum2;
     } else {
-      localDW->CCaller_o5 = localDW->Sum7;
+      localDW->avg_steering_angle = *rty_TVS_Output_d;
     }
 
-    /* End of Switch: '<S18>/Switch' */
+    /* End of Switch: '<S19>/Switch' */
   }
 
-  /* End of Switch: '<S18>/Switch2' */
+  /* End of Switch: '<S19>/Switch2' */
 
   /* Abs: '<S17>/Abs3' */
-  localDW->Square1 = fabs(localDW->CCaller_o5);
+  localDW->Square1 = fabs(localDW->avg_steering_angle);
 
   /* RelationalOperator: '<S17>/Equal' incorporates:
    *  Constant: '<S17>/Constant4'
    */
-  rtb_LowerRelop1 = (localDW->Square1 < 0.01);
+  rtb_LowerRelop1_i_idx_0 = (localDW->Square1 < 0.01);
 
   /* Switch: '<S17>/Switch' incorporates:
    *  Constant: '<S17>/Constant5'
    *  Constant: '<S17>/Constant6'
    */
-  if (rtb_LowerRelop1) {
+  if (rtb_LowerRelop1_i_idx_0) {
     localDW->Square1 = 0.0001;
   } else {
     localDW->Square1 = 0.0;
@@ -1213,86 +1382,24 @@ static void Electronics_o(const real_T rtu_TVS_Information[4], const real_T
   /* End of Switch: '<S17>/Switch' */
 
   /* Sum: '<S17>/Sum3' */
-  localDW->rtb_Sum4_idx_1 = localDW->CCaller_o5 + localDW->Square1;
+  *rty_TVS_Output_ba = localDW->avg_steering_angle + localDW->Square1;
 
   /* Abs: '<S17>/Abs1' */
-  localDW->CCaller_o5 = fabs(localDW->CCaller_o5);
+  localDW->avg_steering_angle = fabs(localDW->avg_steering_angle);
 
   /* Abs: '<S17>/Abs2' */
-  localDW->Square1 = fabs(localDW->Sum7);
+  localDW->Square1 = fabs(*rty_TVS_Output_d);
 
   /* Update for UnitDelay: '<S17>/Unit Delay' incorporates:
    *  RelationalOperator: '<S17>/GreaterThanOrEqual'
    */
-  localDW->UnitDelay_DSTATE_e = (localDW->CCaller_o5 < localDW->Square1);
+  localDW->UnitDelay_DSTATE_e = (localDW->avg_steering_angle < localDW->Square1);
 
-  /* Abs: '<S17>/Abs' */
-  localDW->Square1 = fabs(rtb_Abs_m_idx_0);
+  /* Update for UnitDelay: '<S17>/Unit Delay5' */
+  localDW->UnitDelay5_DSTATE = *rty_TVS_Output_m;
 
-  /* UnitDelay: '<S17>/Unit Delay1' */
-  localDW->CCaller_o5 = localDW->UnitDelay1_DSTATE;
-
-  /* RelationalOperator: '<S17>/GreaterThan1' incorporates:
-   *  Constant: '<S17>/Constant1'
-   */
-  rtb_LowerRelop1 = (localDW->CCaller_o5 > 0.05);
-
-  /* Switch: '<S14>/Switch' incorporates:
-   *  Product: '<S14>/Product'
-   *  Product: '<S14>/Product1'
-   *  SignalConversion generated from: '<S4>/driver_input'
-   */
-  if (rtu_TVS_Information_i > 0.0) {
-    /* Saturate: '<S14>/Discharge Limits' */
-    localDW->CCaller_o5 = rtu_TVS_Information_k[0];
-    if (localDW->CCaller_o5 > 75000.0) {
-      localDW->CCaller_o5 = 75000.0;
-    } else if (localDW->CCaller_o5 < 0.0) {
-      localDW->CCaller_o5 = 0.0;
-    }
-
-    /* End of Saturate: '<S14>/Discharge Limits' */
-    localDW->rtb_Sum4_idx_2 = localDW->CCaller_o5 * rtu_TVS_Information_i;
-  } else {
-    /* Saturate: '<S14>/Charge Limits' */
-    localDW->CCaller_o5 = rtu_TVS_Information_k[1];
-    if (localDW->CCaller_o5 > 0.0) {
-      localDW->CCaller_o5 = 0.0;
-    } else if (localDW->CCaller_o5 < 0.0) {
-      localDW->CCaller_o5 = 0.0;
-    }
-
-    /* End of Saturate: '<S14>/Charge Limits' */
-    localDW->rtb_Sum4_idx_2 = rtu_TVS_Information_i * localDW->CCaller_o5;
-  }
-
-  /* End of Switch: '<S14>/Switch' */
-
-  /* UnitDelay: '<S17>/Unit Delay5' */
-  localDW->CCaller_o5 = localDW->UnitDelay5_DSTATE;
-
-  /* Signum: '<S17>/Sign2' */
-  if (rtIsNaN(localDW->CCaller_o5)) {
-  } else if (localDW->CCaller_o5 < 0.0) {
-    localDW->CCaller_o5 = -1.0;
-  } else {
-    localDW->CCaller_o5 = (localDW->CCaller_o5 > 0.0);
-  }
-
-  /* End of Signum: '<S17>/Sign2' */
-
-  /* Signum: '<S17>/Sign' incorporates:
-   *  Switch: '<S14>/Switch'
-   */
-  if (rtIsNaN(localDW->rtb_Sum4_idx_2)) {
-    localDW->CCaller_o2 = localDW->rtb_Sum4_idx_2;
-  } else if (localDW->rtb_Sum4_idx_2 < 0.0) {
-    localDW->CCaller_o2 = -1.0;
-  } else {
-    localDW->CCaller_o2 = (localDW->rtb_Sum4_idx_2 > 0.0);
-  }
-
-  /* End of Signum: '<S17>/Sign' */
+  /* Update for UnitDelay: '<S17>/Unit Delay1' */
+  localDW->UnitDelay1_DSTATE = localDW->Abs;
 
   /* Update for UnitDelay: '<S17>/Unit Delay4' incorporates:
    *  Constant: '<S17>/Constant2'
@@ -1303,222 +1410,195 @@ static void Electronics_o(const real_T rtu_TVS_Information[4], const real_T
    *  RelationalOperator: '<S17>/Equal2'
    *  RelationalOperator: '<S17>/GreaterThan'
    */
-  localDW->UnitDelay4_DSTATE = (((localDW->Square1 > 0.05) != (int32_T)
-    rtb_LowerRelop1) || (!(localDW->CCaller_o2 == localDW->CCaller_o5)));
+  localDW->UnitDelay4_DSTATE = (((localDW->Abs > 0.05) != (int32_T)
+    rtb_UpperRelop_n_idx_0) || (!(localDW->CCaller_o3 == rtb_Abs_m_idx_0)));
 
   /* Update for DiscreteIntegrator: '<S9>/Discrete-Time Integrator' */
-  localDW->DiscreteTimeIntegrator_DSTATE = localDW->Square;
-  localDW->DiscreteTimeIntegrator_PrevRese = (int8_T)rtb_LessThan_e;
-
-  /* Update for UnitDelay: '<S17>/Unit Delay1' */
-  localDW->UnitDelay1_DSTATE = localDW->Square1;
-
-  /* Update for UnitDelay: '<S17>/Unit Delay5' incorporates:
-   *  Switch: '<S14>/Switch'
-   */
-  localDW->UnitDelay5_DSTATE = localDW->rtb_Sum4_idx_2;
-
-  /* Saturate: '<S16>/Max Torque' incorporates:
-   *  Gain: '<S16>/Gain8'
-   *  Switch: '<S15>/Switch2'
-   */
-  if (0.0 * localDW->Gain8[0] < 0.01) {
-    localDW->CCaller_o2 = 0.01;
-  } else {
-    localDW->CCaller_o2 = (rtNaN);
-  }
+  localDW->DiscreteTimeIntegrator_DSTATE = localDW->DiscreteTimeIntegrator;
+  localDW->DiscreteTimeIntegrator_PrevRese = (int8_T)*rty_TVS_Output_b;
 
   /* End of Outputs for SubSystem: '<S2>/Torque Vectoring Micro Controller' */
+
+  /* Bias: '<S5>/Add Constant' */
+  localDW->AddConstant[0] = rty_TVS_Output_e[0] + 25.0;
+  localDW->AddConstant[1] = rty_TVS_Output_e[1] + 25.0;
+  localDW->AddConstant[2] = rty_TVS_Output_e[2] + 25.0;
+  localDW->AddConstant[3] = rty_TVS_Output_e[3] + 25.0;
 
   /* Bias: '<S5>/Add Constant1' */
-  rty_Tx[0] = localDW->CCaller_o2 + 25.0;
+  localDW->rtb_Gain1_idx_3 = rty_TVS_Output_k[0] + 25.0;
+  localDW->avg_steering_angle = rty_TVS_Output_k[1] + 25.0;
+  localDW->Sum2 = rty_TVS_Output_k[2] + 25.0;
+  localDW->DotProduct2 = rty_TVS_Output_k[3] + 25.0;
+  rty_TVS_Output[0] = localDW->rtb_Gain1_idx_3;
+  rty_TVS_Output[1] = localDW->avg_steering_angle;
+  rty_TVS_Output[2] = localDW->Sum2;
+  rty_TVS_Output[3] = localDW->DotProduct2;
 
-  /* Outputs for Atomic SubSystem: '<S2>/Torque Vectoring Micro Controller' */
-  /* Saturate: '<S16>/Max Torque' incorporates:
-   *  Gain: '<S16>/Gain8'
-   *  Switch: '<S15>/Switch2'
+  /* Sum: '<S5>/Add' incorporates:
+   *  Constant: '<S5>/Constant'
+   *  DotProduct: '<S5>/Dot Product1'
+   *  Gain: '<S17>/Gain6'
    */
-  if (0.0 * localDW->Gain8[1] < 0.01) {
-    localDW->CCaller_o2 = 0.01;
-  } else {
-    localDW->CCaller_o2 = (rtNaN);
-  }
+  localDW->Sum2 = (((25.0 * localDW->rtb_Gain1_idx_0 + 25.0 *
+                     localDW->rtb_Gain1_idx_1) + 6.018211667) + -6.018211667) + *
+    rty_TVS_Output_ba;
 
-  /* End of Outputs for SubSystem: '<S2>/Torque Vectoring Micro Controller' */
-
-  /* Bias: '<S5>/Add Constant1' incorporates:
-   *  Saturate: '<S16>/Max Torque'
+  /* Sum: '<S5>/Add1' incorporates:
+   *  Constant: '<S5>/Constant1'
+   *  DotProduct: '<S5>/Dot Product'
+   *  Gain: '<S14>/Gain5'
    */
-  rty_Tx[1] = localDW->CCaller_o2 + 25.0;
-
-  /* Outputs for Atomic SubSystem: '<S2>/Torque Vectoring Micro Controller' */
-  rty_Tx[2] = localDW->rtb_Gain8_tmp + 25.0;
-  rty_Tx[3] = localDW->rtu_TVS_Information_idx_2 + 25.0;
-
-  /* End of Outputs for SubSystem: '<S2>/Torque Vectoring Micro Controller' */
+  localDW->DotProduct2 = (((25.0 * localDW->rtb_Gain1_idx_2 + 25.0 *
+    localDW->rtb_Gain5_idx_1) + 25.0 * localDW->rtb_Gain5_idx_2) + 25.0 *
+    localDW->rtb_Gain5_idx_3) + *rty_TVS_Output_m;
 
   /* CCaller: '<S5>/C Caller' incorporates:
-   *  Bias: '<S5>/Add Constant'
-   *  Constant: '<S4>/Constant3'
-   *  Constant: '<S5>/Constant'
-   *  Constant: '<S5>/Constant1'
    *  Constant: '<S5>/Constant2'
    *  Constant: '<S5>/Constant4'
-   *  DotProduct: '<S5>/Dot Product'
-   *  DotProduct: '<S5>/Dot Product1'
-   *  Gain: '<S14>/Gain5'
-   *  Gain: '<S17>/Gain6'
-   *  Sum: '<S17>/Sum3'
-   *  Sum: '<S5>/Add'
-   *  Sum: '<S5>/Add1'
-   *  Switch: '<S14>/Switch'
-   *  Switch: '<S16>/Switch1'
    */
-  localDW->CCaller_o2 = 0.0;
-  localDW->Square = 0.0;
+  localDW->rtb_Gain1_idx_3 = 0.0;
+  localDW->CCaller_o3 = 0.0;
   localDW->Square1 = 0.0;
-  localDW->CCaller_o5 = 0.0;
-  *rty_bigM_flag = bigM_func(29.074435549999997, 29.074435549999997, 29.07255,
-    29.07255, (((25.0 * localDW->rtb_UnitDelay_idx_3 + 25.0 * rtb_Abs_m_idx_1) +
-                25.0 * localDW->rtb_Gain5_idx_2) + 25.0 *
-               localDW->rtb_Gain5_idx_3) + localDW->rtb_Sum4_idx_2,
-    localDW->rtb_UnitDelay_idx_3, rtb_Abs_m_idx_1, localDW->rtb_Gain5_idx_2,
-    localDW->rtb_Gain5_idx_3, (((25.0 * localDW->rtb_Sum4_idx_0 + 25.0 *
-    localDW->rtb_Gain6_idx_1) + 6.018211667) + -6.018211667) +
-    localDW->rtb_Sum4_idx_1, localDW->rtb_Sum4_idx_0, localDW->rtb_Gain6_idx_1,
-    0.24072846668, -0.24072846668, localDW->Minimum1[0] + 25.0,
-    localDW->Minimum1[1] + 25.0, localDW->Minimum1[2] + 25.0, localDW->Minimum1
-    [3] + 25.0, rty_Tx[0], rty_Tx[1], rty_Tx[2], rty_Tx[3], &localDW->CCaller_o2,
-    &localDW->Square, &localDW->Square1, &localDW->CCaller_o5, 0.2);
+  localDW->avg_steering_angle = 0.0;
+  *rty_TVS_Output_j = bigM_func(29.074435549999997, 29.074435549999997, 29.07255,
+    29.07255, localDW->DotProduct2, localDW->rtb_Gain1_idx_2,
+    localDW->rtb_Gain5_idx_1, localDW->rtb_Gain5_idx_2, localDW->rtb_Gain5_idx_3,
+    localDW->Sum2, localDW->rtb_Gain1_idx_0, localDW->rtb_Gain1_idx_1,
+    0.24072846668, -0.24072846668, localDW->AddConstant[0], localDW->
+    AddConstant[1], localDW->AddConstant[2], localDW->AddConstant[3],
+    rty_TVS_Output[0], rty_TVS_Output[1], rty_TVS_Output[2], rty_TVS_Output[3],
+    &localDW->rtb_Gain1_idx_3, &localDW->CCaller_o3, &localDW->Square1,
+    &localDW->avg_steering_angle, 0.2);
 
   /* Switch: '<S6>/Switch' incorporates:
    *  Bias: '<S6>/Add Constant3'
    */
-  if (*rty_bigM_flag > 2) {
-    rty_Tx[0] = localDW->CCaller_o2;
-    rty_Tx[1] = localDW->Square;
-    rty_Tx[2] = localDW->Square1;
-    rty_Tx[3] = localDW->CCaller_o5;
+  if (*rty_TVS_Output_j > 2) {
+    rty_TVS_Output[0] = localDW->rtb_Gain1_idx_3;
+    rty_TVS_Output[1] = localDW->CCaller_o3;
+    rty_TVS_Output[2] = localDW->Square1;
+    rty_TVS_Output[3] = localDW->avg_steering_angle;
   } else {
     /* Outputs for Atomic SubSystem: '<S2>/Torque Vectoring Micro Controller' */
     /* Bias: '<S6>/Add Constant3' incorporates:
      *  Gain: '<S6>/Gain'
      *  SignalConversion generated from: '<S4>/driver_input'
      */
-    localDW->CCaller_o2 = 0.0 * rtu_TVS_Information_i + 25.0;
+    localDW->rtb_Gain1_idx_0 = 0.0 * rtu_TVS_Input_b + 25.0;
 
     /* End of Outputs for SubSystem: '<S2>/Torque Vectoring Micro Controller' */
-    rty_Tx[0] = localDW->CCaller_o2;
-    rty_Tx[1] = localDW->CCaller_o2;
+    rty_TVS_Output[0] = localDW->rtb_Gain1_idx_0;
+    rty_TVS_Output[1] = localDW->rtb_Gain1_idx_0;
 
     /* Outputs for Atomic SubSystem: '<S2>/Torque Vectoring Micro Controller' */
     /* Bias: '<S6>/Add Constant3' incorporates:
      *  Gain: '<S6>/Gain'
      *  SignalConversion generated from: '<S4>/driver_input'
      */
-    localDW->CCaller_o2 = 25.0 * rtu_TVS_Information_i + 25.0;
+    localDW->rtb_Gain1_idx_0 = 25.0 * rtu_TVS_Input_b + 25.0;
 
     /* End of Outputs for SubSystem: '<S2>/Torque Vectoring Micro Controller' */
-    rty_Tx[2] = localDW->CCaller_o2;
-    rty_Tx[3] = localDW->CCaller_o2;
+    rty_TVS_Output[2] = localDW->rtb_Gain1_idx_0;
+    rty_TVS_Output[3] = localDW->rtb_Gain1_idx_0;
   }
 
   /* End of Switch: '<S6>/Switch' */
 
   /* Bias: '<S6>/Add Constant2' */
-  rty_Tx[0] += -25.0;
-  rty_Tx[1] += -25.0;
-  rty_Tx[2] += -25.0;
-  rty_Tx[3] += -25.0;
+  rty_TVS_Output[0] += -25.0;
+  rty_TVS_Output[1] += -25.0;
+  rty_TVS_Output[2] += -25.0;
+  rty_TVS_Output[3] += -25.0;
 
   /* DeadZone: '<S6>/Dead Zone' */
-  if (rty_Tx[0] > 0.02) {
-    rty_Tx[0] -= 0.02;
-  } else if (rty_Tx[0] >= -0.02) {
-    rty_Tx[0] = 0.0;
+  if (rty_TVS_Output[0] > 0.02) {
+    rty_TVS_Output[0] -= 0.02;
+  } else if (rty_TVS_Output[0] >= -0.02) {
+    rty_TVS_Output[0] = 0.0;
   } else {
-    rty_Tx[0] -= -0.02;
+    rty_TVS_Output[0] -= -0.02;
   }
 
-  if (rty_Tx[1] > 0.02) {
-    rty_Tx[1] -= 0.02;
-  } else if (rty_Tx[1] >= -0.02) {
-    rty_Tx[1] = 0.0;
+  if (rty_TVS_Output[1] > 0.02) {
+    rty_TVS_Output[1] -= 0.02;
+  } else if (rty_TVS_Output[1] >= -0.02) {
+    rty_TVS_Output[1] = 0.0;
   } else {
-    rty_Tx[1] -= -0.02;
+    rty_TVS_Output[1] -= -0.02;
   }
 
-  if (rty_Tx[2] > 0.02) {
-    rty_Tx[2] -= 0.02;
-  } else if (rty_Tx[2] >= -0.02) {
-    rty_Tx[2] = 0.0;
+  if (rty_TVS_Output[2] > 0.02) {
+    rty_TVS_Output[2] -= 0.02;
+  } else if (rty_TVS_Output[2] >= -0.02) {
+    rty_TVS_Output[2] = 0.0;
   } else {
-    rty_Tx[2] -= -0.02;
+    rty_TVS_Output[2] -= -0.02;
   }
 
-  if (rty_Tx[3] > 0.02) {
-    rty_Tx[3] -= 0.02;
-  } else if (rty_Tx[3] >= -0.02) {
-    rty_Tx[3] = 0.0;
+  if (rty_TVS_Output[3] > 0.02) {
+    rty_TVS_Output[3] -= 0.02;
+  } else if (rty_TVS_Output[3] >= -0.02) {
+    rty_TVS_Output[3] = 0.0;
   } else {
-    rty_Tx[3] -= -0.02;
+    rty_TVS_Output[3] -= -0.02;
   }
 
   /* End of DeadZone: '<S6>/Dead Zone' */
 
   /* RateLimiter: '<S6>/Rate Limiter' */
-  localDW->AddConstant[0] = rty_Tx[0] - localDW->PrevY[0];
-  localDW->AddConstant[1] = rty_Tx[1] - localDW->PrevY[1];
-  localDW->AddConstant[2] = rty_Tx[2] - localDW->PrevY[2];
-  localDW->AddConstant[3] = rty_Tx[3] - localDW->PrevY[3];
+  localDW->AddConstant[0] = rty_TVS_Output[0] - localDW->PrevY[0];
+  localDW->AddConstant[1] = rty_TVS_Output[1] - localDW->PrevY[1];
+  localDW->AddConstant[2] = rty_TVS_Output[2] - localDW->PrevY[2];
+  localDW->AddConstant[3] = rty_TVS_Output[3] - localDW->PrevY[3];
   if (localDW->AddConstant[0] > 1.875) {
-    localDW->CCaller_o5 = localDW->PrevY[0] + 1.875;
+    localDW->avg_steering_angle = localDW->PrevY[0] + 1.875;
   } else if (localDW->AddConstant[0] < -4.5) {
-    localDW->CCaller_o5 = localDW->PrevY[0] + -4.5;
+    localDW->avg_steering_angle = localDW->PrevY[0] + -4.5;
   } else {
-    localDW->CCaller_o5 = rty_Tx[0];
+    localDW->avg_steering_angle = rty_TVS_Output[0];
   }
 
-  rty_Tx[0] = localDW->CCaller_o5;
+  rty_TVS_Output[0] = localDW->avg_steering_angle;
   if (localDW->AddConstant[1] > 1.875) {
-    localDW->CCaller_o5 = localDW->PrevY[1] + 1.875;
+    localDW->avg_steering_angle = localDW->PrevY[1] + 1.875;
   } else if (localDW->AddConstant[1] < -4.5) {
-    localDW->CCaller_o5 = localDW->PrevY[1] + -4.5;
+    localDW->avg_steering_angle = localDW->PrevY[1] + -4.5;
   } else {
-    localDW->CCaller_o5 = rty_Tx[1];
+    localDW->avg_steering_angle = rty_TVS_Output[1];
   }
 
-  rty_Tx[1] = localDW->CCaller_o5;
+  rty_TVS_Output[1] = localDW->avg_steering_angle;
   if (localDW->AddConstant[2] > 1.875) {
-    localDW->CCaller_o5 = localDW->PrevY[2] + 1.875;
+    localDW->avg_steering_angle = localDW->PrevY[2] + 1.875;
   } else if (localDW->AddConstant[2] < -4.5) {
-    localDW->CCaller_o5 = localDW->PrevY[2] + -4.5;
+    localDW->avg_steering_angle = localDW->PrevY[2] + -4.5;
   } else {
-    localDW->CCaller_o5 = rty_Tx[2];
+    localDW->avg_steering_angle = rty_TVS_Output[2];
   }
 
-  rty_Tx[2] = localDW->CCaller_o5;
+  rty_TVS_Output[2] = localDW->avg_steering_angle;
   if (localDW->AddConstant[3] > 1.875) {
-    localDW->CCaller_o5 = localDW->PrevY[3] + 1.875;
+    localDW->avg_steering_angle = localDW->PrevY[3] + 1.875;
   } else if (localDW->AddConstant[3] < -4.5) {
-    localDW->CCaller_o5 = localDW->PrevY[3] + -4.5;
+    localDW->avg_steering_angle = localDW->PrevY[3] + -4.5;
   } else {
-    localDW->CCaller_o5 = rty_Tx[3];
+    localDW->avg_steering_angle = rty_TVS_Output[3];
   }
 
-  rty_Tx[3] = localDW->CCaller_o5;
-  localDW->PrevY[0] = rty_Tx[0];
-  localDW->PrevY[1] = rty_Tx[1];
-  localDW->PrevY[2] = rty_Tx[2];
-  localDW->PrevY[3] = rty_Tx[3];
+  rty_TVS_Output[3] = localDW->avg_steering_angle;
+  localDW->PrevY[0] = rty_TVS_Output[0];
+  localDW->PrevY[1] = rty_TVS_Output[1];
+  localDW->PrevY[2] = rty_TVS_Output[2];
+  localDW->PrevY[3] = rty_TVS_Output[3];
 
   /* End of RateLimiter: '<S6>/Rate Limiter' */
 
   /* Update for UnitDelay: '<S2>/Unit Delay' */
-  localDW->UnitDelay_DSTATE[0] = rty_Tx[0];
-  localDW->UnitDelay_DSTATE[1] = rty_Tx[1];
-  localDW->UnitDelay_DSTATE[2] = rty_Tx[2];
-  localDW->UnitDelay_DSTATE[3] = rty_Tx[3];
+  localDW->UnitDelay_DSTATE[0] = rty_TVS_Output[0];
+  localDW->UnitDelay_DSTATE[1] = rty_TVS_Output[1];
+  localDW->UnitDelay_DSTATE[2] = rty_TVS_Output[2];
+  localDW->UnitDelay_DSTATE[3] = rty_TVS_Output[3];
 
   /* End of Outputs for SubSystem: '<S1>/Fixed Point Sub' */
 }
@@ -1537,18 +1617,27 @@ void Electronics_step(RT_MODEL *const rtM, ExtU *rtU, ExtY *rtY)
    *  Inport: '<Root>/power_limits'
    *  Inport: '<Root>/steering_angle'
    *  Inport: '<Root>/vel'
+   *  Outport: '<Root>/Control_Signal'
    *  Outport: '<Root>/Tx'
+   *  Outport: '<Root>/b'
+   *  Outport: '<Root>/beq'
    *  Outport: '<Root>/bigM_flag'
+   *  Outport: '<Root>/lb'
+   *  Outport: '<Root>/ref_yaw'
+   *  Outport: '<Root>/reset'
+   *  Outport: '<Root>/ub'
+   *  Outport: '<Root>/windup'
    */
-  Electronics_o(rtU->omega, rtU->vel, rtU->steering_angle, rtU->ang_vel,
-                rtU->driver_input, rtU->power_limits, &rtY->bigM_flag, rtY->Tx,
-                &rtDW->Electronics_o4);
+  Electronics_o(rtU->omega, rtU->vel, rtU->steering_angle, rtU->driver_input,
+                rtU->ang_vel, rtU->power_limits, rtY->Tx, &rtY->bigM_flag,
+                &rtY->Control_Signal, &rtY->windup, &rtY->reset, &rtY->ref_yaw,
+                rtY->ub, rtY->lb, &rtY->b, &rtY->beq, &rtDW->Electronics_o4);
 
   /* End of Outputs for SubSystem: '<Root>/Electronics' */
 }
 
 /* Model initialize function */
-void Electronics_initialize(RT_MODEL *const rtM)
+void Electronics_initialize(RT_MODEL *const rtM, ExtY *rtY)
 {
   DW *rtDW = rtM->dwork;
 
@@ -1561,6 +1650,12 @@ void Electronics_initialize(RT_MODEL *const rtM)
   Electronics_Init(&rtDW->Electronics_o4);
 
   /* End of SystemInitialize for SubSystem: '<Root>/Electronics' */
+
+  /* ConstCode for Outport: '<Root>/obj_gain' */
+  rtY->obj_gain[0] = 29.074435549999997;
+  rtY->obj_gain[1] = 29.074435549999997;
+  rtY->obj_gain[2] = 29.07255;
+  rtY->obj_gain[3] = 29.07255;
 }
 
 /*
