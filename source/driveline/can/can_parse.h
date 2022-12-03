@@ -18,12 +18,24 @@
 // Make this match the node name within the can_config.json
 #define NODE_NAME "Driveline"
 
+// Used to represent a float as 32 bits
+typedef union {
+    float f;
+    uint32_t u;
+} FloatConvert_t;
+#define FLOAT_TO_UINT32(float_) (((FloatConvert_t) float_).u)
+#define UINT32_TO_FLOAT(uint32_) (((FloatConvert_t) ((uint32_t) uint32_)).f)
+
+
+
 // Message ID definitions
 /* BEGIN AUTO ID DEFS */
 #define ID_FRONT_DRIVELINE_HB 0x4001903
 #define ID_REAR_DRIVELINE_HB 0x4001943
 #define ID_FRONT_WHEEL_DATA 0x4000003
 #define ID_REAR_WHEEL_DATA 0x4000043
+#define ID_REAR_MC_REQ 0x4000483
+#define ID_REAR_POW_LIM_L 0x40004c3
 #define ID_FRONT_MOTOR_CURRENTS_TEMPS 0xc000283
 #define ID_REAR_MOTOR_CURRENTS_TEMPS 0xc0002c3
 #define ID_REAR_CONTROLLER_TEMPS 0xc000303
@@ -43,6 +55,8 @@
 #define DLC_REAR_DRIVELINE_HB 6
 #define DLC_FRONT_WHEEL_DATA 8
 #define DLC_REAR_WHEEL_DATA 8
+#define DLC_REAR_MC_REQ 8
+#define DLC_REAR_POW_LIM_L 8
 #define DLC_FRONT_MOTOR_CURRENTS_TEMPS 8
 #define DLC_REAR_MOTOR_CURRENTS_TEMPS 8
 #define DLC_REAR_CONTROLLER_TEMPS 2
@@ -96,6 +110,20 @@ extern uint32_t last_can_rx_time_ms;
         data_a->rear_wheel_data.right_speed = right_speed_;\
         data_a->rear_wheel_data.left_normal = left_normal_;\
         data_a->rear_wheel_data.right_normal = right_normal_;\
+        qSendToBack(&queue, &msg);\
+    } while(0)
+#define SEND_REAR_MC_REQ(queue, left_cmd_, right_cmd_) do {\
+        CanMsgTypeDef_t msg = {.Bus=CAN1, .ExtId=ID_REAR_MC_REQ, .DLC=DLC_REAR_MC_REQ, .IDE=1};\
+        CanParsedData_t* data_a = (CanParsedData_t *) &msg.Data;\
+        data_a->rear_mc_req.left_cmd = FLOAT_TO_UINT32(left_cmd_);\
+        data_a->rear_mc_req.right_cmd = FLOAT_TO_UINT32(right_cmd_);\
+        qSendToBack(&queue, &msg);\
+    } while(0)
+#define SEND_REAR_POW_LIM_L(queue, T_, P_c_) do {\
+        CanMsgTypeDef_t msg = {.Bus=CAN1, .ExtId=ID_REAR_POW_LIM_L, .DLC=DLC_REAR_POW_LIM_L, .IDE=1};\
+        CanParsedData_t* data_a = (CanParsedData_t *) &msg.Data;\
+        data_a->rear_pow_lim_l.T = FLOAT_TO_UINT32(T_);\
+        data_a->rear_pow_lim_l.P_c = FLOAT_TO_UINT32(P_c_);\
         qSendToBack(&queue, &msg);\
     } while(0)
 #define SEND_FRONT_MOTOR_CURRENTS_TEMPS(queue, left_current_, right_current_, left_temp_, right_temp_, right_voltage_) do {\
@@ -283,6 +311,14 @@ typedef union { __attribute__((packed))
         uint64_t left_normal: 16;
         uint64_t right_normal: 16;
     } rear_wheel_data;
+    struct {
+        uint64_t left_cmd: 32;
+        uint64_t right_cmd: 32;
+    } rear_mc_req;
+    struct {
+        uint64_t T: 32;
+        uint64_t P_c: 32;
+    } rear_pow_lim_l;
     struct {
         uint64_t left_current: 16;
         uint64_t right_current: 16;

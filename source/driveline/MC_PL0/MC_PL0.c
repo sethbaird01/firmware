@@ -7,9 +7,9 @@
  *
  * Code generated for Simulink model 'MC_PL0'.
  *
- * Model version                  : 1.265
+ * Model version                  : 1.267
  * Simulink Coder version         : 9.7 (R2022a) 13-Nov-2021
- * C/C++ source code generated on : Fri Dec  2 23:38:52 2022
+ * C/C++ source code generated on : Sat Dec  3 12:02:05 2022
  *
  * Target selection: ert.tlc
  * Embedded hardware selection: ARM Compatible->ARM Cortex-M
@@ -445,7 +445,7 @@ void MC_PL0_step(RT_MODEL *const rtM, ExtU *rtU, ExtY *rtY)
    *  Constant: '<S4>/Constant2'
    *  Inport: '<Root>/Tx'
    *  Product: '<S4>/Divide'
-   *  Switch: '<S8>/Switch'
+   *  Switch: '<S9>/Switch'
    */
   if (rtDW->Sum1 != 0.0) {
     rtDW->Switch[0] = rtU->Tx[0] / rtDW->Sum1;
@@ -463,7 +463,7 @@ void MC_PL0_step(RT_MODEL *const rtM, ExtU *rtU, ExtY *rtY)
   for (i = 0; i < 4; i++) {
     /* Product: '<S4>/MatrixMultiply' incorporates:
      *  Inport: '<Root>/power_limits'
-     *  Switch: '<S8>/Switch'
+     *  Switch: '<S9>/Switch'
      */
     rtDW->Sum1 = rtDW->Switch[i];
     rtb_MatrixMultiply_tmp = i << 1;
@@ -472,21 +472,30 @@ void MC_PL0_step(RT_MODEL *const rtM, ExtU *rtU, ExtY *rtY)
     rtDW->MatrixMultiply[rtb_MatrixMultiply_tmp + 1] = rtU->power_limits[1] *
       rtDW->Sum1;
 
+    /* Sum: '<S1>/Sum' incorporates:
+     *  Constant: '<S1>/Constant1'
+     *  Inport: '<Root>/Wx'
+     *  Product: '<S1>/Product2'
+     *  Product: '<S1>/Product3'
+     *  UnitDelay: '<S1>/Unit Delay1'
+     */
+    rtDW->Sum[i] = rtU->Wx[i] * 0.3 + 0.7 * rtDW->UnitDelay1_DSTATE[i];
+
     /* Abs: '<S4>/Abs1' incorporates:
      *  Inport: '<Root>/Tx'
-     *  Switch: '<S8>/Switch'
+     *  Switch: '<S9>/Switch'
      */
     rtDW->Switch[i] = fabs(rtU->Tx[i]);
   }
 
   /* Lookup_n-D: '<S4>/2-D Lookup Table' incorporates:
-   *  Inport: '<Root>/Wx'
-   *  Switch: '<S8>/Switch'
+   *  Sum: '<S1>/Sum'
+   *  Switch: '<S9>/Switch'
    */
   rtDW->bpIndices[0U] = plook_evenca(rtDW->Switch[0], 0.0, 1.6666666666666665,
     15U, &rtDW->Sum1);
   rtDW->fractions[0U] = rtDW->Sum1;
-  rtDW->bpIndices[1U] = plook_evenca(rtU->Wx[0], 0.0, 10.4719755, 106U,
+  rtDW->bpIndices[1U] = plook_evenca(rtDW->Sum[0], 0.0, 10.4719755, 106U,
     &rtDW->Sum1);
   rtDW->fractions[1U] = rtDW->Sum1;
   rtDW->Switch[0] = intrp2d_la(rtDW->bpIndices, rtDW->fractions,
@@ -494,7 +503,7 @@ void MC_PL0_step(RT_MODEL *const rtM, ExtU *rtU, ExtY *rtY)
   rtDW->bpIndices[0U] = plook_evenca(rtDW->Switch[1], 0.0, 1.6666666666666665,
     15U, &rtDW->Sum1);
   rtDW->fractions[0U] = rtDW->Sum1;
-  rtDW->bpIndices[1U] = plook_evenca(rtU->Wx[1], 0.0, 10.4719755, 106U,
+  rtDW->bpIndices[1U] = plook_evenca(rtDW->Sum[1], 0.0, 10.4719755, 106U,
     &rtDW->Sum1);
   rtDW->fractions[1U] = rtDW->Sum1;
   rtDW->Switch[1] = intrp2d_la(rtDW->bpIndices, rtDW->fractions,
@@ -502,7 +511,7 @@ void MC_PL0_step(RT_MODEL *const rtM, ExtU *rtU, ExtY *rtY)
   rtDW->bpIndices[0U] = plook_evenca(rtDW->Switch[2], 0.0, 1.6666666666666665,
     15U, &rtDW->Sum1);
   rtDW->fractions[0U] = rtDW->Sum1;
-  rtDW->bpIndices[1U] = plook_evenca(rtU->Wx[2], 0.0, 10.4719755, 106U,
+  rtDW->bpIndices[1U] = plook_evenca(rtDW->Sum[2], 0.0, 10.4719755, 106U,
     &rtDW->Sum1);
   rtDW->fractions[1U] = rtDW->Sum1;
   rtDW->Switch[2] = intrp2d_la(rtDW->bpIndices, rtDW->fractions,
@@ -510,14 +519,14 @@ void MC_PL0_step(RT_MODEL *const rtM, ExtU *rtU, ExtY *rtY)
   rtDW->bpIndices[0U] = plook_evenca(rtDW->Switch[3], 0.0, 1.6666666666666665,
     15U, &rtDW->Sum1);
   rtDW->fractions[0U] = rtDW->Sum1;
-  rtDW->bpIndices[1U] = plook_evenca(rtU->Wx[3], 0.0, 10.4719755, 106U,
+  rtDW->bpIndices[1U] = plook_evenca(rtDW->Sum[3], 0.0, 10.4719755, 106U,
     &rtDW->Sum1);
   rtDW->fractions[1U] = rtDW->Sum1;
 
   /* Signum: '<S4>/Sign1' incorporates:
    *  Inport: '<Root>/Tx'
    *  Product: '<S4>/Product2'
-   *  Switch: '<S8>/Switch'
+   *  Switch: '<S9>/Switch'
    */
   if (rtIsNaN(rtU->Tx[0])) {
     rtDW->Sum1 = rtU->Tx[0];
@@ -528,23 +537,23 @@ void MC_PL0_step(RT_MODEL *const rtM, ExtU *rtU, ExtY *rtY)
   }
 
   /* Product: '<S4>/Product2' incorporates:
-   *  Switch: '<S8>/Switch'
+   *  Switch: '<S9>/Switch'
    */
   rtDW->Sum1 *= rtDW->Switch[0];
 
-  /* Switch: '<S6>/Switch2' incorporates:
+  /* Switch: '<S7>/Switch2' incorporates:
    *  Gain: '<S4>/Gain'
    *  Product: '<S4>/MatrixMultiply'
-   *  RelationalOperator: '<S6>/LowerRelop1'
-   *  RelationalOperator: '<S6>/UpperRelop'
+   *  RelationalOperator: '<S7>/LowerRelop1'
+   *  RelationalOperator: '<S7>/UpperRelop'
    *  Selector: '<S4>/Selector'
    *  Selector: '<S4>/Selector1'
-   *  Switch: '<S6>/Switch'
+   *  Switch: '<S7>/Switch'
    */
   if (rtDW->Sum1 > rtDW->MatrixMultiply[0]) {
     rtDW->rtb_Switch2_k = rtDW->MatrixMultiply[0];
   } else if (rtDW->Sum1 < -rtDW->MatrixMultiply[1]) {
-    /* Switch: '<S6>/Switch' incorporates:
+    /* Switch: '<S7>/Switch' incorporates:
      *  Gain: '<S4>/Gain'
      *  Selector: '<S4>/Selector1'
      */
@@ -556,12 +565,12 @@ void MC_PL0_step(RT_MODEL *const rtM, ExtU *rtU, ExtY *rtY)
   /* Product: '<S2>/Divide1' incorporates:
    *  Inport: '<Root>/Motor_I'
    *  Inport: '<Root>/Vbatt'
-   *  Inport: '<Root>/Wx'
    *  Product: '<S2>/Product1'
+   *  Sum: '<S1>/Sum'
    *  Sum: '<S2>/Subtract'
    */
   rtDW->rtb_Switch_c_b = (rtDW->rtb_Switch2_k - rtU->Motor_V[0] * rtU->Motor_I[0])
-    * (1.0 / rtU->Wx[0]);
+    * (1.0 / rtDW->Sum[0]);
 
   /* Saturate: '<S2>/Saturation3' incorporates:
    *  DeadZone: '<S2>/Dead Zone'
@@ -589,32 +598,34 @@ void MC_PL0_step(RT_MODEL *const rtM, ExtU *rtU, ExtY *rtY)
   /* DiscreteIntegrator: '<S2>/Discrete-Time Integrator' */
   if (rtDW->DiscreteTimeIntegrator >= 4095.0) {
     rtDW->DiscreteTimeIntegrator = 4095.0;
-  } else if (rtDW->DiscreteTimeIntegrator <= -4095.0) {
-    rtDW->DiscreteTimeIntegrator = -4095.0;
+  } else if (rtDW->DiscreteTimeIntegrator <= 0.0) {
+    rtDW->DiscreteTimeIntegrator = 0.0;
   }
 
   /* Product: '<S5>/Divide1' incorporates:
-   *  Inport: '<Root>/Wx'
+   *  Product: '<S2>/Divide1'
    *  Product: '<S5>/Product3'
+   *  Sum: '<S1>/Sum'
    *  UnitDelay: '<S5>/Unit Delay'
    */
   rtDW->rtb_RateLimiter_m_c = rtDW->rtb_Switch2_k * rtDW->UnitDelay_DSTATE[0] /
-    rtU->Wx[0];
+    rtDW->Sum[0];
 
   /* Lookup_n-D: '<S5>/1-D Lookup Table' incorporates:
-   *  Inport: '<Root>/Wx'
+   *  Product: '<S2>/Divide1'
+   *  Sum: '<S1>/Sum'
    */
-  rtDW->Sum1 = look1_binlc(rtU->Wx[0], rtConstP.uDLookupTable_bp01Data,
+  rtDW->Sum1 = look1_binlc(rtDW->Sum[0], rtConstP.uDLookupTable_bp01Data,
     rtConstP.uDLookupTable_tableData_g, 67U);
 
-  /* Switch: '<S7>/Switch2' incorporates:
+  /* Switch: '<S8>/Switch2' incorporates:
    *  Inport: '<Root>/Tx'
-   *  RelationalOperator: '<S7>/LowerRelop1'
+   *  RelationalOperator: '<S8>/LowerRelop1'
    */
   if (!(rtU->Tx[0] > rtDW->Sum1)) {
-    /* Switch: '<S7>/Switch' incorporates:
+    /* Switch: '<S8>/Switch' incorporates:
      *  Gain: '<S5>/Gain3'
-     *  RelationalOperator: '<S7>/UpperRelop'
+     *  RelationalOperator: '<S8>/UpperRelop'
      */
     if (rtU->Tx[0] < -rtDW->Sum1) {
       rtDW->Sum1 = -rtDW->Sum1;
@@ -623,8 +634,8 @@ void MC_PL0_step(RT_MODEL *const rtM, ExtU *rtU, ExtY *rtY)
     }
   }
 
-  /* Switch: '<S8>/Switch2' incorporates:
-   *  RelationalOperator: '<S8>/LowerRelop1'
+  /* Switch: '<S9>/Switch2' incorporates:
+   *  RelationalOperator: '<S9>/LowerRelop1'
    */
   if (!(rtDW->Sum1 > rtDW->rtb_RateLimiter_m_c)) {
     rtDW->rtb_RateLimiter_m_c = rtDW->Sum1;
@@ -649,7 +660,7 @@ void MC_PL0_step(RT_MODEL *const rtM, ExtU *rtU, ExtY *rtY)
 
   rtDW->PrevY[0] = rtDW->rtb_RateLimiter_m_c;
 
-  /* Switch: '<S6>/Switch2' */
+  /* Switch: '<S7>/Switch2' */
   rtDW->rtb_Switch2_idx_0 = rtDW->rtb_Switch2_k;
 
   /* Product: '<S2>/Divide1' incorporates:
@@ -674,7 +685,7 @@ void MC_PL0_step(RT_MODEL *const rtM, ExtU *rtU, ExtY *rtY)
   /* Signum: '<S4>/Sign1' incorporates:
    *  Inport: '<Root>/Tx'
    *  Product: '<S4>/Product2'
-   *  Switch: '<S8>/Switch'
+   *  Switch: '<S9>/Switch'
    */
   if (rtIsNaN(rtU->Tx[1])) {
     rtDW->Sum1 = rtU->Tx[1];
@@ -685,23 +696,23 @@ void MC_PL0_step(RT_MODEL *const rtM, ExtU *rtU, ExtY *rtY)
   }
 
   /* Product: '<S4>/Product2' incorporates:
-   *  Switch: '<S8>/Switch'
+   *  Switch: '<S9>/Switch'
    */
   rtDW->Sum1 *= rtDW->Switch[1];
 
-  /* Switch: '<S6>/Switch2' incorporates:
+  /* Switch: '<S7>/Switch2' incorporates:
    *  Gain: '<S4>/Gain'
    *  Product: '<S4>/MatrixMultiply'
-   *  RelationalOperator: '<S6>/LowerRelop1'
-   *  RelationalOperator: '<S6>/UpperRelop'
+   *  RelationalOperator: '<S7>/LowerRelop1'
+   *  RelationalOperator: '<S7>/UpperRelop'
    *  Selector: '<S4>/Selector'
    *  Selector: '<S4>/Selector1'
-   *  Switch: '<S6>/Switch'
+   *  Switch: '<S7>/Switch'
    */
   if (rtDW->Sum1 > rtDW->MatrixMultiply[2]) {
     rtDW->rtb_Switch2_k = rtDW->MatrixMultiply[2];
   } else if (rtDW->Sum1 < -rtDW->MatrixMultiply[3]) {
-    /* Switch: '<S6>/Switch' incorporates:
+    /* Switch: '<S7>/Switch' incorporates:
      *  Gain: '<S4>/Gain'
      *  Selector: '<S4>/Selector1'
      */
@@ -713,12 +724,12 @@ void MC_PL0_step(RT_MODEL *const rtM, ExtU *rtU, ExtY *rtY)
   /* Product: '<S2>/Divide1' incorporates:
    *  Inport: '<Root>/Motor_I'
    *  Inport: '<Root>/Vbatt'
-   *  Inport: '<Root>/Wx'
    *  Product: '<S2>/Product1'
+   *  Sum: '<S1>/Sum'
    *  Sum: '<S2>/Subtract'
    */
   rtDW->rtb_Switch_c_b = (rtDW->rtb_Switch2_k - rtU->Motor_V[1] * rtU->Motor_I[1])
-    * (1.0 / rtU->Wx[1]);
+    * (1.0 / rtDW->Sum[1]);
 
   /* Saturate: '<S2>/Saturation3' incorporates:
    *  DeadZone: '<S2>/Dead Zone'
@@ -746,32 +757,34 @@ void MC_PL0_step(RT_MODEL *const rtM, ExtU *rtU, ExtY *rtY)
   /* DiscreteIntegrator: '<S2>/Discrete-Time Integrator' */
   if (rtDW->DiscreteTimeIntegrator >= 4095.0) {
     rtDW->DiscreteTimeIntegrator = 4095.0;
-  } else if (rtDW->DiscreteTimeIntegrator <= -4095.0) {
-    rtDW->DiscreteTimeIntegrator = -4095.0;
+  } else if (rtDW->DiscreteTimeIntegrator <= 0.0) {
+    rtDW->DiscreteTimeIntegrator = 0.0;
   }
 
   /* Product: '<S5>/Divide1' incorporates:
-   *  Inport: '<Root>/Wx'
+   *  Product: '<S2>/Divide1'
    *  Product: '<S5>/Product3'
+   *  Sum: '<S1>/Sum'
    *  UnitDelay: '<S5>/Unit Delay'
    */
   rtDW->rtb_RateLimiter_m_c = rtDW->rtb_Switch2_k * rtDW->UnitDelay_DSTATE[1] /
-    rtU->Wx[1];
+    rtDW->Sum[1];
 
   /* Lookup_n-D: '<S5>/1-D Lookup Table' incorporates:
-   *  Inport: '<Root>/Wx'
+   *  Product: '<S2>/Divide1'
+   *  Sum: '<S1>/Sum'
    */
-  rtDW->Sum1 = look1_binlc(rtU->Wx[1], rtConstP.uDLookupTable_bp01Data,
+  rtDW->Sum1 = look1_binlc(rtDW->Sum[1], rtConstP.uDLookupTable_bp01Data,
     rtConstP.uDLookupTable_tableData_g, 67U);
 
-  /* Switch: '<S7>/Switch2' incorporates:
+  /* Switch: '<S8>/Switch2' incorporates:
    *  Inport: '<Root>/Tx'
-   *  RelationalOperator: '<S7>/LowerRelop1'
+   *  RelationalOperator: '<S8>/LowerRelop1'
    */
   if (!(rtU->Tx[1] > rtDW->Sum1)) {
-    /* Switch: '<S7>/Switch' incorporates:
+    /* Switch: '<S8>/Switch' incorporates:
      *  Gain: '<S5>/Gain3'
-     *  RelationalOperator: '<S7>/UpperRelop'
+     *  RelationalOperator: '<S8>/UpperRelop'
      */
     if (rtU->Tx[1] < -rtDW->Sum1) {
       rtDW->Sum1 = -rtDW->Sum1;
@@ -780,8 +793,8 @@ void MC_PL0_step(RT_MODEL *const rtM, ExtU *rtU, ExtY *rtY)
     }
   }
 
-  /* Switch: '<S8>/Switch2' incorporates:
-   *  RelationalOperator: '<S8>/LowerRelop1'
+  /* Switch: '<S9>/Switch2' incorporates:
+   *  RelationalOperator: '<S9>/LowerRelop1'
    */
   if (!(rtDW->Sum1 > rtDW->rtb_RateLimiter_m_c)) {
     rtDW->rtb_RateLimiter_m_c = rtDW->Sum1;
@@ -806,7 +819,7 @@ void MC_PL0_step(RT_MODEL *const rtM, ExtU *rtU, ExtY *rtY)
 
   rtDW->PrevY[1] = rtDW->rtb_RateLimiter_m_c;
 
-  /* Switch: '<S6>/Switch2' */
+  /* Switch: '<S7>/Switch2' */
   rtDW->rtb_Switch2_idx_1 = rtDW->rtb_Switch2_k;
 
   /* Product: '<S2>/Divide1' incorporates:
@@ -831,7 +844,7 @@ void MC_PL0_step(RT_MODEL *const rtM, ExtU *rtU, ExtY *rtY)
   /* Signum: '<S4>/Sign1' incorporates:
    *  Inport: '<Root>/Tx'
    *  Product: '<S4>/Product2'
-   *  Switch: '<S8>/Switch'
+   *  Switch: '<S9>/Switch'
    */
   if (rtIsNaN(rtU->Tx[2])) {
     rtDW->Sum1 = rtU->Tx[2];
@@ -842,23 +855,23 @@ void MC_PL0_step(RT_MODEL *const rtM, ExtU *rtU, ExtY *rtY)
   }
 
   /* Product: '<S4>/Product2' incorporates:
-   *  Switch: '<S8>/Switch'
+   *  Switch: '<S9>/Switch'
    */
   rtDW->Sum1 *= rtDW->Switch[2];
 
-  /* Switch: '<S6>/Switch2' incorporates:
+  /* Switch: '<S7>/Switch2' incorporates:
    *  Gain: '<S4>/Gain'
    *  Product: '<S4>/MatrixMultiply'
-   *  RelationalOperator: '<S6>/LowerRelop1'
-   *  RelationalOperator: '<S6>/UpperRelop'
+   *  RelationalOperator: '<S7>/LowerRelop1'
+   *  RelationalOperator: '<S7>/UpperRelop'
    *  Selector: '<S4>/Selector'
    *  Selector: '<S4>/Selector1'
-   *  Switch: '<S6>/Switch'
+   *  Switch: '<S7>/Switch'
    */
   if (rtDW->Sum1 > rtDW->MatrixMultiply[4]) {
     rtDW->rtb_Switch2_k = rtDW->MatrixMultiply[4];
   } else if (rtDW->Sum1 < -rtDW->MatrixMultiply[5]) {
-    /* Switch: '<S6>/Switch' incorporates:
+    /* Switch: '<S7>/Switch' incorporates:
      *  Gain: '<S4>/Gain'
      *  Selector: '<S4>/Selector1'
      */
@@ -870,12 +883,12 @@ void MC_PL0_step(RT_MODEL *const rtM, ExtU *rtU, ExtY *rtY)
   /* Product: '<S2>/Divide1' incorporates:
    *  Inport: '<Root>/Motor_I'
    *  Inport: '<Root>/Vbatt'
-   *  Inport: '<Root>/Wx'
    *  Product: '<S2>/Product1'
+   *  Sum: '<S1>/Sum'
    *  Sum: '<S2>/Subtract'
    */
   rtDW->rtb_Switch_c_b = (rtDW->rtb_Switch2_k - rtU->Motor_V[2] * rtU->Motor_I[2])
-    * (1.0 / rtU->Wx[2]);
+    * (1.0 / rtDW->Sum[2]);
 
   /* Saturate: '<S2>/Saturation3' incorporates:
    *  DeadZone: '<S2>/Dead Zone'
@@ -903,32 +916,34 @@ void MC_PL0_step(RT_MODEL *const rtM, ExtU *rtU, ExtY *rtY)
   /* DiscreteIntegrator: '<S2>/Discrete-Time Integrator' */
   if (rtDW->DiscreteTimeIntegrator >= 4095.0) {
     rtDW->DiscreteTimeIntegrator = 4095.0;
-  } else if (rtDW->DiscreteTimeIntegrator <= -4095.0) {
-    rtDW->DiscreteTimeIntegrator = -4095.0;
+  } else if (rtDW->DiscreteTimeIntegrator <= 0.0) {
+    rtDW->DiscreteTimeIntegrator = 0.0;
   }
 
   /* Product: '<S5>/Divide1' incorporates:
-   *  Inport: '<Root>/Wx'
+   *  Product: '<S2>/Divide1'
    *  Product: '<S5>/Product3'
+   *  Sum: '<S1>/Sum'
    *  UnitDelay: '<S5>/Unit Delay'
    */
   rtDW->rtb_RateLimiter_m_c = rtDW->rtb_Switch2_k * rtDW->UnitDelay_DSTATE[2] /
-    rtU->Wx[2];
+    rtDW->Sum[2];
 
   /* Lookup_n-D: '<S5>/1-D Lookup Table' incorporates:
-   *  Inport: '<Root>/Wx'
+   *  Product: '<S2>/Divide1'
+   *  Sum: '<S1>/Sum'
    */
-  rtDW->Sum1 = look1_binlc(rtU->Wx[2], rtConstP.uDLookupTable_bp01Data,
+  rtDW->Sum1 = look1_binlc(rtDW->Sum[2], rtConstP.uDLookupTable_bp01Data,
     rtConstP.uDLookupTable_tableData_g, 67U);
 
-  /* Switch: '<S7>/Switch2' incorporates:
+  /* Switch: '<S8>/Switch2' incorporates:
    *  Inport: '<Root>/Tx'
-   *  RelationalOperator: '<S7>/LowerRelop1'
+   *  RelationalOperator: '<S8>/LowerRelop1'
    */
   if (!(rtU->Tx[2] > rtDW->Sum1)) {
-    /* Switch: '<S7>/Switch' incorporates:
+    /* Switch: '<S8>/Switch' incorporates:
      *  Gain: '<S5>/Gain3'
-     *  RelationalOperator: '<S7>/UpperRelop'
+     *  RelationalOperator: '<S8>/UpperRelop'
      */
     if (rtU->Tx[2] < -rtDW->Sum1) {
       rtDW->Sum1 = -rtDW->Sum1;
@@ -937,8 +952,8 @@ void MC_PL0_step(RT_MODEL *const rtM, ExtU *rtU, ExtY *rtY)
     }
   }
 
-  /* Switch: '<S8>/Switch2' incorporates:
-   *  RelationalOperator: '<S8>/LowerRelop1'
+  /* Switch: '<S9>/Switch2' incorporates:
+   *  RelationalOperator: '<S9>/LowerRelop1'
    */
   if (!(rtDW->Sum1 > rtDW->rtb_RateLimiter_m_c)) {
     rtDW->rtb_RateLimiter_m_c = rtDW->Sum1;
@@ -963,7 +978,7 @@ void MC_PL0_step(RT_MODEL *const rtM, ExtU *rtU, ExtY *rtY)
 
   rtDW->PrevY[2] = rtDW->rtb_RateLimiter_m_c;
 
-  /* Switch: '<S6>/Switch2' */
+  /* Switch: '<S7>/Switch2' */
   rtDW->rtb_Switch2_idx_2 = rtDW->rtb_Switch2_k;
 
   /* Product: '<S2>/Divide1' incorporates:
@@ -988,7 +1003,7 @@ void MC_PL0_step(RT_MODEL *const rtM, ExtU *rtU, ExtY *rtY)
   /* Signum: '<S4>/Sign1' incorporates:
    *  Inport: '<Root>/Tx'
    *  Product: '<S4>/Product2'
-   *  Switch: '<S8>/Switch'
+   *  Switch: '<S9>/Switch'
    */
   if (rtIsNaN(rtU->Tx[3])) {
     rtDW->Sum1 = rtU->Tx[3];
@@ -1004,19 +1019,19 @@ void MC_PL0_step(RT_MODEL *const rtM, ExtU *rtU, ExtY *rtY)
   rtDW->Sum1 *= intrp2d_la(rtDW->bpIndices, rtDW->fractions,
     rtConstP.uDLookupTable_tableData, 16U, rtConstP.pooled6);
 
-  /* Switch: '<S6>/Switch2' incorporates:
+  /* Switch: '<S7>/Switch2' incorporates:
    *  Gain: '<S4>/Gain'
    *  Product: '<S4>/MatrixMultiply'
-   *  RelationalOperator: '<S6>/LowerRelop1'
-   *  RelationalOperator: '<S6>/UpperRelop'
+   *  RelationalOperator: '<S7>/LowerRelop1'
+   *  RelationalOperator: '<S7>/UpperRelop'
    *  Selector: '<S4>/Selector'
    *  Selector: '<S4>/Selector1'
-   *  Switch: '<S6>/Switch'
+   *  Switch: '<S7>/Switch'
    */
   if (rtDW->Sum1 > rtDW->MatrixMultiply[6]) {
     rtDW->rtb_Switch2_k = rtDW->MatrixMultiply[6];
   } else if (rtDW->Sum1 < -rtDW->MatrixMultiply[7]) {
-    /* Switch: '<S6>/Switch' incorporates:
+    /* Switch: '<S7>/Switch' incorporates:
      *  Gain: '<S4>/Gain'
      *  Selector: '<S4>/Selector1'
      */
@@ -1028,12 +1043,12 @@ void MC_PL0_step(RT_MODEL *const rtM, ExtU *rtU, ExtY *rtY)
   /* Product: '<S2>/Divide1' incorporates:
    *  Inport: '<Root>/Motor_I'
    *  Inport: '<Root>/Vbatt'
-   *  Inport: '<Root>/Wx'
    *  Product: '<S2>/Product1'
+   *  Sum: '<S1>/Sum'
    *  Sum: '<S2>/Subtract'
    */
   rtDW->rtb_Switch_c_b = (rtDW->rtb_Switch2_k - rtU->Motor_V[3] * rtU->Motor_I[3])
-    * (1.0 / rtU->Wx[3]);
+    * (1.0 / rtDW->Sum[3]);
 
   /* Saturate: '<S2>/Saturation3' incorporates:
    *  DeadZone: '<S2>/Dead Zone'
@@ -1061,32 +1076,34 @@ void MC_PL0_step(RT_MODEL *const rtM, ExtU *rtU, ExtY *rtY)
   /* DiscreteIntegrator: '<S2>/Discrete-Time Integrator' */
   if (rtDW->DiscreteTimeIntegrator >= 4095.0) {
     rtDW->DiscreteTimeIntegrator = 4095.0;
-  } else if (rtDW->DiscreteTimeIntegrator <= -4095.0) {
-    rtDW->DiscreteTimeIntegrator = -4095.0;
+  } else if (rtDW->DiscreteTimeIntegrator <= 0.0) {
+    rtDW->DiscreteTimeIntegrator = 0.0;
   }
 
   /* Product: '<S5>/Divide1' incorporates:
-   *  Inport: '<Root>/Wx'
+   *  Product: '<S2>/Divide1'
    *  Product: '<S5>/Product3'
+   *  Sum: '<S1>/Sum'
    *  UnitDelay: '<S5>/Unit Delay'
    */
   rtDW->rtb_RateLimiter_m_c = rtDW->rtb_Switch2_k * rtDW->UnitDelay_DSTATE[3] /
-    rtU->Wx[3];
+    rtDW->Sum[3];
 
   /* Lookup_n-D: '<S5>/1-D Lookup Table' incorporates:
-   *  Inport: '<Root>/Wx'
+   *  Product: '<S2>/Divide1'
+   *  Sum: '<S1>/Sum'
    */
-  rtDW->Sum1 = look1_binlc(rtU->Wx[3], rtConstP.uDLookupTable_bp01Data,
+  rtDW->Sum1 = look1_binlc(rtDW->Sum[3], rtConstP.uDLookupTable_bp01Data,
     rtConstP.uDLookupTable_tableData_g, 67U);
 
-  /* Switch: '<S7>/Switch2' incorporates:
+  /* Switch: '<S8>/Switch2' incorporates:
    *  Inport: '<Root>/Tx'
-   *  RelationalOperator: '<S7>/LowerRelop1'
+   *  RelationalOperator: '<S8>/LowerRelop1'
    */
   if (!(rtU->Tx[3] > rtDW->Sum1)) {
-    /* Switch: '<S7>/Switch' incorporates:
+    /* Switch: '<S8>/Switch' incorporates:
      *  Gain: '<S5>/Gain3'
-     *  RelationalOperator: '<S7>/UpperRelop'
+     *  RelationalOperator: '<S8>/UpperRelop'
      */
     if (rtU->Tx[3] < -rtDW->Sum1) {
       rtDW->Sum1 = -rtDW->Sum1;
@@ -1095,8 +1112,8 @@ void MC_PL0_step(RT_MODEL *const rtM, ExtU *rtU, ExtY *rtY)
     }
   }
 
-  /* Switch: '<S8>/Switch2' incorporates:
-   *  RelationalOperator: '<S8>/LowerRelop1'
+  /* Switch: '<S9>/Switch2' incorporates:
+   *  RelationalOperator: '<S9>/LowerRelop1'
    */
   if (!(rtDW->Sum1 > rtDW->rtb_RateLimiter_m_c)) {
     rtDW->rtb_RateLimiter_m_c = rtDW->Sum1;
@@ -1123,13 +1140,13 @@ void MC_PL0_step(RT_MODEL *const rtM, ExtU *rtU, ExtY *rtY)
 
   /* Lookup_n-D: '<S3>/2-D Lookup Table1' incorporates:
    *  Abs: '<S3>/Abs2'
-   *  Inport: '<Root>/Wx'
    *  Product: '<S3>/Divide'
+   *  Sum: '<S1>/Sum'
    */
   rtDW->bpIndices_p[0U] = plook_evenca(rtb_Divide_l_idx_0, 0.0,
     1.6666666666666665, 15U, &rtDW->Sum1);
   rtDW->fractions_m[0U] = rtDW->Sum1;
-  rtDW->bpIndices_p[1U] = plook_evenca(rtU->Wx[0], 0.0, 10.4719755, 106U,
+  rtDW->bpIndices_p[1U] = plook_evenca(rtDW->Sum[0], 0.0, 10.4719755, 106U,
     &rtDW->Sum1);
   rtDW->fractions_m[1U] = rtDW->Sum1;
   rtb_Divide_l_idx_0 = intrp2d_la(rtDW->bpIndices_p, rtDW->fractions_m,
@@ -1137,7 +1154,7 @@ void MC_PL0_step(RT_MODEL *const rtM, ExtU *rtU, ExtY *rtY)
   rtDW->bpIndices_p[0U] = plook_evenca(rtb_Divide_l_idx_1, 0.0,
     1.6666666666666665, 15U, &rtDW->Sum1);
   rtDW->fractions_m[0U] = rtDW->Sum1;
-  rtDW->bpIndices_p[1U] = plook_evenca(rtU->Wx[1], 0.0, 10.4719755, 106U,
+  rtDW->bpIndices_p[1U] = plook_evenca(rtDW->Sum[1], 0.0, 10.4719755, 106U,
     &rtDW->Sum1);
   rtDW->fractions_m[1U] = rtDW->Sum1;
   rtb_Divide_l_idx_1 = intrp2d_la(rtDW->bpIndices_p, rtDW->fractions_m,
@@ -1145,7 +1162,7 @@ void MC_PL0_step(RT_MODEL *const rtM, ExtU *rtU, ExtY *rtY)
   rtDW->bpIndices_p[0U] = plook_evenca(rtb_Divide_l_idx_2, 0.0,
     1.6666666666666665, 15U, &rtDW->Sum1);
   rtDW->fractions_m[0U] = rtDW->Sum1;
-  rtDW->bpIndices_p[1U] = plook_evenca(rtU->Wx[2], 0.0, 10.4719755, 106U,
+  rtDW->bpIndices_p[1U] = plook_evenca(rtDW->Sum[2], 0.0, 10.4719755, 106U,
     &rtDW->Sum1);
   rtDW->fractions_m[1U] = rtDW->Sum1;
   rtb_Divide_l_idx_2 = intrp2d_la(rtDW->bpIndices_p, rtDW->fractions_m,
@@ -1153,16 +1170,16 @@ void MC_PL0_step(RT_MODEL *const rtM, ExtU *rtU, ExtY *rtY)
   rtDW->bpIndices_p[0U] = plook_evenca(fabs(rtDW->rtb_RateLimiter_m_c), 0.0,
     1.6666666666666665, 15U, &rtDW->Sum1);
   rtDW->fractions_m[0U] = rtDW->Sum1;
-  rtDW->bpIndices_p[1U] = plook_evenca(rtU->Wx[3], 0.0, 10.4719755, 106U,
+  rtDW->bpIndices_p[1U] = plook_evenca(rtDW->Sum[3], 0.0, 10.4719755, 106U,
     &rtDW->Sum1);
   rtDW->fractions_m[1U] = rtDW->Sum1;
 
   /* Switch: '<S1>/Switch' incorporates:
    *  Gain: '<S3>/Gain1'
-   *  Inport: '<Root>/Wx'
    *  Product: '<S3>/Product1'
+   *  Sum: '<S1>/Sum'
    */
-  if (rtU->Wx[0] > rtP.feebackThreshhold) {
+  if (rtDW->Sum[0] > rtP.feebackThreshhold) {
     /* Saturate: '<S2>/Saturation2' incorporates:
      *  DiscreteIntegrator: '<S2>/Discrete-Time Integrator'
      *  Gain: '<S2>/Gain'
@@ -1225,10 +1242,10 @@ void MC_PL0_step(RT_MODEL *const rtM, ExtU *rtU, ExtY *rtY)
 
   /* Switch: '<S1>/Switch' incorporates:
    *  Gain: '<S3>/Gain1'
-   *  Inport: '<Root>/Wx'
    *  Product: '<S3>/Product1'
+   *  Sum: '<S1>/Sum'
    */
-  if (rtU->Wx[1] > rtP.feebackThreshhold) {
+  if (rtDW->Sum[1] > rtP.feebackThreshhold) {
     /* Saturate: '<S2>/Saturation2' incorporates:
      *  DiscreteIntegrator: '<S2>/Discrete-Time Integrator'
      *  Gain: '<S2>/Gain'
@@ -1291,10 +1308,10 @@ void MC_PL0_step(RT_MODEL *const rtM, ExtU *rtU, ExtY *rtY)
 
   /* Switch: '<S1>/Switch' incorporates:
    *  Gain: '<S3>/Gain1'
-   *  Inport: '<Root>/Wx'
    *  Product: '<S3>/Product1'
+   *  Sum: '<S1>/Sum'
    */
-  if (rtU->Wx[2] > rtP.feebackThreshhold) {
+  if (rtDW->Sum[2] > rtP.feebackThreshhold) {
     /* Saturate: '<S2>/Saturation2' incorporates:
      *  DiscreteIntegrator: '<S2>/Discrete-Time Integrator'
      *  Gain: '<S2>/Gain'
@@ -1357,10 +1374,10 @@ void MC_PL0_step(RT_MODEL *const rtM, ExtU *rtU, ExtY *rtY)
 
   /* Switch: '<S1>/Switch' incorporates:
    *  Gain: '<S3>/Gain1'
-   *  Inport: '<Root>/Wx'
    *  Product: '<S3>/Product1'
+   *  Sum: '<S1>/Sum'
    */
-  if (rtU->Wx[3] > rtP.feebackThreshhold) {
+  if (rtDW->Sum[3] > rtP.feebackThreshhold) {
     /* Saturate: '<S2>/Saturation2' incorporates:
      *  Gain: '<S2>/Gain'
      *  Sum: '<S2>/Sum1'
@@ -1417,13 +1434,13 @@ void MC_PL0_step(RT_MODEL *const rtM, ExtU *rtU, ExtY *rtY)
   rtY->T[3] = rtDW->rtb_RateLimiter_m_c;
 
   /* Lookup_n-D: '<S5>/2-D Lookup Table' incorporates:
-   *  Inport: '<Root>/Wx'
    *  RateLimiter: '<S5>/Rate Limiter'
+   *  Sum: '<S1>/Sum'
    */
   rtDW->bpIndices_c[0U] = plook_evenc(rtDW->rtb_RateLimiter_m_idx_0, 0.0,
     1.6666666666666665, 15U, &rtDW->Sum1);
   rtDW->fractions_c[0U] = rtDW->Sum1;
-  rtDW->bpIndices_c[1U] = plook_evenc(rtU->Wx[0], 0.0, 10.4719755, 106U,
+  rtDW->bpIndices_c[1U] = plook_evenc(rtDW->Sum[0], 0.0, 10.4719755, 106U,
     &rtDW->Sum1);
   rtDW->fractions_c[1U] = rtDW->Sum1;
 
@@ -1434,13 +1451,13 @@ void MC_PL0_step(RT_MODEL *const rtM, ExtU *rtU, ExtY *rtY)
     rtConstP.uDLookupTable_tableData_b, 16U);
 
   /* Lookup_n-D: '<S5>/2-D Lookup Table' incorporates:
-   *  Inport: '<Root>/Wx'
    *  RateLimiter: '<S5>/Rate Limiter'
+   *  Sum: '<S1>/Sum'
    */
   rtDW->bpIndices_c[0U] = plook_evenc(rtDW->rtb_RateLimiter_m_idx_1, 0.0,
     1.6666666666666665, 15U, &rtDW->Sum1);
   rtDW->fractions_c[0U] = rtDW->Sum1;
-  rtDW->bpIndices_c[1U] = plook_evenc(rtU->Wx[1], 0.0, 10.4719755, 106U,
+  rtDW->bpIndices_c[1U] = plook_evenc(rtDW->Sum[1], 0.0, 10.4719755, 106U,
     &rtDW->Sum1);
   rtDW->fractions_c[1U] = rtDW->Sum1;
 
@@ -1451,13 +1468,13 @@ void MC_PL0_step(RT_MODEL *const rtM, ExtU *rtU, ExtY *rtY)
     rtConstP.uDLookupTable_tableData_b, 16U);
 
   /* Lookup_n-D: '<S5>/2-D Lookup Table' incorporates:
-   *  Inport: '<Root>/Wx'
    *  RateLimiter: '<S5>/Rate Limiter'
+   *  Sum: '<S1>/Sum'
    */
   rtDW->bpIndices_c[0U] = plook_evenc(rtb_RateLimiter_m_idx_2, 0.0,
     1.6666666666666665, 15U, &rtDW->Sum1);
   rtDW->fractions_c[0U] = rtDW->Sum1;
-  rtDW->bpIndices_c[1U] = plook_evenc(rtU->Wx[2], 0.0, 10.4719755, 106U,
+  rtDW->bpIndices_c[1U] = plook_evenc(rtDW->Sum[2], 0.0, 10.4719755, 106U,
     &rtDW->Sum1);
   rtDW->fractions_c[1U] = rtDW->Sum1;
 
@@ -1468,75 +1485,99 @@ void MC_PL0_step(RT_MODEL *const rtM, ExtU *rtU, ExtY *rtY)
     rtConstP.uDLookupTable_tableData_b, 16U);
 
   /* Lookup_n-D: '<S5>/2-D Lookup Table' incorporates:
-   *  Inport: '<Root>/Wx'
+   *  Sum: '<S1>/Sum'
    */
   rtDW->bpIndices_c[0U] = plook_evenc(rtDW->rtb_RateLimiter_m_c, 0.0,
     1.6666666666666665, 15U, &rtDW->Sum1);
   rtDW->fractions_c[0U] = rtDW->Sum1;
-  rtDW->bpIndices_c[1U] = plook_evenc(rtU->Wx[3], 0.0, 10.4719755, 106U,
+  rtDW->bpIndices_c[1U] = plook_evenc(rtDW->Sum[3], 0.0, 10.4719755, 106U,
     &rtDW->Sum1);
   rtDW->fractions_c[1U] = rtDW->Sum1;
 
   /* Outport: '<Root>/P' incorporates:
-   *  Switch: '<S6>/Switch2'
+   *  Switch: '<S7>/Switch2'
    */
-  rtY->P_c[0] = rtDW->rtb_Switch2_idx_0;
+  rtY->P_g[0] = rtDW->rtb_Switch2_idx_0;
 
   /* Outport: '<Root>/r' incorporates:
    *  Gain: '<S4>/Gain1'
-   *  Inport: '<Root>/Wx'
    *  Outport: '<Root>/P'
    *  Product: '<S4>/Divide1'
-   *  Switch: '<S6>/Switch2'
+   *  Sum: '<S1>/Sum'
+   *  Switch: '<S7>/Switch2'
    */
-  rtY->r[0] = 10.0 * rtU->Wx[0] / rtDW->rtb_Switch2_idx_0;
+  rtY->r[0] = 10.0 * rtDW->Sum[0] / rtDW->rtb_Switch2_idx_0;
+
+  /* Update for UnitDelay: '<S1>/Unit Delay1' incorporates:
+   *  Gain: '<S4>/Gain1'
+   *  Sum: '<S1>/Sum'
+   */
+  rtDW->UnitDelay1_DSTATE[0] = rtDW->Sum[0];
 
   /* Update for DiscreteIntegrator: '<S2>/Discrete-Time Integrator' */
   rtDW->DiscreteTimeIntegrator_DSTATE[0] = rtDW->DiscreteTimeIntegrator_idx_0;
 
   /* Outport: '<Root>/P' incorporates:
-   *  Switch: '<S6>/Switch2'
+   *  Switch: '<S7>/Switch2'
    */
-  rtY->P_c[1] = rtDW->rtb_Switch2_idx_1;
+  rtY->P_g[1] = rtDW->rtb_Switch2_idx_1;
 
   /* Outport: '<Root>/r' incorporates:
    *  Gain: '<S4>/Gain1'
-   *  Inport: '<Root>/Wx'
    *  Outport: '<Root>/P'
    *  Product: '<S4>/Divide1'
-   *  Switch: '<S6>/Switch2'
+   *  Sum: '<S1>/Sum'
+   *  Switch: '<S7>/Switch2'
    */
-  rtY->r[1] = 10.0 * rtU->Wx[1] / rtDW->rtb_Switch2_idx_1;
+  rtY->r[1] = 10.0 * rtDW->Sum[1] / rtDW->rtb_Switch2_idx_1;
+
+  /* Update for UnitDelay: '<S1>/Unit Delay1' incorporates:
+   *  Gain: '<S4>/Gain1'
+   *  Sum: '<S1>/Sum'
+   */
+  rtDW->UnitDelay1_DSTATE[1] = rtDW->Sum[1];
 
   /* Update for DiscreteIntegrator: '<S2>/Discrete-Time Integrator' */
   rtDW->DiscreteTimeIntegrator_DSTATE[1] = rtDW->DiscreteTimeIntegrator_idx_1;
 
   /* Outport: '<Root>/P' incorporates:
-   *  Switch: '<S6>/Switch2'
+   *  Switch: '<S7>/Switch2'
    */
-  rtY->P_c[2] = rtDW->rtb_Switch2_idx_2;
+  rtY->P_g[2] = rtDW->rtb_Switch2_idx_2;
 
   /* Outport: '<Root>/r' incorporates:
    *  Gain: '<S4>/Gain1'
-   *  Inport: '<Root>/Wx'
    *  Outport: '<Root>/P'
    *  Product: '<S4>/Divide1'
-   *  Switch: '<S6>/Switch2'
+   *  Sum: '<S1>/Sum'
+   *  Switch: '<S7>/Switch2'
    */
-  rtY->r[2] = 10.0 * rtU->Wx[2] / rtDW->rtb_Switch2_idx_2;
+  rtY->r[2] = 10.0 * rtDW->Sum[2] / rtDW->rtb_Switch2_idx_2;
+
+  /* Update for UnitDelay: '<S1>/Unit Delay1' incorporates:
+   *  Gain: '<S4>/Gain1'
+   *  Sum: '<S1>/Sum'
+   */
+  rtDW->UnitDelay1_DSTATE[2] = rtDW->Sum[2];
 
   /* Update for DiscreteIntegrator: '<S2>/Discrete-Time Integrator' */
   rtDW->DiscreteTimeIntegrator_DSTATE[2] = rtDW->DiscreteTimeIntegrator_idx_2;
 
   /* Outport: '<Root>/P' */
-  rtY->P_c[3] = rtDW->rtb_Switch2_k;
+  rtY->P_g[3] = rtDW->rtb_Switch2_k;
 
   /* Outport: '<Root>/r' incorporates:
    *  Gain: '<S4>/Gain1'
-   *  Inport: '<Root>/Wx'
    *  Product: '<S4>/Divide1'
+   *  Sum: '<S1>/Sum'
    */
-  rtY->r[3] = 10.0 * rtU->Wx[3] / rtDW->rtb_Switch2_k;
+  rtY->r[3] = 10.0 * rtDW->Sum[3] / rtDW->rtb_Switch2_k;
+
+  /* Update for UnitDelay: '<S1>/Unit Delay1' incorporates:
+   *  Gain: '<S4>/Gain1'
+   *  Sum: '<S1>/Sum'
+   */
+  rtDW->UnitDelay1_DSTATE[3] = rtDW->Sum[3];
 
   /* Update for DiscreteIntegrator: '<S2>/Discrete-Time Integrator' */
   rtDW->DiscreteTimeIntegrator_DSTATE[3] = rtDW->DiscreteTimeIntegrator;

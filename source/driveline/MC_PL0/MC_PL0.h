@@ -7,9 +7,9 @@
  *
  * Code generated for Simulink model 'MC_PL0'.
  *
- * Model version                  : 1.265
+ * Model version                  : 1.267
  * Simulink Coder version         : 9.7 (R2022a) 13-Nov-2021
- * C/C++ source code generated on : Fri Dec  2 23:38:52 2022
+ * C/C++ source code generated on : Sat Dec  3 12:02:05 2022
  *
  * Target selection: ert.tlc
  * Embedded hardware selection: ARM Compatible->ARM Cortex-M
@@ -39,12 +39,14 @@
 
 /* Block signals and states (default storage) for system '<Root>' */
 typedef struct {
+  real_T UnitDelay1_DSTATE[4];         /* '<S1>/Unit Delay1' */
   real_T DiscreteTimeIntegrator_DSTATE[4];/* '<S2>/Discrete-Time Integrator' */
   real_T UnitDelay_DSTATE[4];          /* '<S5>/Unit Delay' */
   real_T PrevY[4];                     /* '<S5>/Rate Limiter' */
   real_T PrevY_l[4];                   /* '<S1>/Rate Limiter' */
   real_T MatrixMultiply[8];            /* '<S4>/MatrixMultiply' */
-  real_T Switch[4];                    /* '<S8>/Switch' */
+  real_T Switch[4];                    /* '<S9>/Switch' */
+  real_T Sum[4];                       /* '<S1>/Sum' */
   real_T fractions[2];
   real_T fractions_m[2];
   real_T fractions_c[2];
@@ -115,7 +117,7 @@ typedef struct {
 /* External outputs (root outports fed by signals with default storage) */
 typedef struct {
   real_T k[4];                         /* '<Root>/k' */
-  real_T P_c[4];                       /* '<Root>/P' */
+  real_T P_g[4];                       /* '<Root>/P' */
   real_T T[4];                         /* '<Root>/T' */
   real_T r[4];                         /* '<Root>/r' */
 } ExtY;
@@ -152,12 +154,22 @@ void rt_OneStep(RT_MODEL *const rtM);
  * Block '<S2>/Constant' : Unused code path elimination
  * Block '<S2>/Divide' : Unused code path elimination
  * Block '<S2>/Divide2' : Unused code path elimination
+ * Block '<S2>/Gain2' : Unused code path elimination
+ * Block '<S2>/Gain3' : Unused code path elimination
  * Block '<S2>/Product' : Unused code path elimination
  * Block '<S2>/Saturation' : Unused code path elimination
- * Block '<S2>/Saturation1' : Unused code path elimination
- * Block '<S2>/Sum' : Unused code path elimination
  * Block '<S6>/Data Type Duplicate' : Unused code path elimination
  * Block '<S6>/Data Type Propagation' : Unused code path elimination
+ * Block '<S6>/LowerRelop1' : Unused code path elimination
+ * Block '<S6>/Switch' : Unused code path elimination
+ * Block '<S6>/Switch2' : Unused code path elimination
+ * Block '<S6>/UpperRelop' : Unused code path elimination
+ * Block '<S2>/Saturation1' : Unused code path elimination
+ * Block '<S2>/Sum' : Unused code path elimination
+ * Block '<S2>/Sum2' : Unused code path elimination
+ * Block '<S2>/Sum3' : Unused code path elimination
+ * Block '<S7>/Data Type Duplicate' : Unused code path elimination
+ * Block '<S7>/Data Type Propagation' : Unused code path elimination
  * Block '<S5>/Abs' : Unused code path elimination
  * Block '<S5>/Abs1' : Unused code path elimination
  * Block '<S5>/Add' : Unused code path elimination
@@ -195,10 +207,10 @@ void rt_OneStep(RT_MODEL *const rtM);
  * Block '<S5>/Product1' : Unused code path elimination
  * Block '<S5>/Product2' : Unused code path elimination
  * Block '<S5>/Product4' : Unused code path elimination
- * Block '<S7>/Data Type Duplicate' : Unused code path elimination
- * Block '<S7>/Data Type Propagation' : Unused code path elimination
  * Block '<S8>/Data Type Duplicate' : Unused code path elimination
  * Block '<S8>/Data Type Propagation' : Unused code path elimination
+ * Block '<S9>/Data Type Duplicate' : Unused code path elimination
+ * Block '<S9>/Data Type Propagation' : Unused code path elimination
  * Block '<S5>/Saturation1' : Unused code path elimination
  * Block '<S5>/Selector' : Unused code path elimination
  * Block '<S5>/Selector1' : Unused code path elimination
@@ -237,9 +249,10 @@ void rt_OneStep(RT_MODEL *const rtM);
  * '<S3>'   : 'complete_plant_v6/Vehicle Model/Powertrain/Motor and Battery/MC_PL/Feed Forward Control'
  * '<S4>'   : 'complete_plant_v6/Vehicle Model/Powertrain/Motor and Battery/MC_PL/Power Limiting'
  * '<S5>'   : 'complete_plant_v6/Vehicle Model/Powertrain/Motor and Battery/MC_PL/Torque Limiting'
- * '<S6>'   : 'complete_plant_v6/Vehicle Model/Powertrain/Motor and Battery/MC_PL/Power Limiting/Saturation Dynamic'
- * '<S7>'   : 'complete_plant_v6/Vehicle Model/Powertrain/Motor and Battery/MC_PL/Torque Limiting/Saturation Dynamic1'
- * '<S8>'   : 'complete_plant_v6/Vehicle Model/Powertrain/Motor and Battery/MC_PL/Torque Limiting/Saturation Dynamic2'
+ * '<S6>'   : 'complete_plant_v6/Vehicle Model/Powertrain/Motor and Battery/MC_PL/Feed Back Control/Saturation Dynamic'
+ * '<S7>'   : 'complete_plant_v6/Vehicle Model/Powertrain/Motor and Battery/MC_PL/Power Limiting/Saturation Dynamic'
+ * '<S8>'   : 'complete_plant_v6/Vehicle Model/Powertrain/Motor and Battery/MC_PL/Torque Limiting/Saturation Dynamic1'
+ * '<S9>'   : 'complete_plant_v6/Vehicle Model/Powertrain/Motor and Battery/MC_PL/Torque Limiting/Saturation Dynamic2'
  */
 #endif                                 /* RTW_HEADER_MC_PL0_h_ */
 

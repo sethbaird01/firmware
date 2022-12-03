@@ -348,13 +348,13 @@ void commandTorquePeriodic()
 
     // Power Limiting
     MC_PL_pp(&rtU, &motor_left, &motor_right);
-    //rt_OneStep(rtM);
-    //pow_left = rtY.k[2] * 100.0 / 4095.0;
-    //pow_right = rtY.k[3] * 100.0 / 4095.0;
+    rt_OneStep(rtM);
+    pow_left = rtY.k[2] * 100.0 / 4095.0;
+    pow_right = rtY.k[3] * 100.0 / 4095.0;
 
     // No Power Limiting
-    pow_left = rtU.Tx[2] * 100.0 / 25.0;
-    pow_right = rtU.Tx[3] * 100.0 / 25.0;
+    //pow_left = rtU.Tx[2] * 100.0 / 25.0;
+    //pow_right = rtU.Tx[3] * 100.0 / 25.0;
 
     // Prevent regenerative braking, functionality not yet implemented
     if (pow_left < 0)  pow_left  = 0.0;
@@ -381,6 +381,11 @@ void commandTorquePeriodic()
     // to send 0 to stop motor
     mcSetPower(pow_left,  &motor_left);
     mcSetPower(pow_right, &motor_right);
+    #if (FTR_DRIVELINE_REAR)
+    SEND_REAR_MC_REQ(q_tx_can, pow_left, pow_right);
+    SEND_REAR_POW_LIM_L(q_tx_can, rtY.T[2], rtY.P_g[2]);
+    #endif
+
 }
 
 /**

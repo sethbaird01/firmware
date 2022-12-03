@@ -23,8 +23,8 @@ rtU->accel[0] = CLAMP(can_data.accel_data.ax * ACCELERATION_CALIBRATION, MIN_ACC
 rtU->accel[1] = CLAMP(can_data.accel_data.ay * ACCELERATION_CALIBRATION, MIN_ACCEL, MAX_ACCEL);
 rtU->accel[2] = CLAMP(can_data.accel_data.az * ACCELERATION_CALIBRATION, MIN_ACCEL, MAX_ACCEL);
 
-rtU->omega[0] = CLAMP(0.0, MIN_OMEGA, MAX_OMEGA);
-rtU->omega[1] = CLAMP(0.0, MIN_OMEGA, MAX_OMEGA);
+rtU->omega[0] = CLAMP(0.0 * OMEGA_CALIBRATION, MIN_OMEGA, MAX_OMEGA);
+rtU->omega[1] = CLAMP(0.0 * OMEGA_CALIBRATION, MIN_OMEGA, MAX_OMEGA);
 rtU->omega[2] = CLAMP(can_data.rear_wheel_data.left_speed * OMEGA_CALIBRATION, MIN_OMEGA, MAX_OMEGA);
 rtU->omega[3] = CLAMP(can_data.rear_wheel_data.right_speed * OMEGA_CALIBRATION, MIN_OMEGA, MAX_OMEGA);
 
@@ -46,10 +46,10 @@ rtU->motor_temperature[1] = CLAMP(55.0, MIN_MOTOR_T, MAX_MOTOR_T);
 rtU->motor_temperature[2] = CLAMP(55.0, MIN_MOTOR_T, MAX_MOTOR_T);
 rtU->motor_temperature[3] = CLAMP(55.0, MIN_MOTOR_T, MAX_MOTOR_T);
 
-//rtU->battery_voltage = CLAMP(can_data.orion_currents_volts.pack_voltage * VOLTAGE_CALIBRATION, MIN_VOLTAGE, MAX_VOLTAGE);
+rtU->battery_voltage = CLAMP(can_data.orion_currents_volts.pack_voltage * VOLTAGE_CALIBRATION, MIN_VOLTAGE, MAX_VOLTAGE);
 
-//rtU->power_limits[0] = CLAMP((rtU->battery_voltage) * can_data.orion_info.pack_dcl * CURRENT_CALIBRATION, 0, MAX_BATTERY_POWER);
-//rtU->power_limits[1] = CLAMP((rtU->battery_voltage) * can_data.orion_info.pack_ccl * CURRENT_CALIBRATION, 0, MIN_BATTERY_POWER);
+rtU->power_limits[0] = CLAMP(can_data.orion_currents_volts.pack_voltage * can_data.orion_info.pack_dcl * CURRENT_CALIBRATION, 0, MAX_BATTERY_POWER);
+rtU->power_limits[1] = CLAMP(can_data.orion_currents_volts.pack_voltage * can_data.orion_info.pack_ccl * CURRENT_CALIBRATION, 0, MIN_BATTERY_POWER);
 
 // Temporary
 rtU->FZ[0] = CLAMP(1200.0, MIN_FZ, MAX_FZ);
@@ -61,8 +61,8 @@ rtU->ang[0] = CLAMP(0.0 * ANGLE_CALIBRATION, MIN_ANG, MAX_ANG);
 rtU->ang[1] = CLAMP(0.0 * ANGLE_CALIBRATION, MIN_ANG, MAX_ANG);
 rtU->ang[2] = CLAMP(0.0 * ANGLE_CALIBRATION, MIN_ANG, MAX_ANG);
 
-rtU->battery_voltage = CLAMP(200.0, MIN_VOLTAGE, MAX_VOLTAGE);
+//rtU->battery_voltage = CLAMP(200.0, MIN_VOLTAGE, MAX_VOLTAGE);
 
-rtU->power_limits[0] = CLAMP(40000.0, 0.0, MAX_BATTERY_POWER);
-rtU->power_limits[1] = CLAMP(40000.0, 0.0, MIN_BATTERY_POWER);
+//rtU->power_limits[0] = CLAMP(40000.0, 0.0, MAX_BATTERY_POWER);
+//rtU->power_limits[1] = CLAMP(40000.0, 0.0, MIN_BATTERY_POWER);
 }
