@@ -7,9 +7,9 @@
  *
  * Code generated for Simulink model 'Electronics'.
  *
- * Model version                  : 1.223
+ * Model version                  : 1.228
  * Simulink Coder version         : 9.7 (R2022a) 13-Nov-2021
- * C/C++ source code generated on : Sun Nov  6 18:26:17 2022
+ * C/C++ source code generated on : Tue Nov 15 21:53:05 2022
  *
  * Target selection: ert.tlc
  * Embedded hardware selection: ARM Compatible->ARM Cortex-M
@@ -33,12 +33,13 @@ static uint32_T plook_evenc(real_T u, real_T bp0, real_T bpSpace, uint32_T
 static real_T intrp1d_l(uint32_T bpIndex, real_T frac, const real_T table[]);
 static void Electronics_Init(DW_Electronics *localDW);
 static void Electronics_o(const real_T rtu_TVS_Input[4], const real_T
-  rtu_TVS_Input_d[2], real_T rtu_TVS_Input_c, real_T rtu_TVS_Input_b, const
-  real_T rtu_TVS_Input_i[3], const real_T rtu_TVS_Input_k[2], real_T
-  rty_TVS_Output[4], int32_T *rty_TVS_Output_j, real_T *rty_TVS_Output_d,
-  boolean_T *rty_TVS_Output_c, boolean_T *rty_TVS_Output_b, real_T
-  *rty_TVS_Output_i, real_T rty_TVS_Output_k[4], real_T rty_TVS_Output_e[4],
-  real_T *rty_TVS_Output_m, real_T *rty_TVS_Output_ba, DW_Electronics *localDW);
+  rtu_TVS_Input_j[4], const real_T rtu_TVS_Input_d[2], real_T rtu_TVS_Input_c,
+  real_T rtu_TVS_Input_b, const real_T rtu_TVS_Input_i[3], const real_T
+  rtu_TVS_Input_k[2], real_T rty_TVS_Output[4], int32_T *rty_TVS_Output_j,
+  real_T *rty_TVS_Output_d, boolean_T *rty_TVS_Output_c, boolean_T
+  *rty_TVS_Output_b, real_T *rty_TVS_Output_i, real_T rty_TVS_Output_k[4],
+  real_T rty_TVS_Output_e[4], real_T *rty_TVS_Output_m, real_T
+  *rty_TVS_Output_ba, DW_Electronics *localDW);
 static real_T rtGetNaN(void);
 static real32_T rtGetNaNF(void);
 extern real_T rtInf;
@@ -352,12 +353,13 @@ static void Electronics_Init(DW_Electronics *localDW)
 
 /* Output and update for atomic system: '<Root>/Electronics' */
 static void Electronics_o(const real_T rtu_TVS_Input[4], const real_T
-  rtu_TVS_Input_d[2], real_T rtu_TVS_Input_c, real_T rtu_TVS_Input_b, const
-  real_T rtu_TVS_Input_i[3], const real_T rtu_TVS_Input_k[2], real_T
-  rty_TVS_Output[4], int32_T *rty_TVS_Output_j, real_T *rty_TVS_Output_d,
-  boolean_T *rty_TVS_Output_c, boolean_T *rty_TVS_Output_b, real_T
-  *rty_TVS_Output_i, real_T rty_TVS_Output_k[4], real_T rty_TVS_Output_e[4],
-  real_T *rty_TVS_Output_m, real_T *rty_TVS_Output_ba, DW_Electronics *localDW)
+  rtu_TVS_Input_j[4], const real_T rtu_TVS_Input_d[2], real_T rtu_TVS_Input_c,
+  real_T rtu_TVS_Input_b, const real_T rtu_TVS_Input_i[3], const real_T
+  rtu_TVS_Input_k[2], real_T rty_TVS_Output[4], int32_T *rty_TVS_Output_j,
+  real_T *rty_TVS_Output_d, boolean_T *rty_TVS_Output_c, boolean_T
+  *rty_TVS_Output_b, real_T *rty_TVS_Output_i, real_T rty_TVS_Output_k[4],
+  real_T rty_TVS_Output_e[4], real_T *rty_TVS_Output_m, real_T
+  *rty_TVS_Output_ba, DW_Electronics *localDW)
 {
   real_T rtb_Abs_m_idx_0;
   real_T rtb_UnitDelay_g_idx_0;
@@ -368,10 +370,7 @@ static void Electronics_o(const real_T rtu_TVS_Input[4], const real_T
   int32_T rtb_Abs1_tmp_0;
   int32_T sigIdx;
   uint32_T bpIdx;
-  boolean_T rtb_LowerRelop1_i_idx_0;
-  boolean_T rtb_LowerRelop1_i_idx_1;
-  boolean_T rtb_LowerRelop1_i_idx_2;
-  boolean_T rtb_LowerRelop1_i_idx_3;
+  boolean_T rtb_LessThan[4];
   boolean_T rtb_UpperRelop_n_idx_0;
   boolean_T rtb_UpperRelop_n_idx_1;
   boolean_T rtb_UpperRelop_n_idx_2;
@@ -383,11 +382,11 @@ static void Electronics_o(const real_T rtu_TVS_Input[4], const real_T
   localDW->rtb_Gain1_idx_0 = rtu_TVS_Input[0] - rtu_TVS_Input[0];
   localDW->rtb_Gain1_idx_1 = rtu_TVS_Input[1] - rtu_TVS_Input[1];
   localDW->rtb_Gain1_idx_3 = rtu_TVS_Input[2] - rtu_TVS_Input[2];
-  localDW->rtb_Gain1_idx_2 = rtu_TVS_Input[3] - rtu_TVS_Input[3];
+  localDW->avg_steering_angle = rtu_TVS_Input[3] - rtu_TVS_Input[3];
   rty_TVS_Output[0] = localDW->rtb_Gain1_idx_0;
   rty_TVS_Output[1] = localDW->rtb_Gain1_idx_1;
   rty_TVS_Output[2] = localDW->rtb_Gain1_idx_3;
-  rty_TVS_Output[3] = localDW->rtb_Gain1_idx_2;
+  rty_TVS_Output[3] = localDW->avg_steering_angle;
 
   /* Abs: '<S12>/Abs' */
   rty_TVS_Output[0] = fabs(rty_TVS_Output[0]);
@@ -399,11 +398,11 @@ static void Electronics_o(const real_T rtu_TVS_Input[4], const real_T
   localDW->rtb_Gain1_idx_0 = rtu_TVS_Input[0];
   localDW->rtb_Gain1_idx_1 = rtu_TVS_Input[1];
   localDW->rtb_Gain1_idx_3 = rtu_TVS_Input[2];
-  localDW->rtb_Gain1_idx_2 = rtu_TVS_Input[3];
+  localDW->avg_steering_angle = rtu_TVS_Input[3];
   rty_TVS_Output[0] = localDW->rtb_Gain1_idx_0;
   rty_TVS_Output[1] = localDW->rtb_Gain1_idx_1;
   rty_TVS_Output[2] = localDW->rtb_Gain1_idx_3;
-  rty_TVS_Output[3] = localDW->rtb_Gain1_idx_2;
+  rty_TVS_Output[3] = localDW->avg_steering_angle;
 
   /* Gain: '<S14>/Gain1' */
   rty_TVS_Output[0] *= 6.63043;
@@ -418,17 +417,61 @@ static void Electronics_o(const real_T rtu_TVS_Input[4], const real_T
   localDW->AddConstant[1] = 0.095492965964253843 * rty_TVS_Output[1];
   localDW->AddConstant[2] = 0.095492965964253843 * rty_TVS_Output[2];
   localDW->AddConstant[3] = 0.095492965964253843 * rty_TVS_Output[3];
+
+  /* Saturate: '<S15>/Saturation1' incorporates:
+   *  Bias: '<S5>/Add Constant'
+   */
+  if (localDW->AddConstant[0] > 106.0) {
+    localDW->AddConstant[0] = 106.0;
+  } else if (localDW->AddConstant[0] < 1.0) {
+    localDW->AddConstant[0] = 1.0;
+  }
+
+  if (localDW->AddConstant[1] > 106.0) {
+    localDW->AddConstant[1] = 106.0;
+  } else if (localDW->AddConstant[1] < 1.0) {
+    localDW->AddConstant[1] = 1.0;
+  }
+
+  if (localDW->AddConstant[2] > 106.0) {
+    localDW->AddConstant[2] = 106.0;
+  } else if (localDW->AddConstant[2] < 1.0) {
+    localDW->AddConstant[2] = 1.0;
+  }
+
+  if (localDW->AddConstant[3] > 106.0) {
+    localDW->AddConstant[3] = 106.0;
+  } else if (localDW->AddConstant[3] < 1.0) {
+    localDW->AddConstant[3] = 1.0;
+  }
+
+  /* End of Saturate: '<S15>/Saturation1' */
+
+  /* RelationalOperator: '<S15>/Less Than' incorporates:
+   *  Constant: '<S15>/Constant6'
+   */
+  rtb_LessThan[0] = (rtu_TVS_Input_j[0] < 75.0);
+  rtb_LessThan[1] = (rtu_TVS_Input_j[1] < 75.0);
+  rtb_LessThan[2] = (rtu_TVS_Input_j[2] < 75.0);
+  rtb_LessThan[3] = (rtu_TVS_Input_j[3] < 75.0);
   for (sigIdx = 0; sigIdx < 4; sigIdx++) {
-    /* Saturate: '<S15>/Saturation1' incorporates:
-     *  Bias: '<S5>/Add Constant'
+    /* Switch: '<S15>/Switch' incorporates:
+     *  RelationalOperator: '<S15>/Less Than'
      */
-    localDW->avg_steering_angle = localDW->AddConstant[sigIdx];
-    if (localDW->avg_steering_angle > 106.0) {
-      localDW->avg_steering_angle = 106.0;
-    } else if (localDW->avg_steering_angle < 1.0) {
-      localDW->avg_steering_angle = 1.0;
+    if (rtb_LessThan[sigIdx]) {
+      localDW->rtb_Gain1_idx_0 = 5800.0;
+    } else {
+      localDW->rtb_Gain1_idx_0 = 1800.0;
     }
 
+    /* End of Switch: '<S15>/Switch' */
+
+    /* Abs: '<S15>/Abs1' incorporates:
+     *  Bias: '<S15>/Bias'
+     *  Bias: '<S5>/Add Constant'
+     *  Selector: '<S15>/Selector1'
+     */
+    localDW->avg_steering_angle = localDW->AddConstant[sigIdx];
     for (j = 0; j < 161; j++) {
       /* Abs: '<S15>/Abs1' incorporates:
        *  Abs: '<S15>/Abs'
@@ -440,11 +483,11 @@ static void Electronics_o(const real_T rtu_TVS_Input[4], const real_T
        *  Selector: '<S15>/Selector1'
        *  Sum: '<S15>/Sum1'
        */
-      rtb_Abs1_tmp = (int32_T)rtConstP.pooled5[j];
+      rtb_Abs1_tmp = (int32_T)rtConstP.pooled4[j];
       rtb_Abs1_tmp_0 = 161 * sigIdx + j;
-      localDW->Abs1[rtb_Abs1_tmp_0] = fabs(rtConstP.pooled9[(((int32_T)
+      localDW->Abs1[rtb_Abs1_tmp_0] = fabs(rtConstP.pooled8[(((int32_T)
         (localDW->avg_steering_angle + 1.0) - 1) * 161 + rtb_Abs1_tmp) - 1] -
-        1800.0);
+        localDW->rtb_Gain1_idx_0);
 
       /* Gain: '<S15>/Gain3' incorporates:
        *  Abs: '<S15>/Abs'
@@ -452,14 +495,10 @@ static void Electronics_o(const real_T rtu_TVS_Input[4], const real_T
        *  Selector: '<S15>/Selector'
        *  Sum: '<S15>/Sum'
        */
-      localDW->Abs_i[rtb_Abs1_tmp_0] = fabs(rtConstP.pooled9[(((int32_T)
-        localDW->avg_steering_angle - 1) * 161 + rtb_Abs1_tmp) - 1] - 1800.0);
+      localDW->Abs_i[rtb_Abs1_tmp_0] = fabs(rtConstP.pooled8[(((int32_T)
+        localDW->avg_steering_angle - 1) * 161 + rtb_Abs1_tmp) - 1] -
+        localDW->rtb_Gain1_idx_0);
     }
-
-    /* Saturate: '<S15>/Saturation1' incorporates:
-     *  Bias: '<S5>/Add Constant'
-     */
-    localDW->AddConstant[sigIdx] = localDW->avg_steering_angle;
   }
 
   /* S-Function (sdspstatminmax): '<S15>/Minimum' incorporates:
@@ -491,27 +530,27 @@ static void Electronics_o(const real_T rtu_TVS_Input[4], const real_T
    *  Abs: '<S15>/Abs1'
    *  Bias: '<S5>/Add Constant'
    *  Constant: '<S15>/Constant7'
-   *  Gain: '<S16>/Gain8'
+   *  MinMax: '<S14>/Min2'
    *  Selector: '<S15>/Selector2'
    */
   rtb_Abs1_tmp = 0;
   rtb_Abs1_tmp_0 = 0;
   for (sigIdx = 0; sigIdx < 4; sigIdx++) {
     localDW->Minimum1_Valdata[rtb_Abs1_tmp_0] = localDW->Abs1[rtb_Abs1_tmp];
-    localDW->Gain8[rtb_Abs1_tmp_0] = 1.0;
+    localDW->Min2[rtb_Abs1_tmp_0] = 1.0;
     rtb_Abs1_tmp++;
     for (j = 0; j < 160; j++) {
       if (localDW->Abs1[rtb_Abs1_tmp] < localDW->Minimum1_Valdata[rtb_Abs1_tmp_0])
       {
         localDW->Minimum1_Valdata[rtb_Abs1_tmp_0] = localDW->Abs1[rtb_Abs1_tmp];
-        localDW->Gain8[rtb_Abs1_tmp_0] = (real_T)j + 2.0;
+        localDW->Min2[rtb_Abs1_tmp_0] = (real_T)j + 2.0;
       }
 
       rtb_Abs1_tmp++;
     }
 
     rtb_Abs1_tmp_0++;
-    localDW->AddConstant[sigIdx] = rtConstP.pooled6[(int32_T)
+    localDW->AddConstant[sigIdx] = rtConstP.pooled5[(int32_T)
       localDW->AddConstant[sigIdx] - 1];
   }
 
@@ -528,7 +567,7 @@ static void Electronics_o(const real_T rtu_TVS_Input[4], const real_T
    *  Gain: '<S15>/Gain2'
    *  Rounding: '<S15>/Floor'
    */
-  localDW->rtb_Gain5_idx_1 = rty_TVS_Output[0] - 10.4719755 * floor
+  localDW->avg_steering_angle = rty_TVS_Output[0] - 10.4719755 * floor
     (localDW->rtb_Gain1_idx_0);
   localDW->rtb_Gain1_idx_0 = rty_TVS_Output[1] - 10.4719755 * floor
     (localDW->rtb_Gain1_idx_1);
@@ -540,54 +579,54 @@ static void Electronics_o(const real_T rtu_TVS_Input[4], const real_T
   /* Sum: '<S15>/Sum2' incorporates:
    *  Constant: '<S15>/Constant8'
    *  Constant: '<S15>/Constant9'
-   *  Gain: '<S16>/Gain8'
+   *  MinMax: '<S14>/Min2'
    *  Product: '<S15>/Divide'
    *  Product: '<S15>/Product1'
    *  Selector: '<S15>/Selector3'
    *  Sum: '<S15>/Sum3'
    */
-  localDW->rtb_Gain1_idx_1 = (rtConstP.pooled6[(int32_T)localDW->Gain8[0] - 1] -
-    localDW->AddConstant[0]) * (localDW->rtb_Gain5_idx_1 / 10.4719755) +
+  localDW->rtb_Gain1_idx_1 = (rtConstP.pooled5[(int32_T)localDW->Min2[0] - 1] -
+    localDW->AddConstant[0]) * (localDW->avg_steering_angle / 10.4719755) +
     localDW->AddConstant[0];
-  localDW->rtb_Gain1_idx_0 = (rtConstP.pooled6[(int32_T)localDW->Gain8[1] - 1] -
+  localDW->rtb_Gain1_idx_0 = (rtConstP.pooled5[(int32_T)localDW->Min2[1] - 1] -
     localDW->AddConstant[1]) * (localDW->rtb_Gain1_idx_0 / 10.4719755) +
     localDW->AddConstant[1];
-  localDW->rtb_Gain1_idx_2 = (rtConstP.pooled6[(int32_T)localDW->Gain8[2] - 1] -
+  localDW->rtb_Gain1_idx_2 = (rtConstP.pooled5[(int32_T)localDW->Min2[2] - 1] -
     localDW->AddConstant[2]) * (localDW->rtb_Gain1_idx_2 / 10.4719755) +
     localDW->AddConstant[2];
-  localDW->rtb_Gain1_idx_3 = (rtConstP.pooled6[(int32_T)localDW->Gain8[3] - 1] -
+  localDW->rtb_Gain1_idx_3 = (rtConstP.pooled5[(int32_T)localDW->Min2[3] - 1] -
     localDW->AddConstant[3]) * (localDW->rtb_Gain1_idx_3 / 10.4719755) +
     localDW->AddConstant[3];
 
   /* Lookup_n-D: '<S15>/1-D Lookup Table' incorporates:
-   *  Gain: '<S16>/Gain8'
+   *  MinMax: '<S14>/Min2'
    */
   localDW->avg_steering_angle = rty_TVS_Output[0];
-  localDW->Gain8[0] = look1_binlg(localDW->avg_steering_angle,
+  localDW->Min2[0] = look1_binlg(localDW->avg_steering_angle,
     rtConstP.uDLookupTable_bp01Data, rtConstP.uDLookupTable_tableData, 67U);
   localDW->avg_steering_angle = rty_TVS_Output[1];
-  localDW->Gain8[1] = look1_binlg(localDW->avg_steering_angle,
+  localDW->Min2[1] = look1_binlg(localDW->avg_steering_angle,
     rtConstP.uDLookupTable_bp01Data, rtConstP.uDLookupTable_tableData, 67U);
   localDW->avg_steering_angle = rty_TVS_Output[2];
-  localDW->Gain8[2] = look1_binlg(localDW->avg_steering_angle,
+  localDW->Min2[2] = look1_binlg(localDW->avg_steering_angle,
     rtConstP.uDLookupTable_bp01Data, rtConstP.uDLookupTable_tableData, 67U);
   localDW->avg_steering_angle = rty_TVS_Output[3];
-  localDW->Gain8[3] = look1_binlg(localDW->avg_steering_angle,
+  localDW->Min2[3] = look1_binlg(localDW->avg_steering_angle,
     rtConstP.uDLookupTable_bp01Data, rtConstP.uDLookupTable_tableData, 67U);
 
   /* Switch: '<S18>/Switch2' incorporates:
    *  Bias: '<S5>/Add Constant'
    *  Gain: '<S15>/Gain4'
-   *  Gain: '<S16>/Gain8'
+   *  MinMax: '<S14>/Min2'
    *  RelationalOperator: '<S18>/LowerRelop1'
    *  RelationalOperator: '<S18>/UpperRelop'
    *  Switch: '<S18>/Switch'
    */
-  if (localDW->rtb_Gain1_idx_1 > localDW->Gain8[0]) {
-    localDW->rtb_Gain1_idx_1 = localDW->Gain8[0];
-  } else if (localDW->rtb_Gain1_idx_1 < -localDW->Gain8[0]) {
+  if (localDW->rtb_Gain1_idx_1 > localDW->Min2[0]) {
+    localDW->rtb_Gain1_idx_1 = localDW->Min2[0];
+  } else if (localDW->rtb_Gain1_idx_1 < -localDW->Min2[0]) {
     /* Switch: '<S18>/Switch' */
-    localDW->rtb_Gain1_idx_1 = -localDW->Gain8[0];
+    localDW->rtb_Gain1_idx_1 = -localDW->Min2[0];
   }
 
   localDW->AddConstant[0] = localDW->rtb_Gain1_idx_1;
@@ -598,16 +637,16 @@ static void Electronics_o(const real_T rtu_TVS_Input[4], const real_T
   /* Switch: '<S18>/Switch2' incorporates:
    *  Bias: '<S5>/Add Constant'
    *  Gain: '<S15>/Gain4'
-   *  Gain: '<S16>/Gain8'
+   *  MinMax: '<S14>/Min2'
    *  RelationalOperator: '<S18>/LowerRelop1'
    *  RelationalOperator: '<S18>/UpperRelop'
    *  Switch: '<S18>/Switch'
    */
-  if (localDW->rtb_Gain1_idx_0 > localDW->Gain8[1]) {
-    localDW->rtb_Gain1_idx_1 = localDW->Gain8[1];
-  } else if (localDW->rtb_Gain1_idx_0 < -localDW->Gain8[1]) {
+  if (localDW->rtb_Gain1_idx_0 > localDW->Min2[1]) {
+    localDW->rtb_Gain1_idx_1 = localDW->Min2[1];
+  } else if (localDW->rtb_Gain1_idx_0 < -localDW->Min2[1]) {
     /* Switch: '<S18>/Switch' */
-    localDW->rtb_Gain1_idx_1 = -localDW->Gain8[1];
+    localDW->rtb_Gain1_idx_1 = -localDW->Min2[1];
   }
 
   localDW->AddConstant[1] = localDW->rtb_Gain1_idx_1;
@@ -618,16 +657,16 @@ static void Electronics_o(const real_T rtu_TVS_Input[4], const real_T
   /* Switch: '<S18>/Switch2' incorporates:
    *  Bias: '<S5>/Add Constant'
    *  Gain: '<S15>/Gain4'
-   *  Gain: '<S16>/Gain8'
+   *  MinMax: '<S14>/Min2'
    *  RelationalOperator: '<S18>/LowerRelop1'
    *  RelationalOperator: '<S18>/UpperRelop'
    *  Switch: '<S18>/Switch'
    */
-  if (localDW->rtb_Gain1_idx_2 > localDW->Gain8[2]) {
-    localDW->rtb_Gain1_idx_1 = localDW->Gain8[2];
-  } else if (localDW->rtb_Gain1_idx_2 < -localDW->Gain8[2]) {
+  if (localDW->rtb_Gain1_idx_2 > localDW->Min2[2]) {
+    localDW->rtb_Gain1_idx_1 = localDW->Min2[2];
+  } else if (localDW->rtb_Gain1_idx_2 < -localDW->Min2[2]) {
     /* Switch: '<S18>/Switch' */
-    localDW->rtb_Gain1_idx_1 = -localDW->Gain8[2];
+    localDW->rtb_Gain1_idx_1 = -localDW->Min2[2];
   }
 
   localDW->AddConstant[2] = localDW->rtb_Gain1_idx_1;
@@ -637,16 +676,16 @@ static void Electronics_o(const real_T rtu_TVS_Input[4], const real_T
 
   /* Switch: '<S18>/Switch2' incorporates:
    *  Gain: '<S15>/Gain4'
-   *  Gain: '<S16>/Gain8'
+   *  MinMax: '<S14>/Min2'
    *  RelationalOperator: '<S18>/LowerRelop1'
    *  RelationalOperator: '<S18>/UpperRelop'
    *  Switch: '<S18>/Switch'
    */
-  if (localDW->rtb_Gain1_idx_3 > localDW->Gain8[3]) {
-    localDW->rtb_Gain1_idx_1 = localDW->Gain8[3];
-  } else if (localDW->rtb_Gain1_idx_3 < -localDW->Gain8[3]) {
+  if (localDW->rtb_Gain1_idx_3 > localDW->Min2[3]) {
+    localDW->rtb_Gain1_idx_1 = localDW->Min2[3];
+  } else if (localDW->rtb_Gain1_idx_3 < -localDW->Min2[3]) {
     /* Switch: '<S18>/Switch' */
-    localDW->rtb_Gain1_idx_1 = -localDW->Gain8[3];
+    localDW->rtb_Gain1_idx_1 = -localDW->Min2[3];
   }
 
   /* Switch: '<S16>/Switch1' incorporates:
@@ -729,13 +768,13 @@ static void Electronics_o(const real_T rtu_TVS_Input[4], const real_T
   localDW->rtb_Gain1_idx_3 = 0.6535 * localDW->avg_steering_angle;
 
   /* Sum: '<S22>/Sum of Elements' */
-  localDW->Gain8[0] = localDW->Square1;
-  localDW->Gain8[1] = localDW->CCaller_o3;
-  localDW->Gain8[2] = localDW->rtb_Gain1_idx_3;
+  localDW->Min2[0] = localDW->Square1;
+  localDW->Min2[1] = localDW->CCaller_o3;
+  localDW->Min2[2] = localDW->rtb_Gain1_idx_3;
   localDW->Square1 = -0.0;
-  localDW->Square1 += localDW->Gain8[0];
-  localDW->Square1 += localDW->Gain8[1];
-  localDW->Square1 += localDW->Gain8[2];
+  localDW->Square1 += localDW->Min2[0];
+  localDW->Square1 += localDW->Min2[1];
+  localDW->Square1 += localDW->Min2[2];
   localDW->Square1 += -0.1061;
 
   /* Math: '<S23>/Square1' */
@@ -759,13 +798,13 @@ static void Electronics_o(const real_T rtu_TVS_Input[4], const real_T
   localDW->avg_steering_angle *= 0.6535;
 
   /* Sum: '<S23>/Sum of Elements' */
-  localDW->Gain8[0] = localDW->CCaller_o3;
-  localDW->Gain8[1] = localDW->rtb_Gain1_idx_3;
-  localDW->Gain8[2] = localDW->avg_steering_angle;
+  localDW->Min2[0] = localDW->CCaller_o3;
+  localDW->Min2[1] = localDW->rtb_Gain1_idx_3;
+  localDW->Min2[2] = localDW->avg_steering_angle;
   localDW->CCaller_o3 = -0.0;
-  localDW->CCaller_o3 += localDW->Gain8[0];
-  localDW->CCaller_o3 += localDW->Gain8[1];
-  localDW->CCaller_o3 += localDW->Gain8[2];
+  localDW->CCaller_o3 += localDW->Min2[0];
+  localDW->CCaller_o3 += localDW->Min2[1];
+  localDW->CCaller_o3 += localDW->Min2[2];
   localDW->CCaller_o3 += 0.1061;
 
   /* SignalConversion generated from: '<S11>/Mean' */
@@ -795,19 +834,19 @@ static void Electronics_o(const real_T rtu_TVS_Input[4], const real_T
   localDW->rtb_UnitDelay_g_idx_3 = localDW->rtb_Gain1_idx_3;
 
   /* Gain: '<S17>/Gain2' */
-  localDW->Gain8[0] = 0.0 * localDW->Square1;
-  localDW->Gain8[1] = 0.0 * localDW->Square1;
-  localDW->Gain8[2] = localDW->Square1;
-  localDW->Gain8[3] = localDW->Square1;
+  localDW->Min2[0] = 0.0 * localDW->Square1;
+  localDW->Min2[1] = 0.0 * localDW->Square1;
+  localDW->Min2[2] = localDW->Square1;
+  localDW->Min2[3] = localDW->Square1;
 
   /* Sum: '<S17>/Add' incorporates:
    *  Gain: '<S17>/Gain'
    *  Gain: '<S17>/Gain2'
    */
-  localDW->rtb_Gain1_idx_0 = localDW->Gain8[0] + rtb_UnitDelay_g_idx_0;
-  localDW->Sum2 = localDW->Gain8[1] + rtb_UnitDelay_g_idx_1;
-  localDW->rtb_Gain1_idx_2 = localDW->Gain8[2] + rtb_UnitDelay_g_idx_2;
-  localDW->DotProduct2 = localDW->Gain8[3] + localDW->rtb_UnitDelay_g_idx_3;
+  localDW->rtb_Gain1_idx_0 = localDW->Min2[0] + rtb_UnitDelay_g_idx_0;
+  localDW->Sum2 = localDW->Min2[1] + rtb_UnitDelay_g_idx_1;
+  localDW->rtb_Gain1_idx_2 = localDW->Min2[2] + rtb_UnitDelay_g_idx_2;
+  localDW->DotProduct2 = localDW->Min2[3] + localDW->rtb_UnitDelay_g_idx_3;
 
   /* Saturate: '<S16>/Max Torque' incorporates:
    *  Gain: '<S16>/Gain8'
@@ -972,11 +1011,10 @@ static void Electronics_o(const real_T rtu_TVS_Input[4], const real_T
    */
   if (*rty_TVS_Output_i != 0.0) {
     /* RelationalOperator: '<S20>/LowerRelop1' */
-    rtb_LowerRelop1_i_idx_0 = (localDW->rtb_Gain1_idx_0 > rty_TVS_Output_k[0]);
-    rtb_LowerRelop1_i_idx_1 = (rtb_UnitDelay_g_idx_1 > rty_TVS_Output_k[1]);
-    rtb_LowerRelop1_i_idx_2 = (localDW->rtb_Gain1_idx_2 > rty_TVS_Output_k[2]);
-    rtb_LowerRelop1_i_idx_3 = (localDW->rtb_UnitDelay_g_idx_3 >
-      rty_TVS_Output_k[3]);
+    rtb_LessThan[0] = (localDW->rtb_Gain1_idx_0 > rty_TVS_Output_k[0]);
+    rtb_LessThan[1] = (rtb_UnitDelay_g_idx_1 > rty_TVS_Output_k[1]);
+    rtb_LessThan[2] = (localDW->rtb_Gain1_idx_2 > rty_TVS_Output_k[2]);
+    rtb_LessThan[3] = (localDW->rtb_UnitDelay_g_idx_3 > rty_TVS_Output_k[3]);
 
     /* RelationalOperator: '<S20>/UpperRelop' */
     rtb_UpperRelop_n_idx_0 = (localDW->rtb_Gain1_idx_0 < rty_TVS_Output_e[0]);
@@ -1015,9 +1053,9 @@ static void Electronics_o(const real_T rtu_TVS_Input[4], const real_T
     }
 
     if (rtb_UpperRelop_n_idx_3) {
-      localDW->rtb_Gain5_idx_1 = rty_TVS_Output_e[3];
+      localDW->avg_steering_angle = rty_TVS_Output_e[3];
     } else {
-      localDW->rtb_Gain5_idx_1 = localDW->rtb_UnitDelay_g_idx_3;
+      localDW->avg_steering_angle = localDW->rtb_UnitDelay_g_idx_3;
     }
 
     /* End of Switch: '<S20>/Switch' */
@@ -1025,23 +1063,23 @@ static void Electronics_o(const real_T rtu_TVS_Input[4], const real_T
     /* Switch: '<S20>/Switch2' incorporates:
      *  RelationalOperator: '<S20>/LowerRelop1'
      */
-    if (rtb_LowerRelop1_i_idx_0) {
+    if (rtb_LessThan[0]) {
       /* Product: '<S17>/Product1' */
       localDW->rtb_Gain1_idx_0 = rty_TVS_Output_k[0];
     }
 
-    if (rtb_LowerRelop1_i_idx_1) {
+    if (rtb_LessThan[1]) {
       /* Product: '<S17>/Product1' */
       localDW->rtb_Gain1_idx_1 = rty_TVS_Output_k[1];
     }
 
-    if (rtb_LowerRelop1_i_idx_2) {
+    if (rtb_LessThan[2]) {
       /* Product: '<S17>/Product1' */
       localDW->rtb_Gain1_idx_2 = rty_TVS_Output_k[2];
     }
 
-    if (rtb_LowerRelop1_i_idx_3) {
-      localDW->rtb_Gain5_idx_1 = rty_TVS_Output_k[3];
+    if (rtb_LessThan[3]) {
+      localDW->avg_steering_angle = rty_TVS_Output_k[3];
     }
 
     localDW->AddConstant[0] = localDW->rtb_Gain1_idx_3 *
@@ -1049,7 +1087,7 @@ static void Electronics_o(const real_T rtu_TVS_Input[4], const real_T
     localDW->AddConstant[1] = localDW->rtb_TmpSignalConversionAtDotP_m *
       localDW->rtb_Gain1_idx_1 * 0.38765914066666662;
     localDW->AddConstant[2] = 0.62102 * localDW->rtb_Gain1_idx_2 * 0.387634;
-    localDW->AddConstant[3] = -0.62102 * localDW->rtb_Gain5_idx_1 * 0.387634;
+    localDW->AddConstant[3] = -0.62102 * localDW->avg_steering_angle * 0.387634;
   } else {
     localDW->AddConstant[0] = 0.0;
     localDW->AddConstant[1] = 0.0;
@@ -1066,29 +1104,50 @@ static void Electronics_o(const real_T rtu_TVS_Input[4], const real_T
   localDW->rtb_Gain1_idx_1 = 0.38765914066666662 *
     localDW->rtb_TmpSignalConversionAtDotP_m;
 
+  /* MinMax: '<S14>/Min2' */
+  localDW->CCaller_o3 = rty_TVS_Output[0];
+  localDW->avg_steering_angle = rty_TVS_Output[1];
+  localDW->Square1 = rty_TVS_Output[2];
+  rtb_Abs_m_idx_0 = rty_TVS_Output[3];
+
   /* Gain: '<S14>/Gain5' */
   localDW->rtb_Gain1_idx_2 = 0.95 * rty_TVS_Output[0];
   localDW->rtb_Gain5_idx_1 = 0.95 * rty_TVS_Output[1];
   localDW->rtb_Gain5_idx_2 = 0.95 * rty_TVS_Output[2];
   localDW->rtb_Gain5_idx_3 = 0.95 * rty_TVS_Output[3];
 
-  /* DotProduct: '<S14>/Dot Product' */
-  localDW->avg_steering_angle = rty_TVS_Output[0];
-  localDW->CCaller_o3 = rty_TVS_Output[1];
-  localDW->Square1 = rty_TVS_Output[2];
-  rtb_Abs_m_idx_0 = rty_TVS_Output[3];
-
   /* Switch: '<S14>/Switch' incorporates:
+   *  MinMax: '<S14>/Min2'
    *  Product: '<S14>/Product'
    *  Product: '<S14>/Product1'
    *  SignalConversion generated from: '<S4>/driver_input'
    */
   if (rtu_TVS_Input_b > 0.0) {
+    /* MinMax: '<S14>/Min2' */
+    if (localDW->CCaller_o3 >= 0.1) {
+    } else {
+      localDW->CCaller_o3 = 0.1;
+    }
+
+    if (localDW->avg_steering_angle >= 0.1) {
+    } else {
+      localDW->avg_steering_angle = 0.1;
+    }
+
+    if (localDW->Square1 >= 0.1) {
+    } else {
+      localDW->Square1 = 0.1;
+    }
+
+    if (!(rtb_Abs_m_idx_0 >= 0.1)) {
+      rtb_Abs_m_idx_0 = 0.1;
+    }
+
     /* DotProduct: '<S14>/Dot Product' incorporates:
      *  Constant: '<S14>/Constant'
      */
-    localDW->avg_steering_angle = ((0.0 * localDW->avg_steering_angle + 0.0 *
-      localDW->CCaller_o3) + 26.315789473684212 * localDW->Square1) +
+    localDW->avg_steering_angle = ((0.0 * localDW->CCaller_o3 + 0.0 *
+      localDW->avg_steering_angle) + 26.315789473684212 * localDW->Square1) +
       26.315789473684212 * rtb_Abs_m_idx_0;
 
     /* MinMax: '<S14>/Min' incorporates:
@@ -1112,11 +1171,32 @@ static void Electronics_o(const real_T rtu_TVS_Input[4], const real_T
     /* End of Saturate: '<S14>/Discharge Limits' */
     *rty_TVS_Output_m = localDW->avg_steering_angle * rtu_TVS_Input_b;
   } else {
+    if (localDW->CCaller_o3 >= 0.1) {
+    } else {
+      /* MinMax: '<S14>/Min2' */
+      localDW->CCaller_o3 = 0.1;
+    }
+
+    /* MinMax: '<S14>/Min2' */
+    if (localDW->avg_steering_angle >= 0.1) {
+    } else {
+      localDW->avg_steering_angle = 0.1;
+    }
+
+    if (localDW->Square1 >= 0.1) {
+    } else {
+      localDW->Square1 = 0.1;
+    }
+
+    if (!(rtb_Abs_m_idx_0 >= 0.1)) {
+      rtb_Abs_m_idx_0 = 0.1;
+    }
+
     /* DotProduct: '<S14>/Dot Product' incorporates:
      *  Constant: '<S14>/Constant'
      */
-    localDW->CCaller_o3 = ((0.0 * localDW->avg_steering_angle + 0.0 *
-      localDW->CCaller_o3) + 26.315789473684212 * localDW->Square1) +
+    localDW->CCaller_o3 = ((0.0 * localDW->CCaller_o3 + 0.0 *
+      localDW->avg_steering_angle) + 26.315789473684212 * localDW->Square1) +
       26.315789473684212 * rtb_Abs_m_idx_0;
 
     /* MinMax: '<S14>/Min1' incorporates:
@@ -1237,10 +1317,10 @@ static void Electronics_o(const real_T rtu_TVS_Input[4], const real_T
   localDW->avg_steering_angle += localDW->AddConstant[3];
 
   /* RelationalOperator: '<S19>/LowerRelop1' */
-  rtb_LowerRelop1_i_idx_0 = (*rty_TVS_Output_d > localDW->avg_steering_angle);
+  rtb_UpperRelop_n_idx_1 = (*rty_TVS_Output_d > localDW->avg_steering_angle);
 
   /* Switch: '<S19>/Switch2' */
-  if (!rtb_LowerRelop1_i_idx_0) {
+  if (!rtb_UpperRelop_n_idx_1) {
     /* Switch: '<S17>/Switch2' incorporates:
      *  Constant: '<S13>/Constant3'
      *  Constant: '<S13>/Constant4'
@@ -1255,34 +1335,34 @@ static void Electronics_o(const real_T rtu_TVS_Input[4], const real_T
       /* RelationalOperator: '<S21>/UpperRelop' incorporates:
        *  RelationalOperator: '<S21>/LowerRelop1'
        */
-      rtb_LowerRelop1_i_idx_0 = (rtb_UnitDelay_g_idx_0 < rty_TVS_Output_e[0]);
-      rtb_LowerRelop1_i_idx_1 = (localDW->Sum2 < rty_TVS_Output_e[1]);
-      rtb_LowerRelop1_i_idx_2 = (rtb_UnitDelay_g_idx_2 < rty_TVS_Output_e[2]);
-      rtb_LowerRelop1_i_idx_3 = (localDW->DotProduct2 < rty_TVS_Output_e[3]);
+      rtb_LessThan[0] = (rtb_UnitDelay_g_idx_0 < rty_TVS_Output_e[0]);
+      rtb_LessThan[1] = (localDW->Sum2 < rty_TVS_Output_e[1]);
+      rtb_LessThan[2] = (rtb_UnitDelay_g_idx_2 < rty_TVS_Output_e[2]);
+      rtb_LessThan[3] = (localDW->DotProduct2 < rty_TVS_Output_e[3]);
 
       /* Switch: '<S21>/Switch' incorporates:
        *  Product: '<S17>/Product2'
        *  RelationalOperator: '<S21>/LowerRelop1'
        */
-      if (rtb_LowerRelop1_i_idx_0) {
+      if (rtb_LessThan[0]) {
         localDW->AddConstant[0] = rty_TVS_Output_e[0];
       } else {
         localDW->AddConstant[0] = rtb_UnitDelay_g_idx_0;
       }
 
-      if (rtb_LowerRelop1_i_idx_1) {
+      if (rtb_LessThan[1]) {
         localDW->AddConstant[1] = rty_TVS_Output_e[1];
       } else {
         localDW->AddConstant[1] = localDW->Sum2;
       }
 
-      if (rtb_LowerRelop1_i_idx_2) {
+      if (rtb_LessThan[2]) {
         localDW->AddConstant[2] = rty_TVS_Output_e[2];
       } else {
         localDW->AddConstant[2] = rtb_UnitDelay_g_idx_2;
       }
 
-      if (rtb_LowerRelop1_i_idx_3) {
+      if (rtb_LessThan[3]) {
         localDW->AddConstant[3] = rty_TVS_Output_e[3];
       } else {
         localDW->AddConstant[3] = localDW->DotProduct2;
@@ -1291,25 +1371,25 @@ static void Electronics_o(const real_T rtu_TVS_Input[4], const real_T
       /* End of Switch: '<S21>/Switch' */
 
       /* RelationalOperator: '<S21>/LowerRelop1' */
-      rtb_LowerRelop1_i_idx_0 = (rtb_UnitDelay_g_idx_0 > rty_TVS_Output_k[0]);
-      rtb_LowerRelop1_i_idx_1 = (localDW->Sum2 > rty_TVS_Output_k[1]);
-      rtb_LowerRelop1_i_idx_2 = (rtb_UnitDelay_g_idx_2 > rty_TVS_Output_k[2]);
-      rtb_LowerRelop1_i_idx_3 = (localDW->DotProduct2 > rty_TVS_Output_k[3]);
+      rtb_LessThan[0] = (rtb_UnitDelay_g_idx_0 > rty_TVS_Output_k[0]);
+      rtb_LessThan[1] = (localDW->Sum2 > rty_TVS_Output_k[1]);
+      rtb_LessThan[2] = (rtb_UnitDelay_g_idx_2 > rty_TVS_Output_k[2]);
+      rtb_LessThan[3] = (localDW->DotProduct2 > rty_TVS_Output_k[3]);
 
       /* Switch: '<S21>/Switch2' incorporates:
        *  RelationalOperator: '<S21>/LowerRelop1'
        */
-      if (rtb_LowerRelop1_i_idx_0) {
+      if (rtb_LessThan[0]) {
         /* Product: '<S17>/Product2' */
         localDW->AddConstant[0] = rty_TVS_Output_k[0];
       }
 
-      if (rtb_LowerRelop1_i_idx_1) {
+      if (rtb_LessThan[1]) {
         /* Product: '<S17>/Product2' */
         localDW->AddConstant[1] = rty_TVS_Output_k[1];
       }
 
-      if (rtb_LowerRelop1_i_idx_2) {
+      if (rtb_LessThan[2]) {
         /* Product: '<S17>/Product2' */
         localDW->AddConstant[2] = rty_TVS_Output_k[2];
       }
@@ -1320,7 +1400,7 @@ static void Electronics_o(const real_T rtu_TVS_Input[4], const real_T
        *  Product: '<S17>/Product2'
        *  RelationalOperator: '<S21>/LowerRelop1'
        */
-      if (rtb_LowerRelop1_i_idx_3) {
+      if (rtb_LessThan[3]) {
         localDW->avg_steering_angle = rty_TVS_Output_k[3];
       }
 
@@ -1347,10 +1427,10 @@ static void Electronics_o(const real_T rtu_TVS_Input[4], const real_T
                      rtb_UnitDelay_g_idx_2) + localDW->rtb_UnitDelay_g_idx_3;
 
     /* RelationalOperator: '<S19>/UpperRelop' */
-    rtb_LowerRelop1_i_idx_0 = (*rty_TVS_Output_d < localDW->Sum2);
+    rtb_UpperRelop_n_idx_1 = (*rty_TVS_Output_d < localDW->Sum2);
 
     /* Switch: '<S19>/Switch' */
-    if (rtb_LowerRelop1_i_idx_0) {
+    if (rtb_UpperRelop_n_idx_1) {
       localDW->avg_steering_angle = localDW->Sum2;
     } else {
       localDW->avg_steering_angle = *rty_TVS_Output_d;
@@ -1367,13 +1447,13 @@ static void Electronics_o(const real_T rtu_TVS_Input[4], const real_T
   /* RelationalOperator: '<S17>/Equal' incorporates:
    *  Constant: '<S17>/Constant4'
    */
-  rtb_LowerRelop1_i_idx_0 = (localDW->Square1 < 0.01);
+  rtb_UpperRelop_n_idx_1 = (localDW->Square1 < 0.01);
 
   /* Switch: '<S17>/Switch' incorporates:
    *  Constant: '<S17>/Constant5'
    *  Constant: '<S17>/Constant6'
    */
-  if (rtb_LowerRelop1_i_idx_0) {
+  if (rtb_UpperRelop_n_idx_1) {
     localDW->Square1 = 0.0001;
   } else {
     localDW->Square1 = 0.0;
@@ -1628,8 +1708,9 @@ void Electronics_step(RT_MODEL *const rtM, ExtU *rtU, ExtY *rtY)
    *  Outport: '<Root>/ub'
    *  Outport: '<Root>/windup'
    */
-  Electronics_o(rtU->omega, rtU->vel, rtU->steering_angle, rtU->driver_input,
-                rtU->ang_vel, rtU->power_limits, rtY->Tx, &rtY->bigM_flag,
+  Electronics_o(rtU->omega, rtU->motor_temperature, rtU->vel,
+                rtU->steering_angle, rtU->driver_input, rtU->ang_vel,
+                rtU->power_limits, rtY->Tx, &rtY->bigM_flag,
                 &rtY->Control_Signal, &rtY->windup, &rtY->reset, &rtY->ref_yaw,
                 rtY->ub, rtY->lb, &rtY->b, &rtY->beq, &rtDW->Electronics_o4);
 

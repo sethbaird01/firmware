@@ -18,12 +18,22 @@
 // Make this match the node name within the can_config.json
 #define NODE_NAME "Main_Module"
 
+// Used to represent a float as 32 bits
+typedef union {
+    float f;
+    uint32_t u;
+} FloatConvert_t;
+#define FLOAT_TO_UINT32(float_) (((FloatConvert_t) float_).u)
+#define UINT32_TO_FLOAT(uint32_) (((FloatConvert_t) ((uint32_t) uint32_)).f)
+
+
 // Message ID definitions
 /* BEGIN AUTO ID DEFS */
 #define ID_MAIN_HB 0x4001901
 #define ID_TORQUE_REQUEST_MAIN 0x4000041
 #define ID_FLOWRATE_TEMPS 0x4000881
 #define ID_LWS_CONFIG 0x7c0
+#define ID_TV_OUT 0x4001941
 #define ID_DAQ_RESPONSE_MAIN_MODULE 0x17ffffc1
 #define ID_RAW_THROTTLE_BRAKE 0x14000285
 #define ID_START_BUTTON 0x4000005
@@ -50,6 +60,7 @@
 #define DLC_TORQUE_REQUEST_MAIN 8
 #define DLC_FLOWRATE_TEMPS 6
 #define DLC_LWS_CONFIG 2
+#define DLC_TV_OUT 5
 #define DLC_DAQ_RESPONSE_MAIN_MODULE 8
 #define DLC_RAW_THROTTLE_BRAKE 3
 #define DLC_START_BUTTON 1
@@ -106,6 +117,13 @@
         data_a->LWS_Config.Reserved_2 = Reserved_2_;\
         qSendToBack(&queue, &msg);\
     } while(0)
+#define SEND_TV_OUT(queue, b_, bigM_flag_) do {\
+        CanMsgTypeDef_t msg = {.Bus=CAN1, .ExtId=ID_TV_OUT, .DLC=DLC_TV_OUT, .IDE=1};\
+        CanParsedData_t* data_a = (CanParsedData_t *) &msg.Data;\
+        data_a->TV_Out.b = FLOAT_TO_UINT32(b_);\
+        data_a->TV_Out.bigM_flag = bigM_flag_;\
+        qSendToBack(&queue, &msg);\
+    } while(0)
 #define SEND_DAQ_RESPONSE_MAIN_MODULE(queue, daq_response_) do {\
         CanMsgTypeDef_t msg = {.Bus=CAN1, .ExtId=ID_DAQ_RESPONSE_MAIN_MODULE, .DLC=DLC_DAQ_RESPONSE_MAIN_MODULE, .IDE=1};\
         CanParsedData_t* data_a = (CanParsedData_t *) &msg.Data;\
@@ -145,6 +163,13 @@ typedef enum {
     CAR_STATE_RESET,
     CAR_STATE_RECOVER,
 } car_state_t;
+
+typedef enum {
+    BIGM_FLAG_INFEASIBLE,
+    BIGM_FLAG_OK1,
+    BIGM_FLAG_UNBOUNDED,
+    BIGM_FLAG_OK3,
+} bigM_flag_t;
 
 typedef enum {
     FRONT_LEFT_MOTOR_DISCONNECTED,
@@ -265,6 +290,10 @@ typedef union { __attribute__((packed))
         uint64_t Reserved_1: 5;
         uint64_t Reserved_2: 8;
     } LWS_Config;
+    struct {
+        uint64_t b: 32;
+        uint64_t bigM_flag: 8;
+    } TV_Out;
     struct {
         uint64_t daq_response: 64;
     } daq_response_MAIN_MODULE;

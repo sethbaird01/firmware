@@ -7,9 +7,9 @@
  *
  * Code generated for Simulink model 'Electronics'.
  *
- * Model version                  : 1.223
+ * Model version                  : 1.228
  * Simulink Coder version         : 9.7 (R2022a) 13-Nov-2021
- * C/C++ source code generated on : Sun Nov  6 18:26:17 2022
+ * C/C++ source code generated on : Tue Nov 15 21:53:05 2022
  *
  * Target selection: ert.tlc
  * Embedded hardware selection: ARM Compatible->ARM Cortex-M
@@ -27,6 +27,7 @@
 #endif                                 /* Electronics_COMMON_INCLUDES_ */
 
 #include "Electronics_types.h"
+
 
 /* Macros for accessing real-time model data structure */
 #ifndef rtmGetErrorStatus
@@ -46,7 +47,7 @@ typedef struct {
   real_T Abs_i[644];                   /* '<S15>/Abs' */
   real_T Abs1[644];                    /* '<S15>/Abs1' */
   real_T AddConstant[4];               /* '<S5>/Add Constant' */
-  real_T Gain8[4];                     /* '<S16>/Gain8' */
+  real_T Min2[4];                      /* '<S14>/Min2' */
   real_T UnitDelay5_DSTATE;            /* '<S17>/Unit Delay5' */
   real_T UnitDelay1_DSTATE;            /* '<S17>/Unit Delay1' */
   real_T DiscreteTimeIntegrator_DSTATE;/* '<S9>/Discrete-Time Integrator' */
@@ -83,21 +84,21 @@ typedef struct {
    *   '<S15>/Constant3'
    *   '<S15>/Constant5'
    */
-  real_T pooled5[161];
+  real_T pooled4[161];
 
   /* Pooled Parameter (Expression: torque_sweep)
    * Referenced by:
    *   '<S15>/Constant7'
    *   '<S15>/Constant8'
    */
-  real_T pooled6[161];
+  real_T pooled5[161];
 
   /* Pooled Parameter (Expression: power_loss_grid)
    * Referenced by:
    *   '<S15>/Constant1'
    *   '<S15>/Constant4'
    */
-  real_T pooled9[17227];
+  real_T pooled8[17227];
 
   /* Expression: max_torque
    * Referenced by: '<S15>/1-D Lookup Table'

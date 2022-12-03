@@ -68,8 +68,8 @@ usart_init_t huart_l = {
     .parity      = PT_NONE,
     .obsample    = OB_DISABLE,
     .ovsample    = OV_16,
-    .adv_feature.rx_inv    = true,
-    .adv_feature.tx_inv    = true,
+    .adv_feature.rx_inv    = false,
+    .adv_feature.tx_inv    = false,
     .adv_feature.auto_baud = false,
     .adv_feature.data_inv  = false,
     .adv_feature.msb_first = false,
@@ -90,8 +90,8 @@ usart_init_t huart_r = {
     .parity      = PT_NONE,
     .obsample    = OB_DISABLE,
     .ovsample    = OV_16,
-    .adv_feature.rx_inv    = true,
-    .adv_feature.tx_inv    = true,
+    .adv_feature.rx_inv    = false,
+    .adv_feature.tx_inv    = false,
     .adv_feature.auto_baud = false,
     .adv_feature.data_inv  = false,
     .adv_feature.msb_first = false,
@@ -159,8 +159,13 @@ static ExtY rtY;                       /* External outputs */
 static RT_MODEL rtM_;
 static RT_MODEL *const rtMPtr = &rtM_; /* Real-time model */                       /* Observable states */
 static RT_MODEL *const rtM = rtMPtr;
+static DW rtDW;                        /* Observable states */
+
+uint32_t N = 0;
+float k_avg = 0.1;
 
 int main(void)
+
 {
     /* Data Struct init */
     qConstruct(&q_tx_can, sizeof(CanMsgTypeDef_t));
@@ -257,6 +262,8 @@ void preflightChecks(void) {
             /* Module init */
             initCANParse(&q_rx_can);
             wheelSpeedsInit();
+            rtM->dwork = &rtDW;
+            MC_PL0_initialize(rtM);
             break;
         case 5:
             // Left MC
@@ -335,27 +342,29 @@ void commandTorquePeriodic()
     float pow_left  = (float) CLAMP(can_data.torque_request_main.rear_left, -4095, 4095);
     float pow_right = (float) CLAMP(can_data.torque_request_main.rear_right, -4095, 4095);
     #endif
+
     // pow_left = (float) mot_left_req;
     // pow_right = (float) mot_right_req;
-    //pow_left  = pow_left  * 100.0 / 4095.0;
-    //pow_right = pow_right * 100.0 / 4095.0;
 
-    //rtU.Txx = can_data.torque_request_main.rear_left * (25.0 / 4095.0);
-    //rtU.Wxx = can_data.rear_wheel_data.left_speed * (1.0/100.0 * 0.278);
-    MC_PL_pp(&rtU);
-    rt_OneStep(rtM);
-    pow_left = rtY.k[3];
-    pow_right = rtY.k[4];
+    // Power Limiting
+    MC_PL_pp(&rtU, &motor_left, &motor_right);
+    //rt_OneStep(rtM);
+    //pow_left = rtY.k[2] * 100.0 / 4095.0;
+    //pow_right = rtY.k[3] * 100.0 / 4095.0;
 
-    //rtU.Txx = can_data.torque_request_main.rear_right * (25.0 / 4095.0);
-    //rtU.Wxx = can_data.rear_wheel_data.right_speed * (1.0/100.0 * 0.278);
-    //MC_PL_pp(&rtU);
-    //rt_OneStep();
-    //pow_right = 100*rtY.k;
+    // No Power Limiting
+    pow_left = rtU.Tx[2] * 100.0 / 25.0;
+    pow_right = rtU.Tx[3] * 100.0 / 25.0;
 
     // Prevent regenerative braking, functionality not yet implemented
     if (pow_left < 0)  pow_left  = 0.0;
     if (pow_right < 0) pow_right = 0.0;
+
+    //if (pow_left > 0)
+    //{
+    //    k_avg = (k_avg*N + pow_left)/(N+1);
+    //    N = N + 1;
+    //}
 
     // Only drive if ready
     if (can_data.main_hb.car_state != CAR_STATE_READY2DRIVE || 

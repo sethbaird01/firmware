@@ -1,7 +1,7 @@
 #include "Electronics.h" 
 
 // Calibration
-#define OMEGA_CALIBRATION 1.0 / 360.0
+#define OMEGA_CALIBRATION 1.0 / (360.0 * 0.2286)
 #define STEERING_ANGLE_CALIBRATION 0.1
 #define DRIVER_INPUT_CALIBRATION 1.0 / 4095.0
 #define VOLTAGE_CALIBRATION 1.0
@@ -27,10 +27,10 @@
 #define MIN_ACCEL -30.0
 #define MAX_ACCEL 30.0
 
-#define MIN_OMEGA 0.0
+#define MIN_OMEGA 0.01
 #define MAX_OMEGA 150.0
 
-#define MIN_VEL 0.0
+#define MIN_VEL 0.01
 #define MAX_VEL 30.0
 
 #define MIN_SHOCK_D 0.1

@@ -168,7 +168,7 @@ void carPeriodic()
 
         // SEND_TORQUE_REQUEST_MAIN(q_tx_can, t_req, t_req, t_req, t_req);
         
-        can_data.raw_throttle_brake.throttle = 4095 * 0.15;
+        // can_data.raw_throttle_brake.throttle = 4095 * 0.15;
 
         // t_temp = (t_temp > 469) ? 0 : t_temp + 1;
 
@@ -183,6 +183,12 @@ void carPeriodic()
         // TODO: fix steering for ediff
         torque_r.torque_left = (int16_t)(rtY.Tx[2]*(4095.0/25.0));
         torque_r.torque_right = (int16_t)(rtY.Tx[3]*(4095.0/25.0));
+
+        if (adjusted_throttle <= 0) 
+        {
+            torque_r.torque_left = 0;
+            torque_r.torque_right = 0;
+        }
 
         // check torque request (FSAE rule)
         // if(torque_r.torque_left > t_req)
@@ -199,7 +205,8 @@ void carPeriodic()
         // if (torque_r.torque_right < 0) torque_r.torque_right = 0;
 
         SEND_TORQUE_REQUEST_MAIN(q_tx_can, 0, 0, torque_r.torque_left, torque_r.torque_right);
-        // bypased for daq testing TODO: remove
+        SEND_TV_OUT(q_tx_can, rtY.b, (uint8_t) rtY.bigM_flag);
+        
         // if (mot_left_req > 4095 || mot_right_req > 4095) mot_left_req = mot_right_req = 0;
         // SEND_TORQUE_REQUEST_MAIN(q_tx_can, 0, 0, (int16_t) mot_left_req, (int16_t) mot_right_req);
 

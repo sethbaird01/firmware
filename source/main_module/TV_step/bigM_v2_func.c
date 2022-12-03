@@ -1,20 +1,20 @@
 #include "bigM_v2_func.h"
 
-static const double epsilon   = 1.0e-8;
-int equal(double a, double b) { return fabs(a-b) < epsilon; }
+static const float epsilon   = 1.0e-8;
+int equal(float a, float b) { return fabs(a-b) < epsilon; }
 
 // return: flag
 //         -1 = default, 0 = infeasible (not mathematically), 1 = too many iterations (20)
 //          2 = unbounded (no pivot row), 3 = optimal solution within yaw_err_limit
-int bigM_func(double T2F_1, double T2F_2, double T2F_3, double T2F_4, double b, 
-  double A_1, double A_2, double A_3, double A_4, double beq, double Aeq_1, 
-  double Aeq_2, double Aeq_3, double Aeq_4, double lb_1, double lb_2, double lb_3,
-  double lb_4, double ub_1, double ub_2, double ub_3, double ub_4, double* T1, double* T2,
-  double* T3, double* T4, double yaw_err_limit)
+int bigM_func(float T2F_1, float T2F_2, float T2F_3, float T2F_4, float b, 
+  float A_1, float A_2, float A_3, float A_4, float beq, float Aeq_1, 
+  float Aeq_2, float Aeq_3, float Aeq_4, float lb_1, float lb_2, float lb_3,
+  float lb_4, float ub_1, float ub_2, float ub_3, float ub_4, float* T1, float* T2,
+  float* T3, float* T4, float yaw_err_limit)
 { // Tx_sign = -1 when negative, = 1 when positive
 
   int flag = 0; // flag for Simplex
-  double yaw_err;
+  float yaw_err;
 
   Tableau tab = {11, 24, {
     {0,     -T2F_1, -T2F_2, -T2F_3, -T2F_4, 0, 0, 0, 0, 0, 0, 0, 0, 0, bM, bM, bM, bM, bM, 0, 0, 0, 0, 1, },
@@ -77,7 +77,7 @@ int bigM_func(double T2F_1, double T2F_2, double T2F_3, double T2F_4, double b,
 
 void pivot_on(Tableau *tab, int row, int col) {
   int i, j;
-  double pivot;
+  float pivot;
 
   pivot = tab->mat[row][col];
 
@@ -85,7 +85,7 @@ void pivot_on(Tableau *tab, int row, int col) {
     tab->mat[row][j] /= pivot;
 
   for(i=0; i<tab->m; i++) { // foreach remaining row i do
-    double multiplier = tab->mat[i][col];
+    float multiplier = tab->mat[i][col];
     if(i==row) continue;
     for(j=0; j<tab->n; j++) { // r[i] = r[i] - z * r[row];
       tab->mat[i][j] -= multiplier * tab->mat[row][j];
@@ -96,7 +96,7 @@ void pivot_on(Tableau *tab, int row, int col) {
 // Find pivot_col = most negative column in mat[0][1..n]
 int find_pivot_column(Tableau *tab) {
   int j, pivot_col = 1;
-  double lowest = tab->mat[0][pivot_col];
+  float lowest = tab->mat[0][pivot_col];
   for(j=1; j<tab->n; j++) {
     if (tab->mat[0][j] < lowest) {
       lowest = tab->mat[0][j];
@@ -112,12 +112,12 @@ int find_pivot_column(Tableau *tab) {
 
 int find_pivot_row(Tableau *tab, int pivot_col) {
   int i, pivot_row = 0;
-  double min_ratio = -1;
+  float min_ratio = -1.0F;
 
   for(i=1;i<tab->m;i++){
-    double ratio = tab->mat[i][0] / tab->mat[i][pivot_col];
+    float ratio = tab->mat[i][0] / (tab->mat[i][pivot_col] + 0.0001);
 
-    if ( (ratio > 0  && ratio < min_ratio ) || min_ratio < 0 ) {
+    if ( (ratio > 0.0F  && ratio < min_ratio ) || min_ratio < 0.0F ) {
       min_ratio = ratio;
       pivot_row = i;
     }
@@ -141,7 +141,7 @@ void check_b_positive(Tableau *tab) {
   int i;
   for(i=1; i<tab->m; i++)
     i = i;
-    assert(tab->mat[i][0] >= 0);
+    issert(tab->mat[i][0] >= 0);
 }
 
 // Given a column of identity matrix, find the row containing 1.
@@ -163,7 +163,7 @@ int find_basis_variable(Tableau *tab, int col) {
 }
   
 
-int simplex(Tableau *tab, double* T1, double* T2, double* T3, double* T4) {
+int simplex(Tableau *tab, float* T1, float* T2, float* T3, float* T4) {
   int loop=0;
   int flag = -1;
 
@@ -194,7 +194,7 @@ int simplex(Tableau *tab, double* T1, double* T2, double* T3, double* T4) {
   return 0;
 }
 
-void print_optimal_vector(Tableau *tab, double* T1, double* T2, double* T3, double* T4){
+void print_optimal_vector(Tableau *tab, float* T1, float* T2, float* T3, float* T4){
   int j, xi;
   j = 1;
   xi = find_basis_variable(tab, j);

@@ -7,9 +7,9 @@
  *
  * Code generated for Simulink model 'MC_PL0'.
  *
- * Model version                  : 1.223
+ * Model version                  : 1.265
  * Simulink Coder version         : 9.7 (R2022a) 13-Nov-2021
- * C/C++ source code generated on : Sun Nov  6 18:42:13 2022
+ * C/C++ source code generated on : Fri Dec  2 23:38:52 2022
  *
  * Target selection: ert.tlc
  * Embedded hardware selection: ARM Compatible->ARM Cortex-M
@@ -23,6 +23,9 @@
 #define RTW_HEADER_MC_PL0_types_h_
 
 /* Model Code Variants */
+
+/* Parameters (default storage) */
+typedef struct P_ P;
 
 /* Forward declaration for rtModel */
 typedef struct tag_RTM RT_MODEL;

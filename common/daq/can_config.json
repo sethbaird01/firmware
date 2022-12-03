@@ -56,6 +56,18 @@
                             "msg_period": 0,
                             "msg_id_override": "0x7C0",
                             "is_normal":true
+                        },
+                        {
+                            "msg_name": "TV_Out",
+                            "msg_desc": "TV outputs",
+                            "signals": [
+                                {"sig_name": "b", "type": "float", "units":"Watts"},
+                                {"sig_name": "bigM_flag", "type": "uint8_t", "units":"Flag",
+                                 "choices": ["infeasible", "ok1", "unbounded", "ok3"]}
+                            ],
+                            "msg_period": 0,
+                            "msg_hlp":1,
+                            "msg_pgn":101
                         }
                     ],
                     "rx":[
