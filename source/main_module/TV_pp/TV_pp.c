@@ -46,10 +46,10 @@ rtU->motor_temperature[1] = CLAMP(55.0, MIN_MOTOR_T, MAX_MOTOR_T);
 rtU->motor_temperature[2] = CLAMP(55.0, MIN_MOTOR_T, MAX_MOTOR_T);
 rtU->motor_temperature[3] = CLAMP(55.0, MIN_MOTOR_T, MAX_MOTOR_T);
 
-rtU->battery_voltage = CLAMP(can_data.orion_currents_volts.pack_voltage * VOLTAGE_CALIBRATION, MIN_VOLTAGE, MAX_VOLTAGE);
+//rtU->battery_voltage = CLAMP(can_data.orion_currents_volts.pack_voltage * VOLTAGE_CALIBRATION, MIN_VOLTAGE, MAX_VOLTAGE);
 
-rtU->power_limits[0] = CLAMP(can_data.orion_currents_volts.pack_voltage * can_data.orion_info.pack_dcl * CURRENT_CALIBRATION, 0, MAX_BATTERY_POWER);
-rtU->power_limits[1] = CLAMP(can_data.orion_currents_volts.pack_voltage * can_data.orion_info.pack_ccl * CURRENT_CALIBRATION, 0, MIN_BATTERY_POWER);
+//rtU->power_limits[0] = CLAMP(can_data.orion_currents_volts.pack_voltage * VOLTAGE_CALIBRATION * can_data.orion_info.pack_dcl * CURRENT_CALIBRATION, 0, MAX_BATTERY_POWER);
+//rtU->power_limits[1] = CLAMP(can_data.orion_currents_volts.pack_voltage * VOLTAGE_CALIBRATION * can_data.orion_info.pack_ccl * CURRENT_CALIBRATION, 0, MIN_BATTERY_POWER);
 
 // Temporary
 rtU->FZ[0] = CLAMP(1200.0, MIN_FZ, MAX_FZ);
@@ -61,8 +61,8 @@ rtU->ang[0] = CLAMP(0.0 * ANGLE_CALIBRATION, MIN_ANG, MAX_ANG);
 rtU->ang[1] = CLAMP(0.0 * ANGLE_CALIBRATION, MIN_ANG, MAX_ANG);
 rtU->ang[2] = CLAMP(0.0 * ANGLE_CALIBRATION, MIN_ANG, MAX_ANG);
 
-//rtU->battery_voltage = CLAMP(200.0, MIN_VOLTAGE, MAX_VOLTAGE);
+rtU->battery_voltage = CLAMP(300.0, MIN_VOLTAGE, MAX_VOLTAGE);
 
-//rtU->power_limits[0] = CLAMP(40000.0, 0.0, MAX_BATTERY_POWER);
-//rtU->power_limits[1] = CLAMP(40000.0, 0.0, MIN_BATTERY_POWER);
+rtU->power_limits[0] = CLAMP(80000.0, 0.0, MAX_BATTERY_POWER);
+rtU->power_limits[1] = CLAMP(80000.0, 0.0, MIN_BATTERY_POWER);
 }

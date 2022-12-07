@@ -30,15 +30,15 @@ void MC_PL_pp(ExtU* rtU, motor_t* motor_left, motor_t* motor_right) {
     rtU->Motor_I[2] = CLAMP(motor_left->current_x10 * CURRENT_CALIBRATION, MIN_MOTOR_CURRENT, MAX_MOTOR_CURRENT);
     rtU->Motor_I[3] = CLAMP(motor_right->current_x10 * CURRENT_CALIBRATION, MIN_MOTOR_CURRENT, MAX_MOTOR_CURRENT);
 
-    //rtU->power_limits[0] = CLAMP(1500.0, 0.0, MAX_BATTERY_POWER);
-    //rtU->power_limits[1] = CLAMP(0.0, 0.0, MIN_BATTERY_POWER);
+    rtU->power_limits[0] = CLAMP(3000.0, 0.0, MAX_BATTERY_POWER);
+    rtU->power_limits[1] = CLAMP(0.0, 0.0, MIN_BATTERY_POWER);
 
     //rtU->Motor_V[0] = CLAMP(can_data.orion_currents_volts.pack_voltage * VOLTAGE_CALIBRATION, MIN_VOLTAGE, MAX_VOLTAGE);
     //rtU->Motor_V[1] = CLAMP(can_data.orion_currents_volts.pack_voltage * VOLTAGE_CALIBRATION, MIN_VOLTAGE, MAX_VOLTAGE);
     //rtU->Motor_V[2] = CLAMP(can_data.orion_currents_volts.pack_voltage * VOLTAGE_CALIBRATION, MIN_VOLTAGE, MAX_VOLTAGE);
     //rtU->Motor_V[3] = CLAMP(can_data.orion_currents_volts.pack_voltage * VOLTAGE_CALIBRATION, MIN_VOLTAGE, MAX_VOLTAGE);
 
-    rtU->power_limits[0] = CLAMP(can_data.orion_currents_volts.pack_voltage * can_data.orion_info.pack_dcl, 0, MAX_BATTERY_POWER);
-    rtU->power_limits[1] = CLAMP(can_data.orion_currents_volts.pack_voltage * can_data.orion_info.pack_ccl, 0, MIN_BATTERY_POWER);
+    //rtU->power_limits[0] = CLAMP(can_data.orion_currents_volts.pack_voltage * VOLTAGE_CALIBRATION * can_data.orion_info.pack_dcl, 0, MAX_BATTERY_POWER);
+    //rtU->power_limits[1] = CLAMP(can_data.orion_currents_volts.pack_voltage * VOLTAGE_CALIBRATION * can_data.orion_info.pack_ccl, 0, MIN_BATTERY_POWER);
 
 }
