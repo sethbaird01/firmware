@@ -9,8 +9,8 @@
 #include "stm32l432xx.h"
 #include "string.h"
 
-#define MC_MAX_TX_LENGTH (25)
-#define MC_MAX_RX_LENGTH (77 + MC_MAX_TX_LENGTH)
+#define MC_MAX_TX_LENGTH (64)
+#define MC_MAX_RX_LENGTH (77 + 25)
 
 // Connection times
 #define MC_LOOP_DT (15) // Periodic update rate of motor controller task
@@ -94,7 +94,7 @@ typedef struct
 } motor_t;
 
 void mcInit(motor_t *m, bool is_inverted, q_handle_t *tx_queue);
-void mcSetPower(float power, motor_t *m);
 void mcPeriodic(motor_t *m);
+void mcSetPower(float power, motor_t *m);
 
 #endif

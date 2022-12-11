@@ -1,5 +1,6 @@
 #include "MC_PL0.h"
 #include "plettenberg.h"
+#include "testbench.h"
 
 // Calibration
 #define VOLTAGE_CALIBRATION 0.1
@@ -27,4 +28,4 @@
 #define MIN_MOTOR_CURRENT 0.0
 #define MAX_MOTOR_CURRENT 75.0
 
-void MC_PL_pp(ExtU* rtU, motor_t* motor_left, motor_t* motor_right);
+void MC_PL_pp(ExtU* rtU, motor_t* motor_left, micro_t* micro);

@@ -40,10 +40,13 @@ static uint16_t mc_param_vals[] = {MC_RPM_LIMIT, MC_CURRENT_LIMIT, MC_CURRENT_LI
 
 // Local prototypes
 static void mcSetParam(char *param, uint16_t value, motor_t *m);
+
 static void mcSendTwoByteCmd(char *param, motor_t *m);
 static void mcSendOneByteCmd(char command, motor_t *m);
+
 static uint8_t mcCheckLinkState(motor_t* m);
 static uint8_t mcUpdateConfig(motor_t* m);
+
 static void mcParseMessage(motor_t *m);
 static int16_t mcParseTerm(char *rx_buf, uint8_t start, char *search_term, uint32_t *val_addr);
 
@@ -70,7 +73,6 @@ void mcInit(motor_t *m, bool is_inverted, q_handle_t *tx_queue){
 
         return;
 }
-
 
 /**
  * @brief Sets the motor power if connected
@@ -146,7 +148,6 @@ void mcSetPower(float power, motor_t *m)
     m->curr_power_x10 = pow_x10;
 }
 
-
 /**
  * @brief Sets a 5 byte adjust mode parameter
  *        Must first call mcSetParamStart
@@ -168,7 +169,6 @@ static void mcSetParam(char *param, uint16_t value, motor_t *m)
     cmd[5] = '\0';
     qSendToBack(m->tx_queue, cmd);
 }
-
 
 /**
  * @brief Sends a two byte command to the MC
@@ -199,36 +199,6 @@ static void mcSendOneByteCmd(char command, motor_t *m)
     qSendToBack(m->tx_queue, cmd);
 }
 
-
-/**
- * @brief Updates motor connection state and parses
- *        periodic status message
- * 
- * @param m      The motor controller to update
- */
-void mcPeriodic(motor_t* m) 
-{
-    // Parse if recent data and update timing
-    if (sched.os_ticks - m->last_msg_time < 3 * MC_LOOP_DT / 2)
-        mcParseMessage(m);
-    m->data_stale = (sched.os_ticks - m->last_parse_time > MC_PARSE_TIMEOUT);
-
-    if (!mcCheckLinkState(m))
-    {
-        // in case of false disconnect, stop rotation
-        if (m->motor_state != MC_DISCONNECTED) mcSetPower(0.0, m);
-        m->motor_state = MC_DISCONNECTED;
-        m->config_step = 0;
-        return; // Don't even try other stuff if disconnected
-    }
-    if (!m->config_sent)
-    {
-        m->motor_state = MC_CONFIG;
-        mcUpdateConfig(m);
-    }
-}
-
-
 /**
  * @brief Updates motor link state based on
  *        last received message times
@@ -243,8 +213,7 @@ static uint8_t mcCheckLinkState(motor_t* m)
     uint8_t i;
 
     // check for disconnect
-    if (sched.os_ticks - m->last_rx_time > MC_RX_LARGE_TIMEOUT_MS ||
-        !can_data.main_hb.precharge_state)
+    if (sched.os_ticks - m->last_rx_time > MC_RX_LARGE_TIMEOUT_MS)
     {
         m->last_link_error = MC_LINK_ERROR_GEN_TIMEOUT;
         m->link_state = MC_LINK_DISCONNECTED;
@@ -269,7 +238,7 @@ static uint8_t mcCheckLinkState(motor_t* m)
             for (i = 0; i < MC_MAX_RX_LENGTH; ++i)      // Copy buffer to prevent from changing
                 tmp_rx_buf[i] = m->rx_buf[i];
             search_idx = mcParseTerm(tmp_rx_buf, 0, "S=", &throwaway);
-            if (search_idx != -1 && can_data.main_hb.precharge_state)
+            if (search_idx != -1)
             {
                 m->link_state = MC_LINK_DELAY;
                 m->init_time = 0;
@@ -328,7 +297,6 @@ static uint8_t mcCheckLinkState(motor_t* m)
     return m->link_state == MC_LINK_CONNECTED;
 }
 
-
 /**
  * @brief Send motor configuration params via
  *        adjust mode
@@ -376,6 +344,33 @@ static uint8_t mcUpdateConfig(motor_t* m)
     return 0;
 }
 
+/**
+ * @brief Updates motor connection state and parses
+ *        periodic status message
+ * 
+ * @param m      The motor controller to update
+ */
+void mcPeriodic(motor_t* m) 
+{
+    // Parse if recent data and update timing
+    if (sched.os_ticks - m->last_msg_time < 3 * MC_LOOP_DT / 2)
+        mcParseMessage(m);
+    m->data_stale = (sched.os_ticks - m->last_parse_time > MC_PARSE_TIMEOUT);
+
+    if (!mcCheckLinkState(m))
+    {
+        // in case of false disconnect, stop rotation
+        if (m->motor_state != MC_DISCONNECTED) mcSetPower(0.0, m);
+        m->motor_state = MC_DISCONNECTED;
+        m->config_step = 0;
+        return; // Don't even try other stuff if disconnected
+    }
+    if (!m->config_sent)
+    {
+        m->motor_state = MC_CONFIG;
+        mcUpdateConfig(m);
+    }
+}
 
 /**
  * @brief Parses information from a message
@@ -454,7 +449,6 @@ static void mcParseMessage(motor_t *m)
     if (curr >= 0) m->last_parse_time = sched.os_ticks;
 }
 
-
 /**
  * @brief Parses a number after the specified search term
  *        Starts searching at start and stops at start - 1 (wrap around)
@@ -466,7 +460,7 @@ static void mcParseMessage(motor_t *m)
  * @param val_addr    The address to store the parsed value
  * @return int16_t    Index of the next start location, -1 on failure
  */
-int16_t mcParseTerm(char *rx_buf, uint8_t start, char *search_term, uint32_t *val_addr)
+static int16_t mcParseTerm(char *rx_buf, uint8_t start, char *search_term, uint32_t *val_addr)
 {
     uint8_t search_length = strlen(search_term);
     bool match = false;
