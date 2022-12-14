@@ -10,13 +10,17 @@ void tiInit(micro_t *m, q_handle_t *tx_queue){
         .last_parse_time = 0xFFFF0000,
         .last_rx_time = 0xFFFF0000,
         .last_msg_time = 0xFFF0000,
-        .last_serial_time = 0xFFF0000
+        .last_serial_time = 0xFFF0000,
+        .Tx_in[0] = 0,
+        .Tx_in[1] = 0,
+        .Tx_in[2] = 0,
+        .Tx_in[3] = 0
     };
 
         return;
 }
 
-void tiSetParam(motor_t *m, micro_t *mi)
+void tiSetParam(float pow_left, motor_t *m, micro_t *mi)
 {
     char cmd[31]; // 30 byte + '\0'
     int arg1;
@@ -29,14 +33,14 @@ void tiSetParam(motor_t *m, micro_t *mi)
     arg2 = m->voltage_x10 * 10;
     arg3 = m->rpm * 10;
     arg4 = m->motor_temp * 100;
-    arg5 = m->curr_power_x10 * 10;
+    arg5 = pow_left * 100;
 
     snprintf(cmd, 31, "%04d,%05d,%06d,%04d,%05d\r\n\0", arg1, arg2, arg3, arg4, arg5);
     qSendToBack(mi->tx_queue, cmd);
 }
 
 void tiPeriodic(micro_t* m) {
-    tiParseMessage(m);
+    tiParseMessage(m);   
 }
 
 static void tiParseMessage(micro_t *m)
@@ -56,20 +60,91 @@ static void tiParseMessage(micro_t *m)
     m->last_serial_time = sched.os_ticks;
 
     // Parse Front Left Torque
-    if (curr >= 0) curr = tiParseTerm(tmp_rx_buf, curr, "FL", &val_buf);
-    if (curr >= 0) m->Tx_in[0] = (uint16_t) val_buf;
+    //if (curr >= 0) curr = tiParseTerm(tmp_rx_buf, curr, "FL", &val_buf);
+    //if (curr >= 0) m->Tx_in[0] = (uint16_t) val_buf;
 
     // Parse Front Right Torque
-    if (curr >= 0) curr = tiParseTerm(tmp_rx_buf, curr, "FR", &val_buf);
-    if (curr >= 0) m->Tx_in[1] = (uint16_t) val_buf;
+    //if (curr >= 0) curr = tiParseTerm(tmp_rx_buf, curr, "FR", &val_buf);
+    //if (curr >= 0) m->Tx_in[1] = (uint16_t) val_buf;
 
     // Parse Rear Left Torque
-    if (curr >= 0) curr = tiParseTerm(tmp_rx_buf, curr, "RL", &val_buf);
-    if (curr >= 0) m->Tx_in[2] = val_buf;
+    //if (curr >= 0) curr = tiParseTerm(tmp_rx_buf, curr, "RL", &val_buf);
+    //if (curr >= 0) m->Tx_in[2] = val_buf;
 
     // Parse Rear Right Torque
-    if (curr >= 0) curr = tiParseTerm(tmp_rx_buf, curr, "RR", &val_buf);
-    if (curr >= 0) m->Tx_in[3] = (uint8_t) val_buf;
+    //if (curr >= 0) curr = tiParseTerm(tmp_rx_buf, curr, "RR", &val_buf);
+    //if (curr >= 0) m->Tx_in[3] = (uint8_t) val_buf;
+
+    char Tx_temp[4];
+    bool flag_FL = true;
+    bool flag_FR = true;
+    bool flag_RL = true;
+    bool flag_RR = true;
+    
+    for (uint8_t i = 0; i < TI_MAX_RX_LENGTH; i++) 
+    {
+        if ((tmp_rx_buf[i] == 'F') && (tmp_rx_buf[i+1] == 'L') && flag_FL)
+        {
+            if (((tmp_rx_buf[i+2]) >= '0') && ((tmp_rx_buf[i+2]) <= '9') && ((tmp_rx_buf[i+3]) >= '0') && ((tmp_rx_buf[i+3]) <= '9') && ((tmp_rx_buf[i+4]) >= '0') && ((tmp_rx_buf[i+4]) <= '9') && ((tmp_rx_buf[i+5]) >= '0') && ((tmp_rx_buf[i+5]) <= '9'))
+            {
+                Tx_temp[0] = (tmp_rx_buf[i+2]);
+                Tx_temp[1] = (tmp_rx_buf[i+3]);
+                Tx_temp[2] = (tmp_rx_buf[i+4]);
+                Tx_temp[3] = (tmp_rx_buf[i+5]);
+
+                flag_FL = false;
+
+                sscanf(Tx_temp, "%04d", &(m->Tx_in[0]));
+            }
+        }
+        else if ((tmp_rx_buf[i] == 'F') && (tmp_rx_buf[i+1] == 'R')  && flag_FR)
+        {
+            if (((tmp_rx_buf[i+2]) >= '0') && ((tmp_rx_buf[i+2]) <= '9') && ((tmp_rx_buf[i+3]) >= '0') && ((tmp_rx_buf[i+3]) <= '9') && ((tmp_rx_buf[i+4]) >= '0') && ((tmp_rx_buf[i+4]) <= '9') && ((tmp_rx_buf[i+5]) >= '0') && ((tmp_rx_buf[i+5]) <= '9'))
+            {
+                Tx_temp[0] = (tmp_rx_buf[i+2]);
+                Tx_temp[1] = (tmp_rx_buf[i+3]);
+                Tx_temp[2] = (tmp_rx_buf[i+4]);
+                Tx_temp[3] = (tmp_rx_buf[i+5]);
+
+                flag_FR = false;
+
+                sscanf(Tx_temp, "%04d", &(m->Tx_in[1]));
+            }
+        }
+        else if ((tmp_rx_buf[i] == 'R') && (tmp_rx_buf[i+1] == 'L')  && flag_RL)
+        {
+            if (((tmp_rx_buf[i+2]) >= '0') && ((tmp_rx_buf[i+2]) <= '9') && ((tmp_rx_buf[i+3]) >= '0') && ((tmp_rx_buf[i+3]) <= '9') && ((tmp_rx_buf[i+4]) >= '0') && ((tmp_rx_buf[i+4]) <= '9') && ((tmp_rx_buf[i+5]) >= '0') && ((tmp_rx_buf[i+5]) <= '9'))
+            {
+                Tx_temp[0] = (tmp_rx_buf[i+2]);
+                Tx_temp[1] = (tmp_rx_buf[i+3]);
+                Tx_temp[2] = (tmp_rx_buf[i+4]);
+                Tx_temp[3] = (tmp_rx_buf[i+5]);
+
+                if ((tmp_rx_buf[i+3] == '0')  && (m->Tx_in[1] == 10))
+                {
+                    m->Tx_in[1] = 12;
+                }
+
+                flag_RL = false;
+
+                sscanf(Tx_temp, "%04d", &(m->Tx_in[2]));
+            }
+        }
+        else if ((tmp_rx_buf[i] == 'R') && (tmp_rx_buf[i+1] == 'R') && flag_RR)
+        {   
+            if (((tmp_rx_buf[i+2]) >= '0') && ((tmp_rx_buf[i+2]) <= '9') && ((tmp_rx_buf[i+3]) >= '0') && ((tmp_rx_buf[i+3]) <= '9') && ((tmp_rx_buf[i+4]) >= '0') && ((tmp_rx_buf[i+4]) <= '9') && ((tmp_rx_buf[i+5]) >= '0') && ((tmp_rx_buf[i+5]) <= '9'))
+            {
+                Tx_temp[0] = (tmp_rx_buf[i+2]);
+                Tx_temp[1] = (tmp_rx_buf[i+3]);
+                Tx_temp[2] = (tmp_rx_buf[i+4]);
+                Tx_temp[3] = (tmp_rx_buf[i+5]);
+
+                flag_RR = false;
+
+                sscanf(Tx_temp, "%04d", &(m->Tx_in[3]));
+            }
+        }
+    }
 }
 
 static int16_t tiParseTerm(char *rx_buf, uint8_t start, char *search_term, uint32_t *val_addr)

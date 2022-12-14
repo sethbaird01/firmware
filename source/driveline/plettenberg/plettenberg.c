@@ -397,7 +397,7 @@ static void mcParseMessage(motor_t *m)
     // S=3.649V,a=0.000V,PWM= 787,U= 34.9V,I=  3.7A,RPM=  1482,con= 28°C,mot= 26°C
 
     // Check state
-    curr = mcParseTerm(tmp_rx_buf, curr, "S=", &val_buf);
+    //curr = mcParseTerm(tmp_rx_buf, curr, "S=", &val_buf);
     if (curr >= 0) 
     {
         m->last_serial_time = sched.os_ticks;
@@ -424,29 +424,139 @@ static void mcParseMessage(motor_t *m)
             // TODO: parse error
         }
     }
-
+ 
     // Parse voltage
     if (curr >= 0) curr = mcParseTerm(tmp_rx_buf, curr, "U=", &val_buf);
-    if (curr >= 0) m->voltage_x10 = (uint16_t) val_buf;
+    //if (curr >= 0) m->voltage_x10 = (uint16_t) val_buf;
 
     // Parse current
     if (curr >= 0) curr = mcParseTerm(tmp_rx_buf, curr, "I=", &val_buf);
-    if (curr >= 0) m->current_x10 = (uint16_t) val_buf;
+    //if (curr >= 0) m->current_x10 = (uint16_t) val_buf;
 
     // Parse RPM
     if (curr >= 0) curr = mcParseTerm(tmp_rx_buf, curr, "RPM=", &val_buf);
-    if (curr >= 0) m->rpm = val_buf;
+    //if (curr >= 0) m->rpm = val_buf;
 
     // Parse controller temp
     if (curr >= 0) curr = mcParseTerm(tmp_rx_buf, curr, "con=", &val_buf);
-    if (curr >= 0) m->controller_temp = (uint8_t) val_buf;
+    //if (curr >= 0) m->controller_temp = (uint8_t) val_buf;
 
     // Parse motor temp
     if (curr >= 0) curr = mcParseTerm(tmp_rx_buf, curr, "mot=", &val_buf);
-    if (curr >= 0) m->motor_temp = (uint8_t) val_buf;
+    //if (curr >= 0) m->motor_temp = (uint8_t) val_buf;
 
     // Update parse time
     if (curr >= 0) m->last_parse_time = sched.os_ticks;
+
+    curr = 0;
+
+    uint8_t idx[30];
+    int8_t num_idx = -1;
+    uint8_t num_var = 0;
+
+    for (uint8_t i = 0; i < MC_MAX_RX_LENGTH; i++) 
+    {
+        if (tmp_rx_buf[i] == ',')
+        {
+            num_idx++;
+            idx[num_idx] = i;
+        }
+
+    }
+
+    // Parse the rx buffer, which may contain a message in the following format
+    // 0        9        18       27       36       45         56        66
+    // S=3.649V,a=0.000V,PWM= 787,U= 34.9V,I=  3.7A,RPM=  1482,con= 28°C,mot= 26°C
+
+    i = 0;
+    uint8_t d_idx;
+    char svoltage[4];
+    char scurrent[3];
+    char smottemp[2];
+    char wheelspd[5];
+
+    while ((num_var < 30) && (i < num_idx))
+    {
+        d_idx = idx[i+1] - idx[i];
+        if (((tmp_rx_buf[idx[i]+1]) == 'U') && (((tmp_rx_buf[idx[i]+2]) == '=')) && ((tmp_rx_buf[idx[i]+6]) == '.') && ((tmp_rx_buf[idx[i]+8]) == 'V') && (d_idx == 9))
+        {
+            if (((tmp_rx_buf[idx[i]+3]) >= '0') && ((tmp_rx_buf[idx[i]+3]) <= '9') && ((tmp_rx_buf[idx[i]+4]) >= '0') && ((tmp_rx_buf[idx[i]+4]) <= '9') && ((tmp_rx_buf[idx[i]+5]) >= '0') && ((tmp_rx_buf[idx[i]+5]) <= '9') && ((tmp_rx_buf[idx[i]+7]) >= '0') && ((tmp_rx_buf[idx[i]+7]) <= '9')) 
+            {
+                num_var++;
+                svoltage[0] = (tmp_rx_buf[idx[i]+3]);
+                svoltage[1] = (tmp_rx_buf[idx[i]+4]);
+                svoltage[2] = (tmp_rx_buf[idx[i]+5]);
+                svoltage[3] = (tmp_rx_buf[idx[i]+7]);
+
+                sscanf(svoltage, "%d", &(m->voltage_x10));
+            }
+        }
+        else if (((tmp_rx_buf[idx[i]+1]) == 'I') && (((tmp_rx_buf[idx[i]+2]) == '=')) && ((tmp_rx_buf[idx[i]+3]) == ' ') && ((tmp_rx_buf[idx[i]+6]) == '.') && ((tmp_rx_buf[idx[i]+8]) == 'A') && (d_idx == 9))
+        {
+            if (((tmp_rx_buf[idx[i]+5]) >= '0') && ((tmp_rx_buf[idx[i]+5]) <= '9') && ((tmp_rx_buf[idx[i]+7]) >= '0') && ((tmp_rx_buf[idx[i]+7]) <= '9'))
+            {
+                scurrent[0] = (tmp_rx_buf[idx[i]+4]);
+                scurrent[1] = (tmp_rx_buf[idx[i]+5]);
+                scurrent[2] = (tmp_rx_buf[idx[i]+7]);
+
+                if ((tmp_rx_buf[idx[i]+4]) == ' ')
+                {
+                    sscanf(scurrent, "  %d", &(m->current_x10));
+                    num_var++;
+                }
+                else if (((tmp_rx_buf[idx[i]+4]) >= '0') && ((tmp_rx_buf[idx[i]+4]) <= '9'))
+                {
+                    sscanf(scurrent, "%d", &(m->current_x10));
+                    num_var++;
+                }
+            }
+        }
+        else if (((tmp_rx_buf[idx[i]+1]) == 'm') && (((tmp_rx_buf[idx[i]+2]) == 'o')) && ((tmp_rx_buf[idx[i]+3]) == 't') && ((tmp_rx_buf[idx[i]+4]) == '=') && ((tmp_rx_buf[idx[i]+5]) == ' ') && ((tmp_rx_buf[idx[i]+9]) == 'C') )
+        {
+            if (((tmp_rx_buf[idx[i]+6]) >= '0') && ((tmp_rx_buf[idx[i]+6]) <= '9') && ((tmp_rx_buf[idx[i]+7]) >= '0') && ((tmp_rx_buf[idx[i]+7]) <= '9')) 
+            {
+                num_var++;
+                smottemp[0] = (tmp_rx_buf[idx[i]+6]);
+                smottemp[1] = (tmp_rx_buf[idx[i]+7]);
+
+                sscanf(smottemp, "%d", &(m->motor_temp));
+            }
+        }
+        else if (((tmp_rx_buf[idx[i]+1]) == 'R') && (((tmp_rx_buf[idx[i]+2]) == 'P')) && ((tmp_rx_buf[idx[i]+3]) == 'M') && ((tmp_rx_buf[idx[i]+4]) == '=') && ((tmp_rx_buf[idx[i]+5]) == ' ') && (d_idx == 11))
+        {
+            if (((tmp_rx_buf[idx[i]+10]) >= '0') && ((tmp_rx_buf[idx[i]+10]) <= '9'))
+            {
+                d_idx++;
+                wheelspd[0] = (tmp_rx_buf[idx[i]+6]);
+                wheelspd[1] = (tmp_rx_buf[idx[i]+7]);
+                wheelspd[2] = (tmp_rx_buf[idx[i]+8]);
+                wheelspd[3] = (tmp_rx_buf[idx[i]+9]);
+                wheelspd[4] = (tmp_rx_buf[idx[i]+10]);
+
+                if (wheelspd[3] == ' ')
+                {
+                    sscanf(wheelspd, "    %d", &(m->rpm));
+                    num_var++;
+                }
+                else if ((wheelspd[2] == ' ') && ((tmp_rx_buf[idx[i]+9]) >= '0') && ((tmp_rx_buf[idx[i]+9]) <= '9'))
+                {
+                    sscanf(scurrent, "   %d", &(m->rpm));
+                    num_var++;
+                }
+                else if ((wheelspd[1] == ' ') && ((tmp_rx_buf[idx[i]+8]) >= '0') && ((tmp_rx_buf[idx[i]+8]) <= '9') && ((tmp_rx_buf[idx[i]+9]) >= '0') && ((tmp_rx_buf[idx[i]+9]) <= '9'))
+                {
+                    sscanf(wheelspd, "  %d", &(m->rpm));
+                    num_var++;
+                }
+                else if ((wheelspd[0] == ' ') && ((tmp_rx_buf[idx[i]+7]) >= '0') && ((tmp_rx_buf[idx[i]+7]) <= '9') && ((tmp_rx_buf[idx[i]+8]) >= '0') && ((tmp_rx_buf[idx[i]+8]) <= '9') && ((tmp_rx_buf[idx[i]+9]) >= '0') && ((tmp_rx_buf[idx[i]+9]) <= '9'))
+                {
+                    sscanf(wheelspd, " %d", &(m->rpm));
+                    num_var++;
+                }
+            }
+        }
+        i++;
+    }
 }
 
 /**

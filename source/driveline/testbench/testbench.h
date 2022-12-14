@@ -29,7 +29,7 @@ typedef struct
     motor_link_error_t last_link_error;             // Last link error
 
     // Micro inputs
-    uint16_t      Tx_in[4];                         // Input Torque Command
+    int      Tx_in[4];                         // Input Torque Command
 
     // Motor configuration
     uint32_t      rx_timeout;                       // Dynamically set timeout to determine connection status
@@ -55,6 +55,6 @@ typedef struct
 
 void tiInit(micro_t *m, q_handle_t *tx_queue);
 void tiPeriodic(micro_t *m);
-void tiSetParam(motor_t *m, micro_t *mi);
+void tiSetParam(float pow_left, motor_t *m, micro_t *mi);
 
 #endif

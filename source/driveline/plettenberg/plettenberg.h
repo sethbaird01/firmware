@@ -8,9 +8,10 @@
 #include "source/driveline/can/can_parse.h"
 #include "stm32l432xx.h"
 #include "string.h"
+#include "stdio.h"
 
 #define MC_MAX_TX_LENGTH (64)
-#define MC_MAX_RX_LENGTH (77 + 25)
+#define MC_MAX_RX_LENGTH (77 + 22)
 
 // Connection times
 #define MC_LOOP_DT (15) // Periodic update rate of motor controller task
@@ -75,12 +76,12 @@ typedef struct
     uint32_t      rx_timeout;                       // Dynamically set timeout to determine connection status
 
     // Motor outputs
-    uint16_t      voltage_x10;                      
-    uint16_t      current_x10;
+    int      voltage_x10;                      
+    int      current_x10;
     uint16_t      curr_power_x10;                   // Last torque command percent output sent x10
     uint32_t      rpm;
     uint8_t       controller_temp;
-    uint8_t       motor_temp;
+    int       motor_temp;
 
     // Communications
     q_handle_t   *tx_queue;                         // FIFO for tx commands to be sent via DMA

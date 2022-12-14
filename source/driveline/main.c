@@ -338,13 +338,16 @@ void heartBeat()
  */
 void commandTorquePeriodic()
 {
-    #if (FTR_DRIVELINE_FRONT)
-    float pow_left  = (float) CLAMP(micro.Tx_in[0], -4095, 4095);
-    float pow_right = (float) CLAMP(micro.Tx_in[1], -4095, 4095);
-    #elif (FTR_DRIVELINE_REAR)
-    float pow_left  = (float) CLAMP(micro.Tx_in[2], -4095, 4095);
-    float pow_right = (float) CLAMP(micro.Tx_in[3], -4095, 4095);
-    #endif
+    //#if (FTR_DRIVELINE_FRONT)
+    //float pow_left  = (float) CLAMP(micro.Tx_in[0], -4095, 4095);
+    //float pow_right = (float) CLAMP(micro.Tx_in[1], -4095, 4095);
+    //#elif (FTR_DRIVELINE_REAR)
+    //float pow_left  = (float) CLAMP(micro.Tx_in[2], -4095, 4095);
+    //float pow_right = (float) CLAMP(micro.Tx_in[3], -4095, 4095);
+    //#endif
+
+    float pow_left;
+    float pow_right;
 
     // pow_left = (float) mot_left_req;
     // pow_right = (float) mot_right_req;
@@ -383,7 +386,8 @@ void commandTorquePeriodic()
     // Ensures that if we lost connection we continue
     // to send 0 to stop motor
     mcSetPower(pow_left,  &motor_left);
-    mcSetPower(0, &motor_right);
+    tiSetParam(pow_left, &motor_left, &micro);
+    //mcSetPower(0, &motor_right);
     //#if (FTR_DRIVELINE_REAR)
     //SEND_REAR_MC_REQ(q_tx_can, pow_left, pow_right);
     //SEND_REAR_POW_LIM_L(q_tx_can, rtY.T[2], rtY.P_g[2]);
@@ -404,7 +408,6 @@ void parseDataPeriodic()
     mcPeriodic(&motor_left);
     //mcPeriodic(&motor_right);
     tiPeriodic(&micro);
-    tiSetParam(&motor_left, &micro);
 
     // Only send once both controllers have updated data
     // if (motor_right.data_stale ||
