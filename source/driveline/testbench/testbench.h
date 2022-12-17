@@ -10,8 +10,10 @@
 #include "string.h"
 #include "stdio.h"
 #include "plettenberg.h"
+#include "MC_PL0.h"
+#include "wheel_speeds.h"
 
-#define TI_MAX_TX_LENGTH (64)
+#define TI_MAX_TX_LENGTH (104)
 #define TI_MAX_RX_LENGTH (40)
 
 #define TI_TIMEOUT_CONSTRAINT_TIME (1000)
@@ -55,6 +57,6 @@ typedef struct
 
 void tiInit(micro_t *m, q_handle_t *tx_queue);
 void tiPeriodic(micro_t *m);
-void tiSetParam(float pow_left, motor_t *m, micro_t *mi);
+void tiSetParam(float pow_left, motor_t *m, micro_t *mi, ExtU *rtU, WheelSpeeds_t *w);
 
 #endif

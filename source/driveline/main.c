@@ -45,8 +45,8 @@ GPIOInitConfig_t gpio_config[] = {
   GPIO_INIT_USART2RX_PA15,
   //GPIO_INIT_USART2RX_PA3,
   // Wheel Speed
-  //GPIO_INIT_AF(WSPEEDR_GPIO_Port, WSPEEDR_Pin, WHEELSPEEDR_AF, GPIO_OUTPUT_ULTRA_SPEED, GPIO_TYPE_AF, GPIO_INPUT_PULL_UP),
-  //GPIO_INIT_AF(WSPEEDL_GPIO_Port, WSPEEDL_Pin, WHEELSPEEDL_AF, GPIO_OUTPUT_ULTRA_SPEED, GPIO_TYPE_AF, GPIO_INPUT_PULL_UP),
+  GPIO_INIT_AF(WSPEEDR_GPIO_Port, WSPEEDR_Pin, WHEELSPEEDR_AF, GPIO_OUTPUT_ULTRA_SPEED, GPIO_TYPE_AF, GPIO_INPUT_PULL_UP),
+  GPIO_INIT_AF(WSPEEDL_GPIO_Port, WSPEEDL_Pin, WHEELSPEEDL_AF, GPIO_OUTPUT_ULTRA_SPEED, GPIO_TYPE_AF, GPIO_INPUT_PULL_UP),
   // EEPROM
   GPIO_INIT_OUTPUT(WC_GPIO_Port, WC_Pin, GPIO_OUTPUT_LOW_SPEED),
   GPIO_INIT_I2C1_SCL_PB6,
@@ -169,7 +169,6 @@ uint32_t N = 0;
 float k_avg = 0.1;
 
 int main(void)
-
 {
     /* Data Struct init */
     qConstruct(&q_tx_can, sizeof(CanMsgTypeDef_t));
@@ -195,7 +194,7 @@ int main(void)
     taskCreate(commandTorquePeriodic, 15);
     taskCreate(parseDataPeriodic, MC_LOOP_DT);
     // TODO: taskCreate(shockpot1000Hz, 5);
-    //taskCreate(wheelSpeedsPeriodic, 15);
+    taskCreate(wheelSpeedsPeriodic, 15);
     //taskCreateBackground(canTxUpdate);
     //taskCreateBackground(canRxUpdate);
     taskCreateBackground(usartTxUpdate);
@@ -232,22 +231,22 @@ void preflightChecks(void) {
             //NVIC_EnableIRQ(CAN1_RX0_IRQn);
             break;
         case 2:
-            //if(!PHAL_initPWMIn(TIM1, APB2ClockRateHz / TIM_CLOCK_FREQ, TI1FP1))
-            //{
-            //    HardFault_Handler();
-            //}
-            //if(!PHAL_initPWMChannel(TIM1, CC1, CC_INTERNAL, false))
-            //{
-            //    HardFault_Handler();
-            //}
-            //if(!PHAL_initPWMIn(TIM2, APB1ClockRateHz / TIM_CLOCK_FREQ, TI1FP1))
-            //{
-            //    HardFault_Handler();
-            //}
-            //if(!PHAL_initPWMChannel(TIM2, CC1, CC_INTERNAL, false))
-            //{
-            //    HardFault_Handler();
-            //}
+            if(!PHAL_initPWMIn(TIM1, APB2ClockRateHz / TIM_CLOCK_FREQ, TI1FP1))
+            {
+                HardFault_Handler();
+            }
+            if(!PHAL_initPWMChannel(TIM1, CC1, CC_INTERNAL, false))
+            {
+                HardFault_Handler();
+            }
+            if(!PHAL_initPWMIn(TIM2, APB1ClockRateHz / TIM_CLOCK_FREQ, TI1FP1))
+            {
+                HardFault_Handler();
+            }
+            if(!PHAL_initPWMChannel(TIM2, CC1, CC_INTERNAL, false))
+            {
+                HardFault_Handler();
+            }
             break;
         case 3:
             //if(!PHAL_initADC(ADC1, &adc_config, adc_channel_config, 
@@ -265,7 +264,7 @@ void preflightChecks(void) {
        case 4:
             /* Module init */
             //initCANParse(&q_rx_can);
-            //wheelSpeedsInit();
+            wheelSpeedsInit();
             rtM->dwork = &rtDW;
             MC_PL0_initialize(rtM);
             break;
@@ -348,19 +347,26 @@ void commandTorquePeriodic()
 
     float pow_left;
     float pow_right;
+    volatile uint32_t time1 = 0;
+    volatile uint32_t time2 = 0;
+
+    mcPeriodic(&motor_left);
+    //mcPeriodic(&motor_right);
+    tiPeriodic(&micro);
 
     // pow_left = (float) mot_left_req;
     // pow_right = (float) mot_right_req;
 
     // Power Limiting
+    time1 = sched.os_ticks;
     MC_PL_pp(&rtU, &motor_left, &micro);
-    rt_OneStep(rtM);
-    pow_left = rtY.k[2] * 100.0 / 4095.0;
-    pow_right = rtY.k[3] * 100.0 / 4095.0;
+    //rt_OneStep(rtM);
+    //pow_left = rtY.k[2] * 100.0 / 4095.0;
+    //pow_right = rtY.k[3] * 100.0 / 4095.0;
 
     // No Power Limiting
-    //pow_left = rtU.Tx[2] * 100.0 / 25.0;
-    //pow_right = rtU.Tx[3] * 100.0 / 25.0;
+    pow_left = rtU.Tx[2] * 100.0 / 25.0;
+    pow_right = rtU.Tx[3] * 100.0 / 25.0;
 
     // Prevent regenerative braking, functionality not yet implemented
     if (pow_left < 0)  pow_left  = 0.0;
@@ -386,7 +392,9 @@ void commandTorquePeriodic()
     // Ensures that if we lost connection we continue
     // to send 0 to stop motor
     mcSetPower(pow_left,  &motor_left);
-    tiSetParam(pow_left, &motor_left, &micro);
+    tiSetParam(pow_left, &motor_left, &micro, &rtU, &wheel_speeds);
+    time2 = time1 - sched.os_ticks;
+
     //mcSetPower(0, &motor_right);
     //#if (FTR_DRIVELINE_REAR)
     //SEND_REAR_MC_REQ(q_tx_can, pow_left, pow_right);
@@ -402,51 +410,51 @@ void commandTorquePeriodic()
  */
 void parseDataPeriodic()
 {
-    uint16_t shock_l, shock_r;
+    //uint16_t shock_l, shock_r;
 
     /* Update Data Structures */
-    mcPeriodic(&motor_left);
+    //mcPeriodic(&motor_left);
     //mcPeriodic(&motor_right);
-    tiPeriodic(&micro);
+    //tiPeriodic(&micro);
 
     // Only send once both controllers have updated data
     // if (motor_right.data_stale ||
     //     motor_left.data_stale) return;
 
     // Extract raw shocks from DMA buffer
-    shock_l = raw_shock_pots.pot_left;
-    shock_r = raw_shock_pots.pot_right;
+    //shock_l = raw_shock_pots.pot_left;
+    //shock_r = raw_shock_pots.pot_right;
     // Scale from raw 12bit adc to mm * 10 of linear pot travel
-    shock_l = (POT_VOLT_MIN_DIST_MM * 10 - ((uint32_t) shock_l) * (POT_VOLT_MIN_DIST_MM - POT_VOLT_MAX_DIST_MM) * 10 / 4095);
-    shock_r = (POT_VOLT_MIN_DIST_MM * 10 - ((uint32_t) shock_r) * (POT_VOLT_MIN_DIST_MM - POT_VOLT_MAX_DIST_MM) * 10 / 4095);
+    //shock_l = (POT_VOLT_MIN_DIST_MM * 10 - ((uint32_t) shock_l) * (POT_VOLT_MIN_DIST_MM - POT_VOLT_MAX_DIST_MM) * 10 / 4095);
+    //shock_r = (POT_VOLT_MIN_DIST_MM * 10 - ((uint32_t) shock_r) * (POT_VOLT_MIN_DIST_MM - POT_VOLT_MAX_DIST_MM) * 10 / 4095);
 
 
-#if (FTR_DRIVELINE_REAR)
-    SEND_REAR_WHEEL_DATA(q_tx_can, wheel_speeds.left_kph_x100, wheel_speeds.right_kph_x100,
-                         shock_l, shock_r);
-#elif (FTR_DRIVELINE_FRONT)
-    SEND_FRONT_WHEEL_DATA(q_tx_can, wheel_speeds.left_kph_x100, wheel_speeds.right_kph_x100,
-                         shock_l, shock_r);
-#endif
+//#if (FTR_DRIVELINE_REAR)
+//    SEND_REAR_WHEEL_DATA(q_tx_can, wheel_speeds.left_kph_x100, wheel_speeds.right_kph_x100,
+//                         shock_l, shock_r);
+//#elif (FTR_DRIVELINE_FRONT)
+//    SEND_FRONT_WHEEL_DATA(q_tx_can, wheel_speeds.left_kph_x100, wheel_speeds.right_kph_x100,
+//                         shock_l, shock_r);
+//#endif
 
-#if (FTR_DRIVELINE_REAR)
-    SEND_REAR_MOTOR_CURRENTS_TEMPS(q_tx_can, 
-                                   (uint16_t) motor_left.current_x10, 
-                                   (uint16_t) motor_right.current_x10,
-                                   (uint8_t)  motor_left.motor_temp, 
-                                   (uint8_t)  motor_right.motor_temp,
-                                   (uint16_t)  motor_right.voltage_x10);
-    SEND_REAR_CONTROLLER_TEMPS(q_tx_can,
-                               (uint8_t) motor_left.controller_temp,
-                               (uint8_t) motor_right.controller_temp);
-#elif (FTR_DRIVELINE_FRONT)
-    SEND_FRONT_MOTOR_CURRENTS_TEMPS(q_tx_can, 
-                                   (uint16_t) motor_left.current_x10, 
-                                   (uint16_t) motor_right.current_x10,
-                                   (uint8_t)  motor_left.motor_temp, 
-                                   (uint8_t)  motor_right.motor_temp,
-                                   (uint16_t)  motor_right.voltage_x10);
-#endif
+//#if (FTR_DRIVELINE_REAR)
+//    SEND_REAR_MOTOR_CURRENTS_TEMPS(q_tx_can, 
+//                                   (uint16_t) motor_left.current_x10, 
+//                                   (uint16_t) motor_right.current_x10,
+//                                   (uint8_t)  motor_left.motor_temp, 
+//                                   (uint8_t)  motor_right.motor_temp,
+//                                   (uint16_t)  motor_right.voltage_x10);
+//    SEND_REAR_CONTROLLER_TEMPS(q_tx_can,
+//                               (uint8_t) motor_left.controller_temp,
+//                               (uint8_t) motor_right.controller_temp);
+//#elif (FTR_DRIVELINE_FRONT)
+//    SEND_FRONT_MOTOR_CURRENTS_TEMPS(q_tx_can, 
+//                                   (uint16_t) motor_left.current_x10, 
+//                                   (uint16_t) motor_right.current_x10,
+//                                   (uint8_t)  motor_left.motor_temp, 
+//                                   (uint8_t)  motor_right.motor_temp,
+//                                   (uint16_t)  motor_right.voltage_x10);
+//#endif
 }
 
 void ledUpdate()

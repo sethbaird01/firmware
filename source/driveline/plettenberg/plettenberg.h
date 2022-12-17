@@ -79,7 +79,7 @@ typedef struct
     int      voltage_x10;                      
     int      current_x10;
     uint16_t      curr_power_x10;                   // Last torque command percent output sent x10
-    uint32_t      rpm;
+    int      rpm;
     uint8_t       controller_temp;
     int       motor_temp;
 

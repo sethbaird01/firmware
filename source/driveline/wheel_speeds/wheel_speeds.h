@@ -28,6 +28,8 @@
  * a minimum of 2 MHz.
  */
 #define TIM_CLOCK_FREQ 2000000
+#define SPEED_SENSOR_CALIBRATION 3.141592653589793 * 62.5
+#define SPEED_SENSOR_CALIBRATION2 250 * 3.141592653589793 / 33
 
 #define WHEEL_DIAM_M 0.4572
 #define WHEEL_CIRCUMF_M (3.14159 * WHEEL_DIAM_M)
@@ -40,6 +42,8 @@
 typedef struct {
   uint16_t left_kph_x100;
   uint16_t right_kph_x100;
+  uint32_t cnt;
+  uint32_t ccr;
 } WheelSpeeds_t;
 
 extern WheelSpeeds_t wheel_speeds;

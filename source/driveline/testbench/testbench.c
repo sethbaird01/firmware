@@ -20,22 +20,28 @@ void tiInit(micro_t *m, q_handle_t *tx_queue){
         return;
 }
 
-void tiSetParam(float pow_left, motor_t *m, micro_t *mi)
+void tiSetParam(float pow_left, motor_t *m, micro_t *mi, ExtU* rtU, WheelSpeeds_t *w)
 {
-    char cmd[31]; // 30 byte + '\0'
+    char cmd[56]; // 37 byte + '\0'
     int arg1;
     int arg2;
     int arg3;
     int arg4;
     int arg5;
+    int arg6;
+    int arg7;
+    int arg8;
 
     arg1 = m->current_x10 * 10;
     arg2 = m->voltage_x10 * 10;
     arg3 = m->rpm * 10;
     arg4 = m->motor_temp * 100;
     arg5 = pow_left * 100;
+    arg6 = (int) ((rtU->Wx[2]) * 10);
+    arg7 = w->ccr;
+    arg8 = (int) ((rtU->Wx[3]) * 10);
 
-    snprintf(cmd, 31, "%04d,%05d,%06d,%04d,%05d\r\n\0", arg1, arg2, arg3, arg4, arg5);
+    snprintf(cmd, 56, "%04d,%05d,%06d,%04d,%05d,%06d,%10d,%06d\r\n\0", arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8);
     qSendToBack(mi->tx_queue, cmd);
 }
 

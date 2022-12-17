@@ -47,7 +47,8 @@
 #define WSPEEDL_Pin       (8)
 #define WHEELSPEEDL_AF    (1)
 #define WSPEEDR_GPIO_Port (GPIOA)
-#define WSPEEDR_Pin       (15)
+//#define WSPEEDR_Pin       (15)
+#define WSPEEDR_Pin       (0)
 #define WHEELSPEEDR_AF    (1)
 
 /* EEPROM */
