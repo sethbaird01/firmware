@@ -13,10 +13,12 @@
 /* Module Includes */
 #include "main.h"
 #include "bmi088.h"
-#include "daq.h"
+// #include "daq.h"
 #include "imu.h"
 #include "orion.h"
 #include "bsxlite_interface.h"
+
+#include "common/faults/faults.h"
 
 
 /* PER HAL Initilization Structures */
@@ -151,7 +153,7 @@ int main (void)
     taskCreate(monitorStatus, 50);
     taskCreate(orionChargePeriodic, 50);
     taskCreate(sendIMUData, 10);
-    taskCreate(daqPeriodic, DAQ_UPDATE_PERIOD);
+    // taskCreate(daqPeriodic, DAQ_UPDATE_PERIOD);
 
     taskCreateBackground(canTxUpdate);
     taskCreateBackground(canRxUpdate);
@@ -171,8 +173,8 @@ void preflightChecks(void)
     switch (state++)
     {
         case 0 :
-            if (daqInit(&q_tx_can, 0))
-                PHAL_FaultHandler();
+            // if (daqInit(&q_tx_can, 0))
+            //     PHAL_FaultHandler();
             break;
 
         case 1:
