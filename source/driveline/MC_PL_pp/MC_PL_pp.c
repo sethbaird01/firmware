@@ -1,8 +1,10 @@
 #include "MC_PL_pp.h"
 #include "MC_PL0.h"
 #include "can_parse.h"
-#include "wheel_speeds.h"
+#include "common/modules/wheel_speeds/wheel_speeds.h"
 #include "common_defs.h"
+
+extern WheelSpeeds_t *wheel_speeds;
 
 void MC_PL_pp(ExtU* rtU, motor_t* motor_left, micro_t* micro) {
     rtU->Tx[0] = CLAMP(0.0 * TORQUE_CALIBRATION, ABS_MIN_TORQUE, ABS_MAX_TORQUE);
@@ -12,8 +14,8 @@ void MC_PL_pp(ExtU* rtU, motor_t* motor_left, micro_t* micro) {
 
     rtU->Wx[0] = CLAMP(0.00001 * SPEED_CALIBRATION, MIN_OMEGA, MAX_OMEGA);
     rtU->Wx[1] = CLAMP(0.00001 * SPEED_CALIBRATION, MIN_OMEGA, MAX_OMEGA);
-    rtU->Wx[2] = CLAMP(wheel_speeds.left_kph_x100 * SPEED_CALIBRATION, MIN_OMEGA, MAX_OMEGA);
-    rtU->Wx[3] = CLAMP(wheel_speeds.right_kph_x100 * SPEED_CALIBRATION, MIN_OMEGA, MAX_OMEGA);
+    rtU->Wx[2] = CLAMP(wheel_speeds->l->rad_s, MIN_OMEGA, MAX_OMEGA);
+    rtU->Wx[3] = CLAMP(wheel_speeds->r->rad_s, MIN_OMEGA, MAX_OMEGA);
 
     rtU->motor_T[0] = CLAMP(40.0 * TEMPERATURE_CALIBRATION, MIN_MOTOR_TEMPERATURE, MAX_MOTOR_TEMPERATURE);
     rtU->motor_T[1] = CLAMP(40.0 * TEMPERATURE_CALIBRATION, MIN_MOTOR_TEMPERATURE, MAX_MOTOR_TEMPERATURE);

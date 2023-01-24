@@ -17,7 +17,7 @@
 
 #define WHEEL_DIAM_M (0.4572)
 #define WHEEL_CIRCUMF_M (3.14159 * WHEEL_DIAM_M)
-#define WHEEL_COUNTS_PER_REV (984)
+#define WHEEL_COUNTS_PER_REV (1056)
 
 typedef struct {
   TIM_TypeDef *tim;             // Timer peripheral
@@ -27,8 +27,8 @@ typedef struct {
 } WheelSpeed_t; 
 typedef struct { 
   uint32_t     last_update_ms;  // Last update time (off of os_ticks)
-  WheelSpeed_t l;               // Left wheel configuration
-  WheelSpeed_t r;               // Right wheel configuration
+  WheelSpeed_t *l;               // Left wheel configuration
+  WheelSpeed_t *r;               // Right wheel configuration
 } WheelSpeeds_t;
 
 bool wheelSpeedsInit(WheelSpeeds_t *ws);

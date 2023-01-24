@@ -25,7 +25,7 @@
 // #include "daq.h"
 #include "main.h"
 #include "can_parse.h"
-#include "wheel_speeds.h"
+#include "common/modules/wheel_speeds/wheel_speeds.h"
 #include "shockpot.h"
 #include "plettenberg.h"
 #include "testbench.h"
@@ -38,8 +38,8 @@ GPIOInitConfig_t gpio_config[] = {
   GPIO_INIT_CANRX_PA11,
   GPIO_INIT_CANTX_PA12,
   // Shock Pots
-  GPIO_INIT_ANALOG(POT_AMP_LEFT_GPIO_Port,  POT_AMP_LEFT_Pin),
-  GPIO_INIT_ANALOG(POT_AMP_RIGHT_GPIO_Port, POT_AMP_RIGHT_Pin),
+//   GPIO_INIT_ANALOG(POT_AMP_LEFT_GPIO_Port,  POT_AMP_LEFT_Pin),
+//   GPIO_INIT_ANALOG(POT_AMP_RIGHT_GPIO_Port, POT_AMP_RIGHT_Pin),
   // Motor Controllers
   GPIO_INIT_USART1TX_PA9,
   GPIO_INIT_USART1RX_PA10,
@@ -47,12 +47,14 @@ GPIOInitConfig_t gpio_config[] = {
   GPIO_INIT_USART2RX_PA15,
   //GPIO_INIT_USART2RX_PA3,
   // Wheel Speed
-  GPIO_INIT_AF(WSPEEDR_GPIO_Port, WSPEEDR_Pin, WHEELSPEEDR_AF, GPIO_OUTPUT_ULTRA_SPEED, GPIO_TYPE_AF, GPIO_INPUT_PULL_UP),
-  GPIO_INIT_AF(WSPEEDL_GPIO_Port, WSPEEDL_Pin, WHEELSPEEDL_AF, GPIO_OUTPUT_ULTRA_SPEED, GPIO_TYPE_AF, GPIO_INPUT_PULL_UP),
+//   GPIO_INIT_AF(WSPEEDR_GPIO_Port, WSPEEDR_Pin, WHEELSPEEDR_AF, GPIO_OUTPUT_ULTRA_SPEED, GPIO_TYPE_AF, GPIO_INPUT_PULL_UP),
+//   GPIO_INIT_AF(WSPEEDL_GPIO_Port, WSPEEDL_Pin, WHEELSPEEDL_AF, GPIO_OUTPUT_ULTRA_SPEED, GPIO_TYPE_AF, GPIO_INPUT_PULL_UP),
+  GPIO_INIT_AF(GPIOA, 0, 1, GPIO_OUTPUT_ULTRA_SPEED, GPIO_TYPE_AF, GPIO_INPUT_OPEN_DRAIN),
+  GPIO_INIT_AF(GPIOA, 1, 1, GPIO_OUTPUT_ULTRA_SPEED, GPIO_TYPE_AF, GPIO_INPUT_OPEN_DRAIN),
   // EEPROM
   GPIO_INIT_OUTPUT(WC_GPIO_Port, WC_Pin, GPIO_OUTPUT_LOW_SPEED),
-  GPIO_INIT_I2C1_SCL_PB6,
-  GPIO_INIT_I2C1_SDA_PB7,
+//   GPIO_INIT_I2C1_SCL_PB6,
+//   GPIO_INIT_I2C1_SDA_PB7,
   // Status LEDs
   GPIO_INIT_OUTPUT(ERR_LED_GPIO_Port, ERR_LED_Pin, GPIO_OUTPUT_LOW_SPEED),
   GPIO_INIT_OUTPUT(HEARTBEAT_GPIO_Port, HEARTBEAT_Pin, GPIO_OUTPUT_LOW_SPEED),
@@ -120,6 +122,11 @@ ADCChannelConfig_t adc_channel_config[] = {
 };
 dma_init_t adc_dma_config = ADC1_DMA_CONT_CONFIG((uint32_t) &raw_shock_pots,
                             sizeof(raw_shock_pots) / sizeof(raw_shock_pots.pot_left), 0b01);
+
+WheelSpeed_t left_wheel =  {.tim=TIM2, .invert=true};
+WheelSpeed_t right_wheel = {.tim=TIM2, .invert=true};
+// TODO: test invert
+WheelSpeeds_t wheel_speeds = {.l=&left_wheel, .r=&right_wheel};
 
 #define TargetCoreClockrateHz 16000000
 ClockRateConfig_t clock_config = {
@@ -241,22 +248,22 @@ void preflightChecks(void) {
             //NVIC_EnableIRQ(CAN1_RX0_IRQn);
             break;
         case 2:
-            if(!PHAL_initPWMIn(TIM1, APB2ClockRateHz / TIM_CLOCK_FREQ, TI1FP1))
-            {
-                HardFault_Handler();
-            }
-            if(!PHAL_initPWMChannel(TIM1, CC1, CC_INTERNAL, false))
-            {
-                HardFault_Handler();
-            }
-            if(!PHAL_initPWMIn(TIM2, APB1ClockRateHz / TIM_CLOCK_FREQ, TI1FP1))
-            {
-                HardFault_Handler();
-            }
-            if(!PHAL_initPWMChannel(TIM2, CC1, CC_INTERNAL, false))
-            {
-                HardFault_Handler();
-            }
+            // if(!PHAL_initPWMIn(TIM1, APB2ClockRateHz / TIM_CLOCK_FREQ, TI1FP1))
+            // {
+            //     HardFault_Handler();
+            // }
+            // if(!PHAL_initPWMChannel(TIM1, CC1, CC_INTERNAL, false))
+            // {
+            //     HardFault_Handler();
+            // }
+            // if(!PHAL_initPWMIn(TIM2, APB1ClockRateHz / TIM_CLOCK_FREQ, TI1FP1))
+            // {
+            //     HardFault_Handler();
+            // }
+            // if(!PHAL_initPWMChannel(TIM2, CC1, CC_INTERNAL, false))
+            // {
+            //     HardFault_Handler();
+            // }
             break;
         case 3:
             //if(!PHAL_initADC(ADC1, &adc_config, adc_channel_config, 
@@ -274,7 +281,8 @@ void preflightChecks(void) {
        case 4:
             /* Module init */
             //initCANParse(&q_rx_can);
-            wheelSpeedsInit();
+            // wheelSpeedsInit();
+            wheelSpeedsInit(&wheel_speeds);
             rtM->dwork = &rtDW;
             MC_PL0_initialize(rtM);
             break;

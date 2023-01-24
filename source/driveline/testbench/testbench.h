@@ -11,7 +11,7 @@
 #include "stdio.h"
 #include "plettenberg.h"
 #include "MC_PL0.h"
-#include "wheel_speeds.h"
+#include "common/modules/wheel_speeds/wheel_speeds.h"
 
 #define TI_MAX_TX_LENGTH (104)
 #define TI_MAX_RX_LENGTH (40)

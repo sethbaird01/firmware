@@ -34,12 +34,12 @@ static volatile uint32_t right_update_time = 0;
 bool wheelSpeedsInit(WheelSpeeds_t *ws)
 {
     _ws = 0;
-    if (!PHAL_enableTIMClk(ws->l.tim)) return false;
-    if (!PHAL_enableTIMClk(ws->r.tim)) return false;
-    configEncoder(ws->l.tim, ws->l.invert);
-    configEncoder(ws->r.tim, ws->r.invert);
-    PHAL_startTIM(ws->l.tim);
-    PHAL_startTIM(ws->r.tim);
+    if (!PHAL_enableTIMClk(ws->l->tim)) return false;
+    if (!PHAL_enableTIMClk(ws->r->tim)) return false;
+    configEncoder(ws->l->tim, ws->l->invert);
+    configEncoder(ws->r->tim, ws->r->invert);
+    PHAL_startTIM(ws->l->tim);
+    PHAL_startTIM(ws->r->tim);
     _ws = ws;   // Set last to prevent periodic from running if error during initialization
     return true;
 }
@@ -78,17 +78,22 @@ void wheelSpeedsPeriodic()
     float rad_s_cnt;
     if (!_ws) return;               // Only run if initialized
 
-    cnt_l = _ws->l.tim->CNT;        // Record counter values
-    cnt_r = _ws->r.tim->CNT;
+    cnt_l = _ws->l->tim->CNT;        // Record counter values
+    cnt_r = _ws->r->tim->CNT;
     ms = sched.os_ticks;            // Record measurement time
 
     // rad / s = (count / ms) * (1000 ms / s) * (1 / counts_per_rev) * (2PI rad / rev)
     rad_s_cnt = 2.0 * PI / WHEEL_COUNTS_PER_REV / (ms - _ws->last_update_ms) * 1000.0f;
-    _ws->l.rad_s = (cnt_l - _ws->l.last_count) * rad_s_cnt;
-    _ws->r.rad_s = (cnt_r - _ws->r.last_count) * rad_s_cnt;
+    _ws->l->rad_s = (cnt_l - _ws->l->last_count) * rad_s_cnt;
+    _ws->r->rad_s = (cnt_r - _ws->r->last_count) * rad_s_cnt;
+
+    if (_ws->l->rad_s > 4)
+    {
+        __asm__("bkpt");
+    }
 
     // Update last state values
     _ws->last_update_ms = ms;
-    _ws->l.last_count = cnt_l;
-    _ws->r.last_count = cnt_r;
+    _ws->l->last_count = cnt_l;
+    _ws->r->last_count = cnt_r;
 }

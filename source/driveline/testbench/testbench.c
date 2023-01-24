@@ -38,7 +38,7 @@ void tiSetParam(float pow_left, motor_t *m, micro_t *mi, ExtU* rtU, WheelSpeeds_
     arg4 = m->motor_temp * 100;
     arg5 = pow_left * 100;
     arg6 = (int) ((rtU->Wx[2]) * 10);
-    arg7 = w->ccr;
+    arg7 = (int) (w->l->rad_s * 100);
     arg8 = (int) ((rtU->Wx[3]) * 10);
 
     snprintf(cmd, 56, "%04d,%05d,%06d,%04d,%05d,%06d,%10d,%06d\r\n\0", arg1, arg2, arg3, arg4, arg5, arg6, arg7, arg8);
