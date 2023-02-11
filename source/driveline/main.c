@@ -179,8 +179,7 @@ static DW rtDW;                        /* Observable states */
 uint32_t N = 0;
 float k_avg = 0.1;
 
-int main(void)
-{
+int main(void){
     i = 0;
     /* Data Struct init */
     qConstruct(&q_tx_can, sizeof(CanMsgTypeDef_t));

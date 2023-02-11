@@ -566,10 +566,10 @@ static void mcParseMessage(motor_t *m)
 
             m->rpm = motor_W;
 
-            if (m->rpm > 4000)
-            {
-            m->rpm = motor_W / 10;
-            }
+            //if (m->rpm > 4000)
+            //{
+            //m->rpm = motor_W / 10;
+            //}
         }
         i++;
     }

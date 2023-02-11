@@ -14,8 +14,8 @@ void MC_PL_pp(ExtU* rtU, motor_t* motor_left, micro_t* micro) {
 
     rtU->Wx[0] = CLAMP(0.00001 * SPEED_CALIBRATION, MIN_OMEGA, MAX_OMEGA);
     rtU->Wx[1] = CLAMP(0.00001 * SPEED_CALIBRATION, MIN_OMEGA, MAX_OMEGA);
-    rtU->Wx[2] = CLAMP(wheel_speeds->l->rad_s, MIN_OMEGA, MAX_OMEGA);
-    rtU->Wx[3] = CLAMP(wheel_speeds->r->rad_s, MIN_OMEGA, MAX_OMEGA);
+    rtU->Wx[2] = CLAMP(0, MIN_OMEGA, MAX_OMEGA);
+    rtU->Wx[3] = CLAMP(0, MIN_OMEGA, MAX_OMEGA);
 
     rtU->motor_T[0] = CLAMP(40.0 * TEMPERATURE_CALIBRATION, MIN_MOTOR_TEMPERATURE, MAX_MOTOR_TEMPERATURE);
     rtU->motor_T[1] = CLAMP(40.0 * TEMPERATURE_CALIBRATION, MIN_MOTOR_TEMPERATURE, MAX_MOTOR_TEMPERATURE);
