@@ -201,7 +201,7 @@ int main(void)
     taskCreate(sendIMUData, 10);
     taskCreate(collectGPSData, 40);
     taskCreate(collectMagData, 40);
-    taskCreate(SFS_MAIN, 10);
+    taskCreate(TVS_MAIN, 10);
 
     /* No Way Home */
     schedStart();
@@ -434,6 +434,11 @@ void SFS_MAIN(void)
     /* Disable interrupts here */
     /* Restore FPU context here (if necessary) */
     /* Enable interrupts here */
+}
+
+void TVS_MAIN(void)
+{
+    
 }
 
 void HardFault_Handler()

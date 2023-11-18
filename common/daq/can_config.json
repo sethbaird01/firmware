@@ -528,7 +528,7 @@
                             "msg_pgn":26
                         },
                         {   "msg_name":"orion_currents_volts",
-                            "msg_desc":"Pack current + voltage",
+                            "msg_desc":"Pack current and voltage",
                             "signals":[
                                 {"sig_name":"pack_current","type":"int16_t", "unit": "A", "scale": 0.1},
                                 {"sig_name":"pack_voltage", "type":"uint16_t", "length":16, "unit": "V", "scale": 0.1}
@@ -722,6 +722,14 @@
                         }
                     ],
                     "rx":[
+                        {"msg_name": "LWS_Standard", "callback": true},
+                        {"msg_name": "wheel_speeds", "callback": true},
+                        {"msg_name": "filt_throttle_brake", "callback": true},
+                        {"msg_name": "orion_info", "callback": true},
+                        {"msg_name": "rear_controller_temps", "callback": true},
+                        {"msg_name": "rear_motor_currents_temps", "callback": true},
+                        {"msg_name": "orion_currents_volts", "callback": true},
+
 
                     ]
                 },
