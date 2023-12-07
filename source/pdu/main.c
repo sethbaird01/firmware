@@ -6,10 +6,12 @@
 #include "common/phal_F4_F7/can/can.h"
 #include "common/psched/psched.h"
 #include "common/faults/faults.h"
+#include "common/phal_F4_F7/spi/spi.h"
 
 /* Module Includes */
 #include "main.h"
 #include "can_parse.h"
+#include "led.h"
 
 GPIOInitConfig_t gpio_config[] = {
     // Status Indicators
@@ -139,6 +141,25 @@ ClockRateConfig_t clock_config = {
     .apb2_clock_target_hz       =(TargetCoreClockrateHz / (1)),
 };
 
+dma_init_t spi_tx_dma_config = SPI1_TXDMA_CONT_CONFIG(NULL, 1);
+SPI_InitConfig_t spi_config = {
+    .data_len  = 8,
+    .nss_sw = false,
+    .nss_gpio_port = LED_CTRL_LAT_GPIO_Port,
+    .nss_gpio_pin = LED_CTRL_LAT_Pin,
+    .rx_dma_cfg = 0,
+    .tx_dma_cfg = &spi_tx_dma_config,
+    .periph = SPI1
+};
+
+led_init_t led = {
+    .blank_port = LED_CTRL_BLANK_GPIO_Port,
+    .blank_pin = LED_CTRL_BLANK_Pin,
+    .latch_port = LED_CTRL_LAT_GPIO_Port,
+    .latch_pin = LED_CTRL_LAT_Pin,
+    .spi = &spi_config
+};
+
 extern uint32_t APB1ClockRateHz;
 extern uint32_t APB2ClockRateHz;
 extern uint32_t AHBClockRateHz;
@@ -147,6 +168,7 @@ extern uint32_t PLLClockRateHz;
 void HardFault_Handler();
 void preflightAnimation();
 void preflightChecks(void);
+void updateLED();
 void canTxUpdate();
 void heatBeatLED();
 void sendtestmsg();
@@ -179,6 +201,7 @@ int main()
     taskCreate(heatBeatLED, 500);
     taskCreate(sendtestmsg, 100);
     taskCreate(heartBeatTask, 100);
+    taskCreate(updateLED, 500);
     taskCreateBackground(canTxUpdate);
     taskCreateBackground(canRxUpdate);
     schedStart();
@@ -203,9 +226,16 @@ void preflightChecks(void) {
         case 2:
             initCANParse(&q_rx_can);
            break;
-        default:
+        case 254:
+            if (!PHAL_SPI_init(&spi_config))
+                HardFault_Handler();
+            initLED(&led);
+            break;
+        case 255:
             registerPreflightComplete(1);
             state = 255; // prevent wrap around
+        default:
+            break;
     }
 }
 
@@ -236,6 +266,26 @@ void preflightAnimation(void) {
 void heatBeatLED()
 {
     PHAL_toggleGPIO(HEARTBEAT_GPIO_Port, HEARTBEAT_Pin);
+}
+
+void updateLED()
+{
+    uint16_t word = 0xAAAA;
+    uint16_t word_two = 0x5555;
+    uint16_t send = 0;
+    static bool start;
+    if (!start)
+    {
+        send = word;
+        start = true;
+    }
+    else
+    {
+        send = word_two;
+        start = false;
+    }
+    sendword(&led, send);
+    // toggleLatch(&led);
 }
 
 void sendtestmsg()
