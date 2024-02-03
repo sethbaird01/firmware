@@ -199,6 +199,15 @@
                     "time_to_latch": 10,
                     "time_to_unlatch": 1000,
                     "lcd_message": "APPS Brake Fault"
+                },
+                {
+                    "fault_name": "dual_pedal_act",
+                    "max": 1,
+                    "min": 0,
+                    "priority": "warning",
+                    "time_to_latch": 10,
+                    "time_to_unlatch": 1000,
+                    "lcd_message": "Dual Pedal Pressed Warning"
                 }
             ]
         },

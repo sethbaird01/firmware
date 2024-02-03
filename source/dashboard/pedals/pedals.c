@@ -206,10 +206,14 @@ void pedalsPeriodic(void)
     // {
     //     pedals.apps_brake_faulted = false;
     // }
+
+    // Both set at the same time
     if (b2 >= APPS_BRAKE_THRESHOLD &&
         t2 >= APPS_THROTTLE_FAULT_THRESHOLD)
     {
-        // setFault(ID_APPS_BRAKE_FAULT, true);
+        // set warning fault and treq could be 0
+        t2 = 0;
+        setFault(ID_DUAL_PEDAL_ACT_FAULT, true);
     }
     else if (t2 <= APPS_THROTTLE_CLEARFAULT_THRESHOLD)
     {

@@ -201,11 +201,11 @@ int main (void){
 
     // taskCreate(updatePage, 500);
     // taskCreate(updateFaultDisplay, 500);
-    // taskCreate(heartBeatLED, 500);
+    taskCreate(heartBeatLED, 500);
     // taskCreate(heartBeatTask, 100);
     // taskCreate(pollHDD, 250);
     // taskCreate(update_data_pages, 200);
-    // taskCreate(pedalsPeriodic, 15);
+    taskCreate(pedalsPeriodic, 15);
     // taskCreate(sendMCUTempsVolts, 500);
 
 
@@ -268,7 +268,7 @@ void preflightChecks(void) {
             //Initialize HDD
             // No longer have HDD, but we still have the functionality from it
             // pollHDD();
-            // enableInterrupts();
+            enableInterrupts();
             break;
         case 7:
             //Initialize LCD
@@ -431,6 +431,42 @@ void heartBeatLED()
         PHAL_writeGPIO(IMD_LED_GPIO_Port, IMD_LED_Pin, 0);
         PHAL_writeGPIO(BMS_LED_GPIO_Port, BMS_LED_Pin, 0);
     }
+}
+
+void EXTI15_10_IRQHandler() {
+    // Check if the interrupt was caused by EXTI11
+    if (EXTI->PR & EXTI_PR_PR11) {
+        PHAL_toggleGPIO(PRCHG_LED_GPIO_Port, PRCHG_LED_Pin);
+        SEND_START_BUTTON(q_tx_can, 1);
+
+        // Clear the interrupt pending bit for EXTI11
+        EXTI->PR |= EXTI_PR_PR11;
+    }
+}
+
+void enableInterrupts()
+{
+    // Enable Start Button Interrupt
+    // Start Button is on PD 11
+    // PD 11 is connected to EXTI 11
+
+    // Enable the SYSCFG clock
+    RCC->APB2ENR |= RCC_APB2ENR_SYSCFGEN;
+
+    // Select Port D for EXTI11
+    SYSCFG->EXTICR[2] |= SYSCFG_EXTICR3_EXTI11_PD;  
+
+    // Unmask the interrupt request line for EXTI11
+    EXTI->IMR |= EXTI_IMR_MR11;
+
+    // Disable the rising trigger
+    EXTI->RTSR &= ~EXTI_RTSR_TR11;
+
+    // Enable the falling trigger for the start button
+    EXTI->FTSR |= EXTI_FTSR_TR11;
+    
+    // Enable IRQ for EXTI Line 11
+    NVIC_EnableIRQ(EXTI15_10_IRQn);
 }
 
 // New MCU so these interrupts aren't the same
