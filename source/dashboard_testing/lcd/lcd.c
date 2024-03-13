@@ -604,7 +604,7 @@ void selectItem() {
             tv_settings.tv_enable_selected = (tv_settings.tv_enable_selected == 0);
             
             // Set the option
-            set_value(DT_PUMP_OP, NXT_VALUE, tv_settings.tv_enable_selected);
+            set_value(TV_ENABLE_OP, NXT_VALUE, tv_settings.tv_enable_selected);
         
             // Update CAN as necessary
         }
