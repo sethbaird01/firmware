@@ -91,6 +91,8 @@ add_subdirectory(source/a_box)
 add_subdirectory(source/torque_vector)
 add_subdirectory(source/dashboard)
 add_subdirectory(source/pdu)
+add_subdirectory(source/dashboard_testing)
+
 
 
 # Deprecated Components

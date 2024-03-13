@@ -58,6 +58,25 @@
             "preLaunchTask": "build",
             "runToEntryPoint": "main"
         },
+        {   "name": "Dashboard Testing",
+            "cwd": "${workspaceRoot}",
+            "executable": "./output/dashboard_testing/dashboard_testing.elf",
+            "request": "launch",
+            "type": "cortex-debug",
+            "servertype": "openocd",
+            "device:": "STM32F407VG",
+            "svdFile": "${workspaceRoot}/common/svd/STM32F407.svd",
+            "configFiles": [
+                "interface/stlink.cfg",
+                "target/stm32f4x.cfg"
+            ],
+            "debuggerArgs": [
+                "-d",
+                "${workspaceFolder}/source/dashboard_testing"
+            ],
+            "preLaunchTask": "build",
+            "runToEntryPoint": "main"
+        },
         {   "name": "Torque Vectoring",
             "cwd": "${workspaceRoot}",
             "executable": "./output/torque_vector/torque_vector.elf",
