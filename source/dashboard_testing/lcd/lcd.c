@@ -81,7 +81,7 @@ void updatePage() {
 
             // Set displayed data
             set_value(TV_INTENSITY_FLT, NXT_VALUE, tv_settings.tv_intensity_val); 
-            set_value(TV_INTENSITY_FLT, NXT_VALUE, tv_settings.tv_p_val); 
+            set_value(TV_PROPORTION_FLT, NXT_VALUE, tv_settings.tv_p_val); 
             set_text(TV_DEAD_TXT, NXT_TEXT, int_to_char(tv_settings.tv_deadband_val, parsed_value)); 
             bzero(parsed_value, 3);                                                        
             set_value(TV_ENABLE_OP, NXT_VALUE, tv_settings.tv_enable_selected);
@@ -264,6 +264,8 @@ void moveUp() {
 
             // Update the page items
             set_value(TV_INTENSITY_FLT, NXT_VALUE, tv_settings.tv_intensity_val); 
+            set_value(TV_INTENSITY_FLT, NXT_FONT_COLOR, BLACK);
+
         }
         else if (tv_settings.curr_hover == TV_INTENSITY_HOVER)
         {
@@ -397,6 +399,7 @@ void moveDown() {
 
             // Update the page item
             set_value(TV_INTENSITY_FLT, NXT_VALUE, tv_settings.tv_intensity_val); 
+            set_value(TV_INTENSITY_FLT, NXT_FONT_COLOR, BLACK);
         }
         else if (tv_settings.curr_hover == TV_INTENSITY_HOVER)
         {

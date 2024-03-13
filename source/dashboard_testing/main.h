@@ -146,11 +146,19 @@ typedef enum
 #define LOAD_FR_ADC_CH              (9)
 
 // LCD
-#define LCD_UART                    (USART1)
+// #define LCD_UART                    (USART1)
+// #define LCD_UART_TX_GPIO_Port       (GPIOA)
+// #define LCD_UART_TX_Pin             (9)
+// #define LCD_UART_RX_GPIO_Port       (GPIOA)
+// #define LCD_UART_RX_Pin             (10)
+// #define LCD_NUM_PAGES               (5) // Number encoder selectable pages 
+
+// LCD Test Bench
+#define LCD_UART                    (USART2)
 #define LCD_UART_TX_GPIO_Port       (GPIOA)
-#define LCD_UART_TX_Pin             (9)
+#define LCD_UART_TX_Pin             (2)
 #define LCD_UART_RX_GPIO_Port       (GPIOA)
-#define LCD_UART_RX_Pin             (10)
+#define LCD_UART_RX_Pin             (3)
 #define LCD_NUM_PAGES               (5) // Number encoder selectable pages 
 
 // LV Status

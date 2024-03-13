@@ -60,15 +60,25 @@ GPIOInitConfig_t gpio_config[] = {
 //  GPIO_INIT_ANALOG(LOAD_FR_GPIO_Port, LOAD_FR_Pin),
 
  // LCD
- GPIO_INIT_USART1TX_PA9,
- GPIO_INIT_USART1RX_PA10,
+//  GPIO_INIT_USART1TX_PA9,
+//  GPIO_INIT_USART1RX_PA10,
+
+// FOR STM32 F407 DISCOVERY, don't use PA9/PA10 for USART
+    GPIO_INIT_USART2TX_PA2,
+    GPIO_INIT_USART2RX_PA3,
 
  // Buttons/Switches
  GPIO_INIT_INPUT(B_OK_GPIO_Port, B_OK_Pin, GPIO_INPUT_OPEN_DRAIN),
  GPIO_INIT_INPUT(B_DOWN_GPIO_Port, B_DOWN_Pin, GPIO_INPUT_OPEN_DRAIN),
  GPIO_INIT_INPUT(B_UP_GPIO_Port, B_UP_Pin, GPIO_INPUT_OPEN_DRAIN),
- GPIO_INIT_INPUT(ENC_A_GPIO_Port, ENC_A_Pin, GPIO_INPUT_OPEN_DRAIN),
- GPIO_INIT_INPUT(ENC_B_GPIO_Port, ENC_B_Pin, GPIO_INPUT_OPEN_DRAIN),
+
+// GPIO_INIT_INPUT(ENC_A_GPIO_Port, ENC_A_Pin, GPIO_INPUT_OPEN_DRAIN),
+// GPIO_INIT_INPUT(ENC_B_GPIO_Port, ENC_B_Pin, GPIO_INPUT_OPEN_DRAIN),
+
+ GPIO_INIT_INPUT(ENC_A_GPIO_Port, ENC_A_Pin, GPIO_INPUT_PULL_UP),
+ GPIO_INIT_INPUT(ENC_B_GPIO_Port, ENC_B_Pin, GPIO_INPUT_PULL_UP),
+
+
 //  GPIO_INIT_INPUT(DAQ_SWITCH_GPIO_Port, DAQ_SWITCH_Pin, GPIO_INPUT_OPEN_DRAIN),
 
  // LV Status
@@ -107,8 +117,25 @@ ADCChannelConfig_t adc_channel_config[] = {
 dma_init_t adc_dma_config = ADC1_DMA_CONT_CONFIG((uint32_t) &raw_adc_values, sizeof(raw_adc_values) / sizeof(raw_adc_values.t1), 0b01);
 
 // USART Configuration for LCD
-dma_init_t usart_tx_dma_config = USART1_TXDMA_CONT_CONFIG(NULL, 1);
-dma_init_t usart_rx_dma_config = USART1_RXDMA_CONT_CONFIG(NULL, 2);
+// dma_init_t usart_tx_dma_config = USART1_TXDMA_CONT_CONFIG(NULL, 1);
+// dma_init_t usart_rx_dma_config = USART1_RXDMA_CONT_CONFIG(NULL, 2);
+// usart_init_t lcd = {
+//    .baud_rate   = 115200,
+//    .word_length = WORD_8,
+//    .stop_bits   = SB_ONE,
+//    .parity      = PT_NONE,
+//    .hw_flow_ctl = HW_DISABLE,
+//    .ovsample    = OV_16,
+//    .obsample    = OB_DISABLE,
+//    .periph      = USART1,
+//    .wake_addr   = false,
+//    .usart_active_num = USART1_ACTIVE_IDX,
+//    .tx_dma_cfg = &usart_tx_dma_config,
+//    .rx_dma_cfg = &usart_rx_dma_config
+// };
+
+dma_init_t usart_tx_dma_config = USART2_TXDMA_CONT_CONFIG(NULL, 1);
+dma_init_t usart_rx_dma_config = USART2_RXDMA_CONT_CONFIG(NULL, 2);
 usart_init_t lcd = {
    .baud_rate   = 115200,
    .word_length = WORD_8,
@@ -117,9 +144,9 @@ usart_init_t lcd = {
    .hw_flow_ctl = HW_DISABLE,
    .ovsample    = OV_16,
    .obsample    = OB_DISABLE,
-   .periph      = USART1,
+   .periph      = USART2,
    .wake_addr   = false,
-   .usart_active_num = USART1_ACTIVE_IDX,
+   .usart_active_num = USART2_ACTIVE_IDX,
    .tx_dma_cfg = &usart_tx_dma_config,
    .rx_dma_cfg = &usart_rx_dma_config
 };
@@ -211,8 +238,7 @@ int main (void){
     /* Task Creation */
     schedInit(APB1ClockRateHz);
     configureAnim(preflightAnimation, preflightChecks, 60, 2500);
-
-    taskCreate(updateFaultDisplay, 500);
+    //taskCreate(updateFaultDisplay, 500);
     //taskCreate(heartBeatLED, 500);
     //taskCreate(pedalsPeriodic, 15);
     taskCreate(pollDashboardInput, 100);
@@ -220,7 +246,7 @@ int main (void){
     // taskCreate(makeTheCarSad, 7000);
     //taskCreate(update_data_pages, 200);
     //taskCreate(sendBrakeStatus, 500);
-    taskCreate(sendTVParameters, 4000);
+    //taskCreate(sendTVParameters, 4000);
     taskCreateBackground(usartTxUpdate);
     //taskCreateBackground(canTxUpdate);
     //taskCreateBackground(canRxUpdate);
@@ -286,37 +312,37 @@ void preflightAnimation(void) {
     // Controls external LEDs since they are more visible when dash is in car
     static uint32_t time_ext;
 
-    PHAL_writeGPIO(BMS_LED_GPIO_Port, BMS_LED_Pin, 1);
-    PHAL_writeGPIO(IMD_LED_GPIO_Port, IMD_LED_Pin, 1);
-    PHAL_writeGPIO(PRCHG_LED_GPIO_Port, PRCHG_LED_Pin, 1);
+    // PHAL_writeGPIO(BMS_LED_GPIO_Port, BMS_LED_Pin, 1);
+    // PHAL_writeGPIO(IMD_LED_GPIO_Port, IMD_LED_Pin, 1);
+    // PHAL_writeGPIO(PRCHG_LED_GPIO_Port, PRCHG_LED_Pin, 1);
     static uint32_t time;
 
-    PHAL_writeGPIO(HEART_LED_GPIO_Port, HEART_LED_Pin, 0);
-    PHAL_writeGPIO(ERROR_LED_GPIO_Port, ERROR_LED_Pin, 0);
-    PHAL_writeGPIO(CONN_LED_GPIO_Port, CONN_LED_Pin, 0);
+    // PHAL_writeGPIO(HEART_LED_GPIO_Port, HEART_LED_Pin, 0);
+    // PHAL_writeGPIO(ERROR_LED_GPIO_Port, ERROR_LED_Pin, 0);
+    // PHAL_writeGPIO(CONN_LED_GPIO_Port, CONN_LED_Pin, 0);
 
     switch (time++ % 6)
     {
         case 0:
         case 5:
-            PHAL_writeGPIO(HEART_LED_GPIO_Port, HEART_LED_Pin, 1);
+            //PHAL_writeGPIO(HEART_LED_GPIO_Port, HEART_LED_Pin, 1);
             break;
         case 1:
         case 4:
-            PHAL_writeGPIO(CONN_LED_GPIO_Port, CONN_LED_Pin, 1);
+            //PHAL_writeGPIO(CONN_LED_GPIO_Port, CONN_LED_Pin, 1);
             break;
         case 2:
         case 3:
-            PHAL_writeGPIO(ERROR_LED_GPIO_Port, ERROR_LED_Pin, 1);
+            //PHAL_writeGPIO(ERROR_LED_GPIO_Port, ERROR_LED_Pin, 1);
             break;
     }
 
     switch (time_ext++ % 4)
     {
         case 0:
-            PHAL_writeGPIO(BMS_LED_GPIO_Port, BMS_LED_Pin, 0);
-            PHAL_writeGPIO(IMD_LED_GPIO_Port, IMD_LED_Pin, 0);
-            PHAL_writeGPIO(PRCHG_LED_GPIO_Port, PRCHG_LED_Pin, 0);
+            // PHAL_writeGPIO(BMS_LED_GPIO_Port, BMS_LED_Pin, 0);
+            // PHAL_writeGPIO(IMD_LED_GPIO_Port, IMD_LED_Pin, 0);
+            // PHAL_writeGPIO(PRCHG_LED_GPIO_Port, PRCHG_LED_Pin, 0);
             break;
     }
 }
