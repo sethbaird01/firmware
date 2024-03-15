@@ -77,7 +77,7 @@ void canRxUpdate()
                 can_data.dashboard_hb.last_rx = sched.os_ticks;
                 break;
             case ID_MAX_CELL_TEMP:
-                can_data.max_cell_temp.max_temp = msg_data_a->max_cell_temp.max_temp;
+                can_data.max_cell_temp.max_temp = (int16_t) msg_data_a->max_cell_temp.max_temp;
                 can_data.max_cell_temp.stale = 0;
                 can_data.max_cell_temp.last_rx = sched.os_ticks;
                 break;
@@ -98,10 +98,22 @@ void canRxUpdate()
                 main_module_bl_cmd_CALLBACK(msg_data_a);
                 break;
             case ID_THROTTLE_REMAPPED:
-                can_data.throttle_remapped.remap_k_rl = (int16_t) msg_data_a->throttle_remapped.remap_k_rl;
-                can_data.throttle_remapped.remap_k_rr = (int16_t) msg_data_a->throttle_remapped.remap_k_rr;
+                can_data.throttle_remapped.vcu_k_rl = (int16_t) msg_data_a->throttle_remapped.vcu_k_rl;
+                can_data.throttle_remapped.vcu_k_rr = (int16_t) msg_data_a->throttle_remapped.vcu_k_rr;
                 can_data.throttle_remapped.stale = 0;
                 can_data.throttle_remapped.last_rx = sched.os_ticks;
+                break;
+            case ID_ORION_CURRENTS_VOLTS:
+                can_data.orion_currents_volts.pack_current = (int16_t) msg_data_a->orion_currents_volts.pack_current;
+                can_data.orion_currents_volts.pack_voltage = msg_data_a->orion_currents_volts.pack_voltage;
+                can_data.orion_currents_volts.stale = 0;
+                can_data.orion_currents_volts.last_rx = sched.os_ticks;
+                break;
+            case ID_THROTTLE_VCU:
+                can_data.throttle_vcu.vcu_r_rl = (int16_t) msg_data_a->throttle_vcu.vcu_r_rl;
+                can_data.throttle_vcu.vcu_r_rr = (int16_t) msg_data_a->throttle_vcu.vcu_r_rr;
+                can_data.throttle_vcu.stale = 0;
+                can_data.throttle_vcu.last_rx = sched.os_ticks;
                 break;
             case ID_FAULT_SYNC_PDU:
                 can_data.fault_sync_pdu.idx = msg_data_a->fault_sync_pdu.idx;
@@ -116,6 +128,11 @@ void canRxUpdate()
             case ID_FAULT_SYNC_A_BOX:
                 can_data.fault_sync_a_box.idx = msg_data_a->fault_sync_a_box.idx;
                 can_data.fault_sync_a_box.latched = msg_data_a->fault_sync_a_box.latched;
+				handleCallbacks(msg_data_a->fault_sync_main_module.idx, msg_data_a->fault_sync_main_module.latched);
+                break;
+            case ID_FAULT_SYNC_TORQUE_VECTOR:
+                can_data.fault_sync_torque_vector.idx = msg_data_a->fault_sync_torque_vector.idx;
+                can_data.fault_sync_torque_vector.latched = msg_data_a->fault_sync_torque_vector.latched;
 				handleCallbacks(msg_data_a->fault_sync_main_module.idx, msg_data_a->fault_sync_main_module.latched);
                 break;
             case ID_FAULT_SYNC_TEST_NODE:
@@ -162,6 +179,12 @@ void canRxUpdate()
     CHECK_STALE(can_data.throttle_remapped.stale,
                 sched.os_ticks, can_data.throttle_remapped.last_rx,
                 UP_THROTTLE_REMAPPED);
+    CHECK_STALE(can_data.orion_currents_volts.stale,
+                sched.os_ticks, can_data.orion_currents_volts.last_rx,
+                UP_ORION_CURRENTS_VOLTS);
+    CHECK_STALE(can_data.throttle_vcu.stale,
+                sched.os_ticks, can_data.throttle_vcu.last_rx,
+                UP_THROTTLE_VCU);
     /* END AUTO STALE CHECKS */
 }
 
@@ -192,16 +215,20 @@ bool initCANFilter()
     CAN1->sFilterRegister[3].FR1 = (ID_MAIN_MODULE_BL_CMD << 3) | 4;
     CAN1->sFilterRegister[3].FR2 = (ID_THROTTLE_REMAPPED << 3) | 4;
     CAN1->FA1R |= (1 << 4);    // configure bank 4
-    CAN1->sFilterRegister[4].FR1 = (ID_FAULT_SYNC_PDU << 3) | 4;
-    CAN1->sFilterRegister[4].FR2 = (ID_FAULT_SYNC_DASHBOARD << 3) | 4;
+    CAN1->sFilterRegister[4].FR1 = (ID_ORION_CURRENTS_VOLTS << 3) | 4;
+    CAN1->sFilterRegister[4].FR2 = (ID_THROTTLE_VCU << 3) | 4;
     CAN1->FA1R |= (1 << 5);    // configure bank 5
-    CAN1->sFilterRegister[5].FR1 = (ID_FAULT_SYNC_A_BOX << 3) | 4;
-    CAN1->sFilterRegister[5].FR2 = (ID_FAULT_SYNC_TEST_NODE << 3) | 4;
+    CAN1->sFilterRegister[5].FR1 = (ID_FAULT_SYNC_PDU << 3) | 4;
+    CAN1->sFilterRegister[5].FR2 = (ID_FAULT_SYNC_DASHBOARD << 3) | 4;
     CAN1->FA1R |= (1 << 6);    // configure bank 6
-    CAN1->sFilterRegister[6].FR1 = (ID_SET_FAULT << 3) | 4;
-    CAN1->sFilterRegister[6].FR2 = (ID_RETURN_FAULT_CONTROL << 3) | 4;
+    CAN1->sFilterRegister[6].FR1 = (ID_FAULT_SYNC_A_BOX << 3) | 4;
+    CAN1->sFilterRegister[6].FR2 = (ID_FAULT_SYNC_TORQUE_VECTOR << 3) | 4;
     CAN1->FA1R |= (1 << 7);    // configure bank 7
-    CAN1->sFilterRegister[7].FR1 = (ID_DAQ_COMMAND_MAIN_MODULE << 3) | 4;
+    CAN1->sFilterRegister[7].FR1 = (ID_FAULT_SYNC_TEST_NODE << 3) | 4;
+    CAN1->sFilterRegister[7].FR2 = (ID_SET_FAULT << 3) | 4;
+    CAN1->FA1R |= (1 << 8);    // configure bank 8
+    CAN1->sFilterRegister[8].FR1 = (ID_RETURN_FAULT_CONTROL << 3) | 4;
+    CAN1->sFilterRegister[8].FR2 = (ID_DAQ_COMMAND_MAIN_MODULE << 3) | 4;
     /* END AUTO FILTER */
     CAN1->FA1R |= (1 << 6);    // configure bank 6
     CAN1->sFilterRegister[6].FR1 = (ID_LWS_STANDARD << 21);

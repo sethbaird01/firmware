@@ -23,13 +23,13 @@
 #define ID_MAIN_HB 0x4001901
 #define ID_TORQUE_REQUEST_MAIN 0x4000041
 #define ID_COOLANT_TEMPS 0x4000881
-#define ID_COOLANT_OUT 0x40008c1
 #define ID_GEARBOX 0x10000901
 #define ID_LWS_CONFIG 0x7c0
 #define ID_VOLTAGE_RAILS 0x10001901
 #define ID_PRECHARGE_STATE 0x8001881
 #define ID_CURRENT_MEAS 0x10001941
 #define ID_MCU_STATUS 0x10001981
+#define ID_NUM_MC_SKIPS 0x10001b81
 #define ID_REAR_MC_STATUS 0x4001941
 #define ID_REAR_MOTOR_CURRENTS_TEMPS 0xc0002c1
 #define ID_SDC_STATUS 0xc000381
@@ -45,10 +45,13 @@
 #define ID_LWS_STANDARD 0x2b0
 #define ID_MAIN_MODULE_BL_CMD 0x409c43e
 #define ID_THROTTLE_REMAPPED 0xc0025b7
-#define ID_FAULT_SYNC_PDU 0x8cadf
-#define ID_FAULT_SYNC_DASHBOARD 0x8ca85
+#define ID_ORION_CURRENTS_VOLTS 0x140006f8
+#define ID_THROTTLE_VCU 0xc0025f7
+#define ID_FAULT_SYNC_PDU 0x8cb1f
+#define ID_FAULT_SYNC_DASHBOARD 0x8cac5
 #define ID_FAULT_SYNC_A_BOX 0x8ca44
-#define ID_FAULT_SYNC_TEST_NODE 0x8cb3f
+#define ID_FAULT_SYNC_TORQUE_VECTOR 0x8cab7
+#define ID_FAULT_SYNC_TEST_NODE 0x8cb7f
 #define ID_SET_FAULT 0x809c83e
 #define ID_RETURN_FAULT_CONTROL 0x809c87e
 #define ID_DAQ_COMMAND_MAIN_MODULE 0x14000072
@@ -59,13 +62,13 @@
 #define DLC_MAIN_HB 2
 #define DLC_TORQUE_REQUEST_MAIN 8
 #define DLC_COOLANT_TEMPS 4
-#define DLC_COOLANT_OUT 3
 #define DLC_GEARBOX 2
 #define DLC_LWS_CONFIG 2
 #define DLC_VOLTAGE_RAILS 8
 #define DLC_PRECHARGE_STATE 4
 #define DLC_CURRENT_MEAS 7
 #define DLC_MCU_STATUS 5
+#define DLC_NUM_MC_SKIPS 4
 #define DLC_REAR_MC_STATUS 6
 #define DLC_REAR_MOTOR_CURRENTS_TEMPS 8
 #define DLC_SDC_STATUS 2
@@ -81,9 +84,12 @@
 #define DLC_LWS_STANDARD 5
 #define DLC_MAIN_MODULE_BL_CMD 5
 #define DLC_THROTTLE_REMAPPED 4
+#define DLC_ORION_CURRENTS_VOLTS 4
+#define DLC_THROTTLE_VCU 4
 #define DLC_FAULT_SYNC_PDU 3
 #define DLC_FAULT_SYNC_DASHBOARD 3
 #define DLC_FAULT_SYNC_A_BOX 3
+#define DLC_FAULT_SYNC_TORQUE_VECTOR 3
 #define DLC_FAULT_SYNC_TEST_NODE 3
 #define DLC_SET_FAULT 3
 #define DLC_RETURN_FAULT_CONTROL 2
@@ -115,16 +121,6 @@
         data_a->coolant_temps.battery_out_temp = battery_out_temp_;\
         data_a->coolant_temps.drivetrain_in_temp = drivetrain_in_temp_;\
         data_a->coolant_temps.drivetrain_out_temp = drivetrain_out_temp_;\
-        qSendToBack(&queue, &msg);\
-    } while(0)
-#define SEND_COOLANT_OUT(queue, bat_fan_, dt_fan_, bat_pump_, bat_pump_aux_, dt_pump_) do {\
-        CanMsgTypeDef_t msg = {.Bus=CAN1, .ExtId=ID_COOLANT_OUT, .DLC=DLC_COOLANT_OUT, .IDE=1};\
-        CanParsedData_t* data_a = (CanParsedData_t *) &msg.Data;\
-        data_a->coolant_out.bat_fan = bat_fan_;\
-        data_a->coolant_out.dt_fan = dt_fan_;\
-        data_a->coolant_out.bat_pump = bat_pump_;\
-        data_a->coolant_out.bat_pump_aux = bat_pump_aux_;\
-        data_a->coolant_out.dt_pump = dt_pump_;\
         qSendToBack(&queue, &msg);\
     } while(0)
 #define SEND_GEARBOX(queue, l_temp_, r_temp_) do {\
@@ -177,6 +173,13 @@
         data_a->mcu_status.background_use = background_use_;\
         data_a->mcu_status.sched_error = sched_error_;\
         data_a->mcu_status.can_tx_fails = can_tx_fails_;\
+        qSendToBack(&queue, &msg);\
+    } while(0)
+#define SEND_NUM_MC_SKIPS(queue, noise_r_, noise_l_) do {\
+        CanMsgTypeDef_t msg = {.Bus=CAN1, .ExtId=ID_NUM_MC_SKIPS, .DLC=DLC_NUM_MC_SKIPS, .IDE=1};\
+        CanParsedData_t* data_a = (CanParsedData_t *) &msg.Data;\
+        data_a->num_mc_skips.noise_r = noise_r_;\
+        data_a->num_mc_skips.noise_l = noise_l_;\
         qSendToBack(&queue, &msg);\
     } while(0)
 #define SEND_REAR_MC_STATUS(queue, rear_left_motor_, rear_left_motor_link_, rear_left_last_link_error_, rear_right_motor_, rear_right_motor_link_, rear_right_last_link_error_) do {\
@@ -258,6 +261,8 @@
 #define UP_MAX_CELL_TEMP 500
 #define UP_LWS_STANDARD 15
 #define UP_THROTTLE_REMAPPED 15
+#define UP_ORION_CURRENTS_VOLTS 32
+#define UP_THROTTLE_VCU 15
 /* END AUTO UP DEFS */
 
 #define CHECK_STALE(stale, curr, last, period) if(!stale && \
@@ -266,6 +271,8 @@
 /* BEGIN AUTO CAN ENUMERATIONS */
 typedef enum {
     CAR_STATE_IDLE,
+    CAR_STATE_PRECHARGING,
+    CAR_STATE_ENERGIZED,
     CAR_STATE_BUZZING,
     CAR_STATE_READY2DRIVE,
     CAR_STATE_ERROR,
@@ -343,13 +350,6 @@ typedef union {
         uint64_t drivetrain_out_temp: 8;
     } coolant_temps;
     struct {
-        uint64_t bat_fan: 8;
-        uint64_t dt_fan: 8;
-        uint64_t bat_pump: 1;
-        uint64_t bat_pump_aux: 1;
-        uint64_t dt_pump: 1;
-    } coolant_out;
-    struct {
         uint64_t l_temp: 8;
         uint64_t r_temp: 8;
     } gearbox;
@@ -383,6 +383,10 @@ typedef union {
         uint64_t sched_error: 8;
         uint64_t can_tx_fails: 8;
     } mcu_status;
+    struct {
+        uint64_t noise_r: 16;
+        uint64_t noise_l: 16;
+    } num_mc_skips;
     struct {
         uint64_t rear_left_motor: 8;
         uint64_t rear_left_motor_link: 8;
@@ -466,9 +470,17 @@ typedef union {
         uint64_t data: 32;
     } main_module_bl_cmd;
     struct {
-        uint64_t remap_k_rl: 16;
-        uint64_t remap_k_rr: 16;
+        uint64_t vcu_k_rl: 16;
+        uint64_t vcu_k_rr: 16;
     } throttle_remapped;
+    struct {
+        uint64_t pack_current: 16;
+        uint64_t pack_voltage: 16;
+    } orion_currents_volts;
+    struct {
+        uint64_t vcu_r_rl: 16;
+        uint64_t vcu_r_rr: 16;
+    } throttle_vcu;
     struct {
         uint64_t idx: 16;
         uint64_t latched: 1;
@@ -481,6 +493,10 @@ typedef union {
         uint64_t idx: 16;
         uint64_t latched: 1;
     } fault_sync_a_box;
+    struct {
+        uint64_t idx: 16;
+        uint64_t latched: 1;
+    } fault_sync_torque_vector;
     struct {
         uint64_t idx: 16;
         uint64_t latched: 1;
@@ -529,7 +545,7 @@ typedef struct {
         uint32_t last_rx;
     } dashboard_hb;
     struct {
-        uint16_t max_temp;
+        int16_t max_temp;
         uint8_t stale;
         uint32_t last_rx;
     } max_cell_temp;
@@ -549,11 +565,23 @@ typedef struct {
         uint32_t data;
     } main_module_bl_cmd;
     struct {
-        int16_t remap_k_rl;
-        int16_t remap_k_rr;
+        int16_t vcu_k_rl;
+        int16_t vcu_k_rr;
         uint8_t stale;
         uint32_t last_rx;
     } throttle_remapped;
+    struct {
+        int16_t pack_current;
+        uint16_t pack_voltage;
+        uint8_t stale;
+        uint32_t last_rx;
+    } orion_currents_volts;
+    struct {
+        int16_t vcu_r_rl;
+        int16_t vcu_r_rr;
+        uint8_t stale;
+        uint32_t last_rx;
+    } throttle_vcu;
     struct {
         uint16_t idx;
         uint8_t latched;
@@ -566,6 +594,10 @@ typedef struct {
         uint16_t idx;
         uint8_t latched;
     } fault_sync_a_box;
+    struct {
+        uint16_t idx;
+        uint8_t latched;
+    } fault_sync_torque_vector;
     struct {
         uint16_t idx;
         uint8_t latched;
