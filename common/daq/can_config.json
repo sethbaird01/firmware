@@ -12,7 +12,7 @@
                             "msg_desc":"Heart beat message for main module",
                             "signals":[
                                 {"sig_name":"car_state", "sig_desc":"Main car state","type":"uint8_t","length":8,
-                                 "choices": ["idle", "buzzing", "ready2drive", "error", "fatal", "reset", "recover", "fan_ctrl"]},
+                                 "choices": ["idle", "precharging", "energized", "buzzing", "ready2drive", "error", "fatal", "reset", "recover", "fan_ctrl"]},
                                 {"sig_name":"precharge_state", "type":"uint8_t", "length": 1}
                             ],
                             "msg_period":100,
@@ -43,20 +43,6 @@
                             "msg_period":200,
                             "msg_hlp":1,
                             "msg_pgn":34
-                        },
-                        {
-                            "msg_name": "coolant_out",
-                            "msg_desc": "outputs to coolant loops",
-                            "signals": [
-                                {"sig_name": "bat_fan", "type":"uint8_t", "unit": "%"},
-                                {"sig_name":"dt_fan", "type":"uint8_t", "unit":"%"},
-                                {"sig_name": "bat_pump", "type":"uint8_t", "length": 1},
-                                {"sig_name": "bat_pump_aux", "type":"uint8_t", "length": 1},
-                                {"sig_name": "dt_pump", "type":"uint8_t", "length": 1}
-                            ],
-                            "msg_period": 1000,
-                            "msg_hlp":1,
-                            "msg_pgn":35
                         },
                         {
                             "msg_name": "gearbox",
@@ -135,6 +121,17 @@
                             "msg_pgn": 102
                         },
                         {
+                            "msg_name": "num_mc_skips",
+                            "msg_desc": "Messages ignored by MC",
+                            "signals": [
+                                {"sig_name":"noise_r", "type":"uint16_t", "sig_desc": "Num of skipped msgs"},
+                                {"sig_name":"noise_l", "type":"uint16_t", "sig_desc": "Num of skipped msgs"}
+                            ],
+                            "msg_period": 100,
+                            "msg_hlp": 4,
+                            "msg_pgn": 110
+                        },
+                        {
                             "msg_name": "rear_mc_status",
                             "msg_desc": "rear drivline heart beat",
                             "signals": [
@@ -188,7 +185,7 @@
                                 {"sig_name": "pchg_out", "type":"uint8_t", "length":1}
 
                             ],
-                            "msg_period": 165,
+                            "msg_period": 200,
                             "msg_hlp": 3,
                             "msg_pgn": 14
                         },
@@ -225,7 +222,8 @@
                         {"msg_name": "max_cell_temp"},
                         {"msg_name": "LWS_Standard"},
                         {"msg_name": "main_module_bl_cmd" , "callback": true},
-                        {"msg_name": "throttle_remapped"}
+                        {"msg_name": "throttle_remapped"},
+                        {"msg_name": "orion_currents_volts"}
                     ]
                 },
                 {
@@ -256,13 +254,13 @@
                             "msg_period": 1000
                         },
                         {
-                            "msg_name": "num_them_bad",
+                            "msg_name": "num_therm_bad",
                             "msg_desc": "Number of wonky thermistors on pack",
                             "signals":[
-                                {"sig_name": "module_1", "sig_desc": "Number of thermistors > 1.5v", "type": "uint8_t"},
-                                {"sig_name": "module_2", "sig_desc": "Number of thermistors > 1.5v", "type": "uint8_t"},
-                                {"sig_name": "module_3", "sig_desc": "Number of thermistors > 1.5v", "type": "uint8_t"},
-                                {"sig_name": "module_4", "sig_desc": "Number of thermistors > 1.5v", "type": "uint8_t"}
+                                {"sig_name": "A", "sig_desc": "Number of thermistors > 1.5v", "type": "uint8_t"},
+                                {"sig_name": "B", "sig_desc": "Number of thermistors > 1.5v", "type": "uint8_t"},
+                                {"sig_name": "C", "sig_desc": "Number of thermistors > 1.5v", "type": "uint8_t"},
+                                {"sig_name": "D", "sig_desc": "Number of thermistors > 1.5v", "type": "uint8_t"}
                             ],
                             "msg_period": 500,
                             "msg_hlp": 2,
@@ -320,7 +318,7 @@
                         {   "msg_name":"max_cell_temp",
                             "msg_desc":"maximum cell temperature for the whole pack",
                             "signals":[
-                                {"sig_name":"max_temp","type": "uint16_t", "scale": 0.01}
+                                {"sig_name":"max_temp","type": "int16_t", "scale": 0.1}
                             ],
                             "msg_period":500,
                             "msg_hlp":1,
@@ -329,10 +327,10 @@
                         {   "msg_name": "mod_cell_temp_avg",
                             "msg_desc": "Average cell temperature for each module",
                             "signals":[
-                                {"sig_name": "temp_A", "type": "uint16_t", "scale": 0.01},
-                                {"sig_name": "temp_B", "type": "uint16_t", "scale": 0.01},
-                                {"sig_name": "temp_C", "type": "uint16_t", "scale": 0.01},
-                                {"sig_name": "temp_D", "type": "uint16_t", "scale": 0.01}
+                                {"sig_name": "temp_A", "type": "int16_t", "scale": 0.1},
+                                {"sig_name": "temp_B", "type": "int16_t", "scale": 0.1},
+                                {"sig_name": "temp_C", "type": "int16_t", "scale": 0.1},
+                                {"sig_name": "temp_D", "type": "int16_t", "scale": 0.1}
                             ],
                             "msg_period":0,
                             "msg_hlp":5,
@@ -341,10 +339,10 @@
                         {"msg_name": "mod_cell_temp_max",
                         "msg_desc": "Max cell temperature for each module",
                         "signals":[
-                            {"sig_name": "temp_A", "type": "uint16_t", "scale": 0.01},
-                            {"sig_name": "temp_B", "type": "uint16_t", "scale": 0.01},
-                            {"sig_name": "temp_C", "type": "uint16_t", "scale": 0.01},
-                            {"sig_name": "temp_D", "type": "uint16_t", "scale": 0.01}
+                            {"sig_name": "temp_A", "type": "int16_t", "scale": 0.1},
+                            {"sig_name": "temp_B", "type": "int16_t", "scale": 0.1},
+                            {"sig_name": "temp_C", "type": "int16_t", "scale": 0.1},
+                            {"sig_name": "temp_D", "type": "int16_t", "scale": 0.1}
                         ],
                         "msg_period":0,
                         "msg_hlp":5,
@@ -353,28 +351,37 @@
                     {"msg_name": "mod_cell_temp_min",
                         "msg_desc": "Min cell temperature for each module",
                         "signals":[
-                            {"sig_name": "temp_A", "type": "uint16_t", "scale": 0.01},
-                            {"sig_name": "temp_B", "type": "uint16_t", "scale": 0.01},
-                            {"sig_name": "temp_C", "type": "uint16_t", "scale": 0.01},
-                            {"sig_name": "temp_D", "type": "uint16_t", "scale": 0.01}
+                            {"sig_name": "temp_A", "type": "int16_t", "scale": 0.1},
+                            {"sig_name": "temp_B", "type": "int16_t", "scale": 0.1},
+                            {"sig_name": "temp_C", "type": "int16_t", "scale": 0.1},
+                            {"sig_name": "temp_D", "type": "int16_t", "scale": 0.1}
                         ],
                         "msg_period":0,
                         "msg_hlp":5,
                         "msg_pgn":520
                     },
-                        {   "msg_name": "raw_cell_temp",
+                        {   "msg_name": "raw_cell_temp_a_b",
                             "msg_desc": "Raw cell temperature for each module of thermistor at index",
                             "signals":[
                                 {"sig_name": "index",  "type": "uint8_t",  "length": 8},
-                                {"sig_name": "temp_A", "type": "uint16_t", "length": 12, "scale": 0.01, "unit": "C"},
-                                {"sig_name": "temp_B", "type": "uint16_t", "length": 12, "scale": 0.01, "unit": "C"},
-                                {"sig_name": "temp_C", "type": "uint16_t", "length": 12, "scale": 0.01, "unit": "C"},
-                                {"sig_name": "temp_D", "type": "uint16_t", "length": 12, "scale": 0.01, "unit": "C"}
+                                {"sig_name": "temp_A", "type": "int16_t", "scale": 0.1, "unit": "C"},
+                                {"sig_name": "temp_B", "type": "int16_t", "scale": 0.1, "unit": "C"}
                             ],
                             "msg_period":0,
                             "msg_hlp":5,
                             "msg_pgn":515
-                        }
+                        },
+                        {"msg_name": "raw_cell_temp_c_d",
+                        "msg_desc": "Raw cell temperature for each module of thermistor at index",
+                        "signals":[
+                            {"sig_name": "index",  "type": "uint8_t",  "length": 8},
+                            {"sig_name": "temp_C", "type": "int16_t", "scale": 0.1, "unit": "C"},
+                            {"sig_name": "temp_D", "type": "int16_t", "scale": 0.1, "unit": "C"}
+                        ],
+                        "msg_period":0,
+                        "msg_hlp":5,
+                        "msg_pgn":526
+                    }
                     ],
                     "rx": [
                         {"msg_name": "elcon_charger_status"},
@@ -636,12 +643,12 @@
                             "msg_desc": "Cooling Pump/Fan requests from Dash LCD",
                             "signals": [
                                 {"sig_name": "dt_pump", "type": "uint8_t"},
-                                {"sig_name": "dt_fan", "type": "uint8_t"},
+                                {"sig_name": "dt_fan", "type": "uint8_t", "unit":"%", "maximum":100},
                                 {"sig_name": "batt_pump", "type": "uint8_t"},
                                 {"sig_name": "batt_pump2", "type": "uint8_t"},
-                                {"sig_name": "batt_fan", "type": "uint8_t"}
+                                {"sig_name": "batt_fan", "type": "uint8_t", "unit":"%", "maximum":100}
                             ],
-                            "msg_period": 5,
+                            "msg_period": 0,
                             "msg_hlp": 3,
                             "msg_pgn": 11
                         },
@@ -737,20 +744,74 @@
                     "node_ssa":31,
                     "tx": [
                         {
-                            "msg_name":"pdu_test",
-                            "msg_desc":"periodic dashboard heartbeat",
+                            "msg_name":"v_rails",
+                            "msg_desc":"PDU voltage rail readings",
                             "signals":[
-                                {"sig_name": "test_1", "type":"uint8_t"},
-                                {"sig_name": "test_2", "type":"uint8_t"},
-                                {"sig_name": "test_3", "type":"uint8_t"}
+                                {"sig_name": "in_24v", "type":"uint16_t", "unit":"mV"},
+                                {"sig_name": "out_5v", "type":"uint16_t", "unit":"mV"},
+                                {"sig_name": "out_3v3", "type":"uint16_t", "unit":"mV"}
                             ],
-                            "msg_period":15,
+                            "msg_period":500,
                             "msg_hlp":1,
-                            "msg_pgn":1040
+                            "msg_pgn":1041
+                        },
+                        {
+                            "msg_name":"rail_currents",
+                            "msg_desc":"PDU rail currents",
+                            "signals":[
+                                {"sig_name": "i_24v", "type":"uint16_t", "unit":"mA"},
+                                {"sig_name": "i_5v", "type":"uint16_t", "unit":"mA"}
+                            ],
+                            "msg_period":500,
+                            "msg_hlp":1,
+                            "msg_pgn":1042
+                        },
+                        {
+                            "msg_name":"pump_and_fan_current",
+                            "msg_desc":"PDU pump and fan currents",
+                            "signals":[
+                                {"sig_name": "i_pump1", "type":"uint16_t", "unit":"mA"},
+                                {"sig_name": "i_pump2", "type":"uint16_t", "unit":"mA"},
+                                {"sig_name": "i_fan1", "type":"uint16_t", "unit":"mA", "length":12},
+                                {"sig_name": "i_fan2", "type":"uint16_t", "unit":"mA", "length":12}
+                            ],
+                            "msg_period":500,
+                            "msg_hlp":1,
+                            "msg_pgn":1043
+                        },
+                        {
+                            "msg_name":"other_currents",
+                            "msg_desc":"Other PDU currents",
+                            "signals":[
+                                {"sig_name": "i_sdc", "type":"uint16_t", "unit":"mA", "length":12},
+                                {"sig_name": "i_aux", "type":"uint16_t", "unit":"mA", "length":12},
+                                {"sig_name": "i_dash", "type":"uint16_t", "unit":"mA", "length":12},
+                                {"sig_name": "i_abox", "type":"uint16_t", "unit":"mA", "length":12},
+                                {"sig_name": "i_main", "type":"uint16_t", "unit":"mA", "length":12}
+                            ],
+                            "msg_period":500,
+                            "msg_hlp":1,
+                            "msg_pgn":1044
+                        },
+                        {
+                            "msg_name": "coolant_out",
+                            "msg_desc": "outputs to coolant loops",
+                            "signals": [
+                                {"sig_name": "bat_fan", "type":"uint8_t", "unit": "%"},
+                                {"sig_name":"dt_fan", "type":"uint8_t", "unit":"%"},
+                                {"sig_name": "bat_pump", "type":"uint8_t", "length": 1},
+                                {"sig_name": "bat_pump_aux", "type":"uint8_t", "length": 1},
+                                {"sig_name": "dt_pump", "type":"uint8_t", "length": 1}
+                            ],
+                            "msg_period": 1000,
+                            "msg_hlp":1,
+                            "msg_pgn":35
                         }
                     ],
                     "rx": [
-                        {"msg_name": "pdu_bl_cmd" , "callback": true}
+                        {"msg_name": "pdu_bl_cmd" , "callback": true},
+                        {"msg_name":"cooling_driver_request", "callback": true},
+                        {"msg_name":"main_hb"}
                     ]
                 },
                 {

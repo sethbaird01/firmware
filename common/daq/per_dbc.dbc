@@ -52,13 +52,6 @@ BO_ 2214594689 coolant_temps: 4 Main_Module
  SG_ battery_out_temp : 8|8@1- (1,0) [0|0] "C" Vector__XXX
  SG_ battery_in_temp : 0|8@1- (1,0) [0|0] "C" Vector__XXX
 
-BO_ 2214594753 coolant_out: 3 Main_Module
- SG_ dt_pump : 18|1@1+ (1,0) [0|0] "" Vector__XXX
- SG_ bat_pump_aux : 17|1@1+ (1,0) [0|0] "" Vector__XXX
- SG_ bat_pump : 16|1@1+ (1,0) [0|0] "" Vector__XXX
- SG_ dt_fan : 8|8@1+ (1,0) [0|0] "%" Vector__XXX
- SG_ bat_fan : 0|8@1+ (1,0) [0|0] "%" Vector__XXX
-
 BO_ 2415921409 gearbox: 2 Main_Module
  SG_ r_temp : 8|8@1- (1,0) [0|0] "" Vector__XXX
  SG_ l_temp : 0|8@1- (1,0) [0|0] "" Vector__XXX
@@ -92,6 +85,10 @@ BO_ 2415925633 mcu_status: 5 Main_Module
  SG_ background_use : 16|8@1+ (1,0) [0|0] "" Vector__XXX
  SG_ foreground_use : 8|8@1+ (1,0) [0|0] "" Vector__XXX
  SG_ sched_skips : 0|8@1+ (1,0) [0|0] "" Vector__XXX
+
+BO_ 2415926145 num_mc_skips: 4 Main_Module
+ SG_ noise_l : 16|16@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ noise_r : 0|16@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2214598977 rear_mc_status: 6 Main_Module
  SG_ rear_right_last_link_error : 40|8@1+ (1,0) [0|0] "" Vector__XXX
@@ -149,11 +146,11 @@ BO_ 2550588916 elcon_charger_command: 5 a_box
  SG_ current_limit : 16|16@1+ (0.1,0) [0|0] "A" Vector__XXX
  SG_ voltage_limit : 0|16@1+ (0.1,0) [0|0] "V" Vector__XXX
 
-BO_ 2281734340 num_them_bad: 4 a_box
- SG_ module_4 : 24|8@1+ (1,0) [0|0] "" Vector__XXX
- SG_ module_3 : 16|8@1+ (1,0) [0|0] "" Vector__XXX
- SG_ module_2 : 8|8@1+ (1,0) [0|0] "" Vector__XXX
- SG_ module_1 : 0|8@1+ (1,0) [0|0] "" Vector__XXX
+BO_ 2281734340 num_therm_bad: 4 a_box
+ SG_ D : 24|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ C : 16|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ B : 8|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ A : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2281734276 pack_charge_status: 7 a_box
  SG_ current : 33|16@1+ (0.1,0) [0|0] "A" Vector__XXX
@@ -177,31 +174,34 @@ BO_ 2214625540 angle_data: 6 a_box
  SG_ pitch : 0|16@1- (1,0) [0|0] "degx10" Vector__XXX
 
 BO_ 2214913540 max_cell_temp: 2 a_box
- SG_ max_temp : 0|16@1+ (0.01,0) [0|0] "" Vector__XXX
+ SG_ max_temp : 0|16@1- (0.1,0) [0|0] "" Vector__XXX
 
 BO_ 2483060868 mod_cell_temp_avg: 8 a_box
- SG_ temp_D : 48|16@1+ (0.01,0) [0|0] "" Vector__XXX
- SG_ temp_C : 32|16@1+ (0.01,0) [0|0] "" Vector__XXX
- SG_ temp_B : 16|16@1+ (0.01,0) [0|0] "" Vector__XXX
- SG_ temp_A : 0|16@1+ (0.01,0) [0|0] "" Vector__XXX
+ SG_ temp_D : 48|16@1- (0.1,0) [0|0] "" Vector__XXX
+ SG_ temp_C : 32|16@1- (0.1,0) [0|0] "" Vector__XXX
+ SG_ temp_B : 16|16@1- (0.1,0) [0|0] "" Vector__XXX
+ SG_ temp_A : 0|16@1- (0.1,0) [0|0] "" Vector__XXX
 
 BO_ 2483060996 mod_cell_temp_max: 8 a_box
- SG_ temp_D : 48|16@1+ (0.01,0) [0|0] "" Vector__XXX
- SG_ temp_C : 32|16@1+ (0.01,0) [0|0] "" Vector__XXX
- SG_ temp_B : 16|16@1+ (0.01,0) [0|0] "" Vector__XXX
- SG_ temp_A : 0|16@1+ (0.01,0) [0|0] "" Vector__XXX
+ SG_ temp_D : 48|16@1- (0.1,0) [0|0] "" Vector__XXX
+ SG_ temp_C : 32|16@1- (0.1,0) [0|0] "" Vector__XXX
+ SG_ temp_B : 16|16@1- (0.1,0) [0|0] "" Vector__XXX
+ SG_ temp_A : 0|16@1- (0.1,0) [0|0] "" Vector__XXX
 
 BO_ 2483061252 mod_cell_temp_min: 8 a_box
- SG_ temp_D : 48|16@1+ (0.01,0) [0|0] "" Vector__XXX
- SG_ temp_C : 32|16@1+ (0.01,0) [0|0] "" Vector__XXX
- SG_ temp_B : 16|16@1+ (0.01,0) [0|0] "" Vector__XXX
- SG_ temp_A : 0|16@1+ (0.01,0) [0|0] "" Vector__XXX
+ SG_ temp_D : 48|16@1- (0.1,0) [0|0] "" Vector__XXX
+ SG_ temp_C : 32|16@1- (0.1,0) [0|0] "" Vector__XXX
+ SG_ temp_B : 16|16@1- (0.1,0) [0|0] "" Vector__XXX
+ SG_ temp_A : 0|16@1- (0.1,0) [0|0] "" Vector__XXX
 
-BO_ 2483060932 raw_cell_temp: 7 a_box
- SG_ temp_D : 44|12@1+ (0.01,0) [0|0] "C" Vector__XXX
- SG_ temp_C : 32|12@1+ (0.01,0) [0|0] "C" Vector__XXX
- SG_ temp_B : 20|12@1+ (0.01,0) [0|0] "C" Vector__XXX
- SG_ temp_A : 8|12@1+ (0.01,0) [0|0] "C" Vector__XXX
+BO_ 2483060932 raw_cell_temp_a_b: 5 a_box
+ SG_ temp_B : 24|16@1- (0.1,0) [0|0] "C" Vector__XXX
+ SG_ temp_A : 8|16@1- (0.1,0) [0|0] "C" Vector__XXX
+ SG_ index : 0|8@1+ (1,0) [0|0] "" Vector__XXX
+
+BO_ 2483061636 raw_cell_temp_c_d: 5 a_box
+ SG_ temp_D : 24|16@1- (0.1,0) [0|0] "C" Vector__XXX
+ SG_ temp_C : 8|16@1- (0.1,0) [0|0] "C" Vector__XXX
  SG_ index : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2148059716 fault_sync_a_box: 3 a_box
@@ -339,10 +339,10 @@ BO_ 2483028613 raw_throttle_brake: 8 Dashboard
  SG_ throttle : 0|12@1+ (0.02442,0) [0|0] "%" Vector__XXX
 
 BO_ 2348810949 cooling_driver_request: 5 Dashboard
- SG_ batt_fan : 32|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ batt_fan : 32|8@1+ (1,0) [0|100] "%" Vector__XXX
  SG_ batt_pump2 : 24|8@1+ (1,0) [0|0] "" Vector__XXX
  SG_ batt_pump : 16|8@1+ (1,0) [0|0] "" Vector__XXX
- SG_ dt_fan : 8|8@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ dt_fan : 8|8@1+ (1,0) [0|100] "%" Vector__XXX
  SG_ dt_pump : 0|8@1+ (1,0) [0|0] "" Vector__XXX
 
 BO_ 2214593093 filt_throttle_brake: 3 Dashboard
@@ -378,10 +378,34 @@ BO_ 688 LWS_Standard: 5 Steering
  SG_ LWS_SPEED : 16|8@1+ (4,0) [0|0] "deg/s" Vector__XXX
  SG_ LWS_ANGLE : 0|16@1- (0.1,0) [0|0] "deg" Vector__XXX
 
-BO_ 2214659103 pdu_test: 3 PDU
- SG_ test_3 : 16|8@1+ (1,0) [0|0] "" Vector__XXX
- SG_ test_2 : 8|8@1+ (1,0) [0|0] "" Vector__XXX
- SG_ test_1 : 0|8@1+ (1,0) [0|0] "" Vector__XXX
+BO_ 2214659167 v_rails: 6 PDU
+ SG_ out_3v3 : 32|16@1+ (1,0) [0|0] "mV" Vector__XXX
+ SG_ out_5v : 16|16@1+ (1,0) [0|0] "mV" Vector__XXX
+ SG_ in_24v : 0|16@1+ (1,0) [0|0] "mV" Vector__XXX
+
+BO_ 2214659231 rail_currents: 4 PDU
+ SG_ i_5v : 16|16@1+ (1,0) [0|0] "mA" Vector__XXX
+ SG_ i_24v : 0|16@1+ (1,0) [0|0] "mA" Vector__XXX
+
+BO_ 2214659295 pump_and_fan_current: 7 PDU
+ SG_ i_fan2 : 44|12@1+ (1,0) [0|0] "mA" Vector__XXX
+ SG_ i_fan1 : 32|12@1+ (1,0) [0|0] "mA" Vector__XXX
+ SG_ i_pump2 : 16|16@1+ (1,0) [0|0] "mA" Vector__XXX
+ SG_ i_pump1 : 0|16@1+ (1,0) [0|0] "mA" Vector__XXX
+
+BO_ 2214659359 other_currents: 8 PDU
+ SG_ i_main : 48|12@1+ (1,0) [0|0] "mA" Vector__XXX
+ SG_ i_abox : 36|12@1+ (1,0) [0|0] "mA" Vector__XXX
+ SG_ i_dash : 24|12@1+ (1,0) [0|0] "mA" Vector__XXX
+ SG_ i_aux : 12|12@1+ (1,0) [0|0] "mA" Vector__XXX
+ SG_ i_sdc : 0|12@1+ (1,0) [0|0] "mA" Vector__XXX
+
+BO_ 2214594783 coolant_out: 3 PDU
+ SG_ dt_pump : 18|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ bat_pump_aux : 17|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ bat_pump : 16|1@1+ (1,0) [0|0] "" Vector__XXX
+ SG_ dt_fan : 8|8@1+ (1,0) [0|0] "%" Vector__XXX
+ SG_ bat_fan : 0|8@1+ (1,0) [0|0] "%" Vector__XXX
 
 BO_ 2148059871 fault_sync_pdu: 3 PDU
  SG_ latched : 16|1@1+ (1,0) [0|0] "" Vector__XXX
@@ -596,12 +620,6 @@ CM_ SG_ 2214594689 drivetrain_out_temp "Out flow temperature of drivetrain coola
 CM_ SG_ 2214594689 drivetrain_in_temp "In flow temperature of drivetrain coolant loop";
 CM_ SG_ 2214594689 battery_out_temp "Out flow temperature of battery coolant loop";
 CM_ SG_ 2214594689 battery_in_temp "In flow temperature of battery coolant loop";
-CM_ BO_ 2214594753 "outputs to coolant loops";
-CM_ SG_ 2214594753 dt_pump "";
-CM_ SG_ 2214594753 bat_pump_aux "";
-CM_ SG_ 2214594753 bat_pump "";
-CM_ SG_ 2214594753 dt_fan "";
-CM_ SG_ 2214594753 bat_fan "";
 CM_ BO_ 2415921409 "Gearbox temps";
 CM_ SG_ 2415921409 r_temp "";
 CM_ SG_ 2415921409 l_temp "";
@@ -635,6 +653,9 @@ CM_ SG_ 2415925633 sched_error "PSCHED Error Flags (bit #)
 CM_ SG_ 2415925633 background_use "Percent of the 1ms loop time used by background tasks";
 CM_ SG_ 2415925633 foreground_use "Percent of the 1ms loop time used by foreground tasks";
 CM_ SG_ 2415925633 sched_skips "Number of loop misses (execution time was skipped)";
+CM_ BO_ 2415926145 "Messages ignored by MC";
+CM_ SG_ 2415926145 noise_l "Num of skipped msgs";
+CM_ SG_ 2415926145 noise_r "Num of skipped msgs";
 CM_ BO_ 2214598977 "rear drivline heart beat";
 CM_ SG_ 2214598977 rear_right_last_link_error "";
 CM_ SG_ 2214598977 rear_right_motor_link "";
@@ -683,10 +704,10 @@ CM_ SG_ 2550588916 charge_disable "Disable charging";
 CM_ SG_ 2550588916 current_limit "Charge current";
 CM_ SG_ 2550588916 voltage_limit "Charge voltage";
 CM_ BO_ 2281734340 "Number of wonky thermistors on pack";
-CM_ SG_ 2281734340 module_4 "Number of thermistors > 1.5v";
-CM_ SG_ 2281734340 module_3 "Number of thermistors > 1.5v";
-CM_ SG_ 2281734340 module_2 "Number of thermistors > 1.5v";
-CM_ SG_ 2281734340 module_1 "Number of thermistors > 1.5v";
+CM_ SG_ 2281734340 D "Number of thermistors > 1.5v";
+CM_ SG_ 2281734340 C "Number of thermistors > 1.5v";
+CM_ SG_ 2281734340 B "Number of thermistors > 1.5v";
+CM_ SG_ 2281734340 A "Number of thermistors > 1.5v";
 CM_ BO_ 2281734276 "Send charge information";
 CM_ SG_ 2281734276 current "Instantaneous charge current";
 CM_ SG_ 2281734276 voltage "Instantaneous charge voltage";
@@ -722,11 +743,13 @@ CM_ SG_ 2483061252 temp_C "";
 CM_ SG_ 2483061252 temp_B "";
 CM_ SG_ 2483061252 temp_A "";
 CM_ BO_ 2483060932 "Raw cell temperature for each module of thermistor at index";
-CM_ SG_ 2483060932 temp_D "";
-CM_ SG_ 2483060932 temp_C "";
 CM_ SG_ 2483060932 temp_B "";
 CM_ SG_ 2483060932 temp_A "";
 CM_ SG_ 2483060932 index "";
+CM_ BO_ 2483061636 "Raw cell temperature for each module of thermistor at index";
+CM_ SG_ 2483061636 temp_D "";
+CM_ SG_ 2483061636 temp_C "";
+CM_ SG_ 2483061636 index "";
 CM_ BO_ 2148059716 "Fault status message";
 CM_ SG_ 2148059716 latched "";
 CM_ SG_ 2148059716 idx "";
@@ -875,10 +898,30 @@ CM_ SG_ 688 Cal "";
 CM_ SG_ 688 Ok "";
 CM_ SG_ 688 LWS_SPEED "";
 CM_ SG_ 688 LWS_ANGLE "";
-CM_ BO_ 2214659103 "periodic dashboard heartbeat";
-CM_ SG_ 2214659103 test_3 "";
-CM_ SG_ 2214659103 test_2 "";
-CM_ SG_ 2214659103 test_1 "";
+CM_ BO_ 2214659167 "PDU voltage rail readings";
+CM_ SG_ 2214659167 out_3v3 "";
+CM_ SG_ 2214659167 out_5v "";
+CM_ SG_ 2214659167 in_24v "";
+CM_ BO_ 2214659231 "PDU rail currents";
+CM_ SG_ 2214659231 i_5v "";
+CM_ SG_ 2214659231 i_24v "";
+CM_ BO_ 2214659295 "PDU pump and fan currents";
+CM_ SG_ 2214659295 i_fan2 "";
+CM_ SG_ 2214659295 i_fan1 "";
+CM_ SG_ 2214659295 i_pump2 "";
+CM_ SG_ 2214659295 i_pump1 "";
+CM_ BO_ 2214659359 "Other PDU currents";
+CM_ SG_ 2214659359 i_main "";
+CM_ SG_ 2214659359 i_abox "";
+CM_ SG_ 2214659359 i_dash "";
+CM_ SG_ 2214659359 i_aux "";
+CM_ SG_ 2214659359 i_sdc "";
+CM_ BO_ 2214594783 "outputs to coolant loops";
+CM_ SG_ 2214594783 dt_pump "";
+CM_ SG_ 2214594783 bat_pump_aux "";
+CM_ SG_ 2214594783 bat_pump "";
+CM_ SG_ 2214594783 dt_fan "";
+CM_ SG_ 2214594783 bat_fan "";
 CM_ BO_ 2148059871 "Fault status message";
 CM_ SG_ 2148059871 latched "";
 CM_ SG_ 2148059871 idx "";
@@ -1018,7 +1061,7 @@ CM_ SG_ 2483032050 daq_command "";
 
 
 
-VAL_ 2214598913 car_state 0 "idle" 1 "buzzing" 2 "ready2drive" 3 "error" 4 "fatal" 5 "reset" 6 "recover" 7 "fan_ctrl" ;
+VAL_ 2214598913 car_state 0 "idle" 1 "precharging" 2 "energized" 3 "buzzing" 4 "ready2drive" 5 "error" 6 "fatal" 7 "reset" 8 "recover" 9 "fan_ctrl" ;
 VAL_ 2214598977 rear_right_last_link_error 0 "none" 1 "not_serial" 2 "cmd_timeout" 3 "gen_timeout" ;
 VAL_ 2214598977 rear_right_motor_link 0 "disconnected" 1 "attempting" 2 "verifying" 3 "delay" 4 "connected" 5 "fail" ;
 VAL_ 2214598977 rear_right_motor 0 "disconnected" 1 "connected" 2 "config" 3 "error" ;
