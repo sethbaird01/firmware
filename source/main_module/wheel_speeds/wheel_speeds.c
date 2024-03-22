@@ -94,10 +94,13 @@ uint32_t getLeftWheelSpeed() {
      * per revolution. So if we scale up the period by 42, that is how often a revolution
      * is occuring. */
 
-    uint32_t speed;
-    double period = (MOTOR_L_WS_PWM_TIM->CCR1 * (MOTOR_L_WS_PWM_TIM->PSC + 1.0)) / APB2ClockRateHz;
-    double freq = 1.0 / ((MOTOR_L_WS_PWM_TIM->CCR1 * (MOTOR_L_WS_PWM_TIM->PSC + 1.0)) / APB2ClockRateHz);
-    double time_per_revolution = period * TEETH_PER_REVOLUTION;
+    float speed;
+    float period = (MOTOR_L_WS_PWM_TIM->CCR1 * (MOTOR_L_WS_PWM_TIM->PSC + 1.0)) / APB2ClockRateHz;
+    float freq = 1.0 / ((MOTOR_L_WS_PWM_TIM->CCR1 * (MOTOR_L_WS_PWM_TIM->PSC + 1.0)) / APB2ClockRateHz);
+    float time_per_revolution_sec = period * TEETH_PER_REVOLUTION;
+    float rpm = 1.0 / (time_per_revolution_sec / 60);
+
+    speed = ((rpm * PI * WHEEL_DIAMETER_INCHES) / 1056); // 1056 is how many in/min per mi/hr
 
     return speed;
 }
