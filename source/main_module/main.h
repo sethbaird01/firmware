@@ -15,6 +15,7 @@
 
 //STM32L496VGT6
 
+#include <stdint.h>
 #include "common/faults/fault_nodes.h"
 
 #define FAULT_NODE_NAME NODE_MAIN_MODULE
