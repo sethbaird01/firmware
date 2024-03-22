@@ -5,7 +5,7 @@ extern uint32_t APB2ClockRateHz;
 
 bool wheelSpeedsInit() {
     /* Right Init */
-    RCC->APB1ENR |= RCC_APB1ENR_TIM3EN;
+    RCC->APB2ENR |= RCC_APB2ENR_TIM1EN;
     MOTOR_R_WS_PWM_TIM->CR1 &= ~TIM_CR1_CEN; // Disable counter (turn off timer)
 
     MOTOR_R_WS_PWM_TIM->PSC = 1 - 1;
@@ -46,7 +46,7 @@ bool wheelSpeedsInit() {
     MOTOR_R_WS_PWM_TIM->CR1 |= TIM_CR1_CEN; // Enable timer
 
     /* Left Init */
-    RCC->APB1ENR |= RCC_APB1ENR_TIM3EN;
+    RCC->APB1ENR |= RCC_APB1ENR_TIM4EN;
     MOTOR_L_WS_PWM_TIM->CR1 &= ~TIM_CR1_CEN; // Disable counter (turn off timer)
 
     MOTOR_L_WS_PWM_TIM->PSC = 1 - 1;
@@ -82,7 +82,6 @@ bool wheelSpeedsInit() {
 
     /* Enable channels */
     MOTOR_L_WS_PWM_TIM->CCER |= TIM_CCER_CC1E; // Enable CCR1
-    MOTOR_L_WS_PWM_TIM->CCER |= TIM_CCER_CC2E; // Enable CCR2
 
     MOTOR_L_WS_PWM_TIM->CR1 |= TIM_CR1_CEN; // Enable timer
     
@@ -96,8 +95,9 @@ uint32_t getLeftWheelSpeed() {
      * is occuring. */
 
     uint32_t speed;
-    uint32_t period = (MOTOR_L_WS_PWM_TIM->CCR2 * MOTOR_L_WS_PWM_TIM->PSC + 1.0) / APB2ClockRateHz;
-    uint32_t time_per_revolution = period * TEETH_PER_REVOLUTION;
+    double period = (MOTOR_L_WS_PWM_TIM->CCR1 * (MOTOR_L_WS_PWM_TIM->PSC + 1.0)) / APB2ClockRateHz;
+    double freq = 1.0 / ((MOTOR_L_WS_PWM_TIM->CCR1 * (MOTOR_L_WS_PWM_TIM->PSC + 1.0)) / APB2ClockRateHz);
+    double time_per_revolution = period * TEETH_PER_REVOLUTION;
 
     return speed;
 }

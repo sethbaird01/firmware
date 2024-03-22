@@ -20,6 +20,7 @@
 #include "cooling.h"
 #include "daq.h"
 #include "main.h"
+#include "wheel_speeds.h"
 
 
 GPIOInitConfig_t gpio_config[] = {
