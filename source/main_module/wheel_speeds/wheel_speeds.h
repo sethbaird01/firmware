@@ -7,7 +7,6 @@
 
 #define TEETH_PER_REVOLUTION (42)
 #define WHEEL_DIAMETER_INCHES (16)
-#define PI (3.14159F)
 
 bool wheelSpeedsInit();
 uint32_t getLeftWheelSpeed();

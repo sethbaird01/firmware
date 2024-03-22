@@ -1,4 +1,5 @@
 #include "wheel_speeds.h"
+#include "common_defs.h"
 
 extern uint32_t APB1ClockRateHz;
 extern uint32_t APB2ClockRateHz;
