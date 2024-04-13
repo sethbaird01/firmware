@@ -12,7 +12,7 @@
 #include "bootloader_common.h"
 
 __attribute__((section(".bootlaoder_shared_memory"))) 
-BootlaoderSharedMemory_t bootloader_shared_memory = {
+BootloaderSharedMemory_t bootloader_shared_memory = {
     0
 };
 

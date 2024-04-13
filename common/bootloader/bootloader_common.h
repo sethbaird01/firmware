@@ -43,9 +43,10 @@ typedef struct {
     uint32_t        magic_word;
     uint32_t        reset_count;
     ResetReason_t   reset_reason;
-} BootlaoderSharedMemory_t;
+    char            stacktrace[1024];
+} BootloaderSharedMemory_t;
 
-extern BootlaoderSharedMemory_t bootloader_shared_memory;
+extern BootloaderSharedMemory_t bootloader_shared_memory;
 
 __attribute__((always_inline)) inline void Bootloader_ConfirmApplicationLaunch()
 {
