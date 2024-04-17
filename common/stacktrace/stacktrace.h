@@ -5,7 +5,7 @@
 
 #define STACKTRACE_DEPTH 10
 
-struct stackframe{
+struct stackframe {
     struct stackframe* fp;
     uint32_t lr;
 };

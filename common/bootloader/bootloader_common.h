@@ -21,6 +21,8 @@
 #include "stm32l4xx.h"
 #endif
 
+#include "../stacktrace/stacktrace.h"
+
 #define BOOTLOADER_SHARED_MEMORY_MAGIC (0xABCDBEEF)
 
 typedef enum
@@ -36,14 +38,15 @@ typedef enum {
     RESET_REASON_DOWNLOAD_FW,
     RESET_REASON_APP_WATCHDOG,
     RESET_REASON_POR,
-    RESET_REASON_BAD_FIRMWARE
+    RESET_REASON_BAD_FIRMWARE,
+    RESET_REASON_HARDFAULT
 } ResetReason_t;
 
 typedef struct {
-    uint32_t        magic_word;
-    uint32_t        reset_count;
-    ResetReason_t   reset_reason;
-    char            stacktrace[1024];
+    uint32_t          magic_word;
+    uint32_t          reset_count;
+    ResetReason_t     reset_reason;
+    struct stackframe st[STACKTRACE_DEPTH];
 } BootloaderSharedMemory_t;
 
 extern BootloaderSharedMemory_t bootloader_shared_memory;

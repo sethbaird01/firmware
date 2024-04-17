@@ -10,6 +10,7 @@
  */
 
 #include "bootloader_common.h"
+#include "../stacktrace/stacktrace.h"
 
 __attribute__((section(".bootlaoder_shared_memory"))) 
 BootloaderSharedMemory_t bootloader_shared_memory = {
@@ -29,5 +30,14 @@ int Bootloader_ResetForWatchdog()
     bootloader_shared_memory.magic_word     = BOOTLOADER_SHARED_MEMORY_MAGIC;
     bootloader_shared_memory.reset_reason   = RESET_REASON_APP_WATCHDOG;
     bootloader_shared_memory.reset_count    = 0;
+    NVIC_SystemReset();
+}
+
+int Bootloader_ResetForHardfault()
+{
+    bootloader_shared_memory.magic_word     = BOOTLOADER_SHARED_MEMORY_MAGIC;
+    bootloader_shared_memory.reset_reason   = RESET_REASON_HARDFAULT;
+    bootloader_shared_memory.reset_count    = 0;
+    get_stacktrace(bootloader_shared_memory.st);
     NVIC_SystemReset();
 }
