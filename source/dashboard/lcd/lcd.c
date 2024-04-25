@@ -981,8 +981,9 @@ void update_data_pages() {
                 set_text(SPEED, NXT_TEXT, "S");
             }
             // Vehicle Speed [m/s] = Wheel Speed [RPM] * 16 [in] * PI * 0.0254 / 60
+            // max of left_speed_sensor and right_speed_sensor (is in Rad/s) rad to meters is v=wr  * 0.2 * 0.01 for scale now we have meters 
             else {
-                set_text(SPEED, NXT_TEXT, int_to_char((uint16_t)((float)MAX(can_data.rear_wheel_speeds.left_speed_mc, can_data.rear_wheel_speeds.right_speed_mc) * 16.0 * 3.14159265358 * 0.254 / 60.0), parsed_value));
+                //set_text(SPEED, NXT_TEXT, int_to_char((uint16_t)((float)MAX(can_data.F.left_speed_mc, can_data.rear_wheel_speeds.right_speed_mc) * 16.0 * 3.14159265358 * 0.254 / 60.0), parsed_value));
                 bzero(parsed_value, 3);
             }
             if (sendFirsthalf) {

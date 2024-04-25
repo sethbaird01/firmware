@@ -8,6 +8,7 @@
 #include "common/phal_F4_F7/adc/adc.h"
 #include "common/phal_F4_F7/spi/spi.h"
 #include "common/phal_F4_F7/dma/dma.h"
+#include "common/phal_F4_F7/eeprom_spi/eeprom_spi.h"
 #include "common/faults/faults.h"
 
 /* Module Includes */
@@ -122,6 +123,7 @@ usart_init_t lcd = {
    .rx_dma_cfg = &usart_rx_dma_config
 };
 
+
 // Clock Configuration
 #define TargetCoreClockrateHz 16000000
 ClockRateConfig_t clock_config = {
@@ -131,6 +133,26 @@ ClockRateConfig_t clock_config = {
     .ahb_clock_target_hz        =(TargetCoreClockrateHz / 1),
     .apb1_clock_target_hz       =(TargetCoreClockrateHz / (1)),
     .apb2_clock_target_hz       =(TargetCoreClockrateHz / (1)),
+};
+
+// EEPROM SPI
+// PB12 is SPI2_NSS (datasheet)
+// PB13 is SPI2_CLK
+// PB14 is SPI2_MISO
+// PB15 is SPI2_MOSI
+dma_init_t spi_rx_dma_config = SPI2_RXDMA_CONT_CONFIG(NULL, 2);
+dma_init_t spi_tx_dma_config = SPI2_TXDMA_CONT_CONFIG(NULL, 1);
+// Trusting these configs
+SPI_InitConfig_t spi_config = 
+{
+    .data_rate = TargetCoreClockrateHz / 32, // 5 MHZ
+    .data_len = 8,
+    .nss_sw = true,
+    .nss_gpio_port = EEPROM_NSS_GPIO_Port,
+    .nss_gpio_pin = EEPROM_NSS_Pin,
+    .rx_dma_cfg = &spi_rx_dma_config,
+    .tx_dma_cfg = &spi_tx_dma_config,
+    .periph = SPI2
 };
 
 lcd_t lcd_data = {
@@ -260,11 +282,17 @@ void preflightChecks(void) {
         case 4:
             enableInterrupts();
             break;
-        case 6:
+        case 5:
+            if (initMem(EEPROM_nWP_GPIO_Port, EEPROM_nWP_Pin, &spi_config, 1, 1) != E_SUCCESS)
+            {
+                HardFault_Handler();
+            }
+            break;
+        case 7:
             // Zero Rotary Encoder
             zeroEncoder(&prev_rot_state);
             break;
-        case 5:
+        case 6:
             initLCD();
             break;
         default:
