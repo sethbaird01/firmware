@@ -380,7 +380,7 @@ void VCU_MAIN(void)
     int16_t equal_k_rr = 0;
 
     /* If precharging -> Accumulate acceleration vector */
-    if (/*(can_data.main_hb.car_state == 1) & */(ac_counter <= NUM_ELEM_ACC_CALIBRATION)) {
+    if ((can_data.main_hb.car_state == 1) & (ac_counter <= NUM_ELEM_ACC_CALIBRATION)) {
         /* Accumulate acceleration vector */
         vec_mm.ax[ac_counter] = GPSHandle.acceleration.x;
         vec_mm.ay[ac_counter] = GPSHandle.acceleration.y;
