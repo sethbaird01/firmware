@@ -46,6 +46,10 @@ bool BMI088_init(BMI088_Handle_t *bmi)
 void BMI088_powerOnAccel(BMI088_Handle_t *bmi)
 {
     BMI088_selectAccel(bmi);
+    // Dummy read to enter SPI mode on accellerometer
+    PHAL_SPI_readByte(bmi->spi, BMI088_ACC_CHIP_ID_ADDR, 1);
+    BMI088_selectAccel(bmi);
+    waitMicros(100);
     PHAL_SPI_writeByte(bmi->spi, BMI088_ACC_PWR_CONF_ADDR, 0);
     PHAL_SPI_writeByte(bmi->spi, BMI088_ACC_PWR_CTRL_ADDR, BMI088_ACC_PWR_CTRL_NORMAL);
     return;

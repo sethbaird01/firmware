@@ -265,8 +265,11 @@ void preflightChecks(void)
         break;
     case 1500:
         BMI088_powerOnAccel(&bmi_config);
-        break;
-    case 3000:
+        // Attempt to wait 1.5ms
+        for (uint8_t i = 0; i < 15; i++)
+        {
+            waitMicros(100);
+        }
         if (!BMI088_initAccel(&bmi_config))
             HardFault_Handler();
         break;
@@ -416,7 +419,7 @@ void VCU_MAIN(void)
     setFault(ID_MM_DISABLED_FAULT,!rtY_em.MM_STATE);
     setFault(ID_TV_UNCALIBRATED_FAULT,!TV_Calibrated);
     setFault(ID_NO_GPS_FIX_FAULT,!rtU_tv.F_raw[8]);
-    
+
     setFault(ID_TV_ENABLED_FAULT,rtY_tv.TVS_STATE);
     setFault(ID_MM_ENABLED_FAULT,rtY_em.MM_STATE);
     setFault(ID_TV_CALIBRATED_FAULT,TV_Calibrated);
