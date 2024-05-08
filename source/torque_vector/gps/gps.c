@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdbool.h>
 #include "gps.h"
+#include "common/psched/psched.h"
 //#include "sfs_pp.h"
 //#include "SFS.h"
 
@@ -66,7 +67,7 @@ GPS_Handle_t gps_handle = {.raw_message = {0},
                            .messages_received = -1};
 
 // Parse velocity from raw message
-bool parseVelocity(GPS_Handle_t *GPS)
+bool parseVelocity(volatile GPS_Handle_t *GPS)
 {
     // For future reference, we use the UBX protocol to communicate with GPS - Specifically UBX-NAV-PVT
     // Validate the message header, class, and id
@@ -186,6 +187,8 @@ bool parseVelocity(GPS_Handle_t *GPS)
             uLong.bytes[3] = GPS->raw_message[9];
             GPS->iTOW = uLong.uLong; /* ms is the raw data */
 
+            GPS->last_rx_time = sched.os_ticks;
+
             /* Determine if data is new */
             if (GPS->iTOW != prev_iTOW) {
                 GPS->unique_iTOW = true;
@@ -196,12 +199,6 @@ bool parseVelocity(GPS_Handle_t *GPS)
                 GPS->unique_iTOW = false;
                 ++counter;
             }
-
-            SEND_GPS_VELOCITY(GPS->n_vel_rounded, GPS->e_vel_rounded, GPS->d_vel_rounded);
-            SEND_GPS_SPEED(GPS->g_speed_rounded, GPS->headVeh_rounded);
-
-            SEND_GPS_COORDINATES(GPS->lat_rounded, GPS->lon_rounded);
-            SEND_GPS_POSITION(GPS->height_rounded);
         }
 
         // Collect Magnetic Declination
@@ -214,4 +211,16 @@ bool parseVelocity(GPS_Handle_t *GPS)
         return correctFix;
     }
     return false;
+}
+
+void sendGPSstats(volatile GPS_Handle_t *GPS)
+{
+    if (GPS->fix_type > GPS_FIX_2D && GPS->fix_type < GPS_FIX_TIME_ONLY)
+    {
+        SEND_GPS_VELOCITY(GPS->n_vel_rounded, GPS->e_vel_rounded, GPS->d_vel_rounded);
+        SEND_GPS_SPEED(GPS->g_speed_rounded, GPS->headVeh_rounded);
+
+        SEND_GPS_COORDINATES(GPS->lat_rounded, GPS->lon_rounded);
+        SEND_GPS_POSITION(GPS->height_rounded);
+    }
 }

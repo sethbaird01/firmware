@@ -3,7 +3,7 @@
 #include "can_parse.h"
 #include "common_defs.h"
 
-void tv_pp(ExtU_tv *rtU_tv, GPS_Handle_t *GPS)
+void tv_pp(ExtU_tv *rtU_tv, volatile GPS_Handle_t *GPS)
 {
     /* Flags */
     // rtU_tv->F_raw[0] = (can_data.main_hb.stale == 0);

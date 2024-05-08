@@ -126,9 +126,10 @@ SPI_InitConfig_t spi_config = {
     .periph = SPI1};
 
 // Test Nav Message
-GPS_Handle_t GPSHandle = {};
+volatile GPS_Handle_t GPSHandle = {};
 vector_3d_t accel_in, gyro_in, mag_in;
 
+uint32_t start_time;
 
 BMI088_Handle_t bmi_config = {
     .accel_csb_gpio_port = SPI_CS_ACEL_GPIO_Port,
@@ -155,6 +156,7 @@ extern void HardFault_Handler(void);
 void parseIMU(void);
 void pollIMU(void);
 void VCU_MAIN(void);
+void GPS_periodic(void);
 
 /* Torque Vectoring Definitions */
 static ExtU_tv rtU_tv; /* External inputs */
@@ -210,6 +212,7 @@ int main(void)
     taskCreate(parseIMU, 20);
     taskCreate(pollIMU, 20);
     taskCreate(VCU_MAIN, 15);
+    taskCreate(GPS_periodic, 15);
 
     /* No Way Home */
     schedStart();
@@ -220,6 +223,7 @@ int main(void)
 void preflightChecks(void)
 {
     static uint16_t state;
+    vector_3d_t accel_test_in;
 
     switch (state++)
     {
@@ -263,17 +267,31 @@ void preflightChecks(void)
             HardFault_Handler();
         }
         break;
-    case 1500:
+    case 7:
         BMI088_powerOnAccel(&bmi_config);
         // Attempt to wait 1.5ms
-        for (uint8_t i = 0; i < 15; i++)
-        {
-            waitMicros(100);
-        }
+        // for (uint8_t i = 0; i < 15; i++)
+        // {
+        //     waitMicros(100);
+        // }
+        start_time = sched.os_ticks;
+        break;
+    case 61:
         if (!BMI088_initAccel(&bmi_config))
             HardFault_Handler();
+        if ((sched.os_ticks - start_time) < 50)
+        {
+            HardFault_Handler();
+        }
         break;
-    case 4200:
+    case 63:
+        BMI088_readAccel(&bmi_config, &accel_test_in);
+        if (accel_test_in.x == 0 && accel_test_in.y == 0 && accel_test_in.z == 0)
+        {
+            state = 6;
+        }
+        break;
+    case 65:
         /* Pack torque vectoring data into rtM_tv */
         rtM_tv->dwork = &rtDW_tv;
 
@@ -289,13 +307,13 @@ void preflightChecks(void)
         /* Initialize Engine Map */
         em_initialize(rtM_em);
     default:
-        if (state > 4500)
+        if (state > 66)
         {
             if (!imu_init(&imu_h))
                 HardFault_Handler();
             initCANParse();
             registerPreflightComplete(1);
-            state = 4500; // prevent wrap around
+            state = 66; // prevent wrap around
         }
         break;
     }
@@ -344,6 +362,11 @@ void heartBeatLED(void)
 void pollIMU(void)
 {
     imu_periodic(&imu_h);
+}
+
+void GPS_periodic()
+{
+    sendGPSstats(&GPSHandle);
 }
 
 void parseIMU(void)

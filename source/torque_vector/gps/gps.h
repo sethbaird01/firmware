@@ -40,6 +40,7 @@ typedef struct
     vector_3d_t acceleration;
     vector_3d_t gyroscope;
     signed long messages_received;
+    uint32_t last_rx_time;
     uint8_t raw_message[100];
 
     uint8_t g_speed_bytes[4];
@@ -108,6 +109,6 @@ typedef struct
  * @return true Parsing successful
  * @return false Parsing failed
  */
-bool parseVelocity(GPS_Handle_t *GPS);
-
+bool parseVelocity(volatile GPS_Handle_t *GPS);
+void sendGPSstats(volatile GPS_Handle_t *GPS);
 #endif //_GPS_H
