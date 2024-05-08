@@ -18,8 +18,11 @@
     4. Go to "RATE" configuration
         4a. Select 40ms as the measurement period
         4b. Send this config change to the GPS
-    5. Go to "CFG" setting, and hit the "send" button to once again save changes to the GPS.
-    6. At this point, confirm you changes by turning it off and reconnecting it, ensuring the correct message is sent at 40ms
+    5. Go to View -> Generation 9 Configuration View -> Advanced Configuration -> CFG-NAVSPG-DYNMODEL
+        5a. Set value to "4-Automotive"
+        5b. Send this config change to the GPS
+    6. Go to "CFG" setting, and hit the "send" button to once again save changes to the GPS.
+    7. At this point, confirm you changes by turning it off and reconnecting it, ensuring the correct message is sent at 40ms
 */
 
 union i_Long iLong;
