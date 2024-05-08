@@ -9,7 +9,7 @@
  *
  * Model version                  : 1.45
  * Simulink Coder version         : 23.2 (R2023b) 01-Aug-2023
- * C/C++ source code generated on : Sat May  4 21:24:23 2024
+ * C/C++ source code generated on : Tue May  7 22:54:59 2024
  *
  * Target selection: ert.tlc
  * Embedded hardware selection: ARM Compatible->ARM Cortex-M
@@ -395,8 +395,8 @@ void tv_step(RT_MODEL_tv *const rtM_tv, ExtU_tv *rtU_tv, ExtY_tv *rtY_tv)
   real_T csum;
   real_T cumRevIndex;
   real_T modValueRev;
+  real_T raw_dR;
   real_T tmp_0;
-  real_T u0;
   real_T z;
   int32_T i;
   int32_T localProduct;
@@ -404,15 +404,15 @@ void tv_step(RT_MODEL_tv *const rtM_tv, ExtU_tv *rtU_tv, ExtY_tv *rtY_tv)
   boolean_T MatrixConcatenate[39];
   boolean_T LessThan[16];
   for (i = 0; i < 16; i++) {
-    u0 = rtU_tv->D_raw[i];
+    raw_dR = rtU_tv->D_raw[i];
     cumRevIndex = rtConstP_tv.Saturation_LowerSat[i];
     csum = rtP_tv.ub[i];
-    if (u0 > csum) {
+    if (raw_dR > csum) {
       Saturation[i] = csum;
-    } else if (u0 < cumRevIndex) {
+    } else if (raw_dR < cumRevIndex) {
       Saturation[i] = cumRevIndex;
     } else {
-      Saturation[i] = u0;
+      Saturation[i] = raw_dR;
     }
   }
 
@@ -453,7 +453,7 @@ void tv_step(RT_MODEL_tv *const rtM_tv, ExtU_tv *rtU_tv, ExtY_tv *rtY_tv)
 
   modValueRev = obj->pModValueRev;
   z = 0.0;
-  u0 = 0.0;
+  raw_dR = 0.0;
   csum += Saturation[9];
   if (modValueRev == 0.0) {
     z = csumrev[(int32_T)cumRevIndex - 1] + csum;
@@ -471,7 +471,7 @@ void tv_step(RT_MODEL_tv *const rtM_tv, ExtU_tv *rtU_tv, ExtY_tv *rtY_tv)
   }
 
   if (modValueRev == 0.0) {
-    u0 = z / 20.0;
+    raw_dR = z / 20.0;
   }
 
   obj->pCumSum = csum;
@@ -513,66 +513,69 @@ void tv_step(RT_MODEL_tv *const rtM_tv, ExtU_tv *rtU_tv, ExtY_tv *rtY_tv)
   rtY_tv->sig_filt[6] = Product_p[0];
   rtY_tv->sig_filt[7] = Product_p[1];
   rtY_tv->sig_filt[8] = Product_p[2];
-  rtY_tv->sig_filt[9] = u0;
+  rtY_tv->sig_filt[9] = raw_dR;
   rtY_tv->sig_filt[10] = rtDW_tv->MedianFilter_g.MedianFilter_c;
   rtY_tv->sig_filt[11] = rtDW_tv->MedianFilter1.MedianFilter_c;
   rtY_tv->sig_filt[12] = tmp[0];
   rtY_tv->sig_filt[13] = tmp[1];
   rtY_tv->sig_filt[14] = tmp[2];
   MedianFilter(Saturation[12], &rtDW_tv->MedianFilter2);
-  cumRevIndex = fmin(fmin(fmin((rtDW_tv->MedianFilter1.MedianFilter_c +
-    rtP_tv.mT_bias) * rtP_tv.mT_gain + 1.0,
-    (rtDW_tv->MedianFilter_g.MedianFilter_c + rtP_tv.mcT_bias) * rtP_tv.mcT_gain
-    + 1.0), (rtDW_tv->MedianFilter2.MedianFilter_c + rtP_tv.bT_bias) *
-    rtP_tv.bT_gain + 1.0), (u0 + rtP_tv.bI_bias) * rtP_tv.bI_gain + 1.0);
-  if (cumRevIndex > 1.0) {
-    cumRevIndex = 1.0;
-  } else if (cumRevIndex < 0.0) {
-    cumRevIndex = 0.0;
-  }
-
-  if (Saturation[0] > cumRevIndex) {
-    csum = cumRevIndex;
-  } else if (Saturation[0] < 0.0) {
+  csum = fmin(fmin(fmin((rtDW_tv->MedianFilter1.MedianFilter_c + rtP_tv.mT_bias)
+                        * rtP_tv.mT_gain + 1.0,
+                        (rtDW_tv->MedianFilter_g.MedianFilter_c +
+    rtP_tv.mcT_bias) * rtP_tv.mcT_gain + 1.0),
+                   (rtDW_tv->MedianFilter2.MedianFilter_c + rtP_tv.bT_bias) *
+                   rtP_tv.bT_gain + 1.0), (raw_dR + rtP_tv.bI_bias) *
+              rtP_tv.bI_gain + 1.0);
+  if (csum > 1.0) {
+    csum = 1.0;
+  } else if (csum < 0.0) {
     csum = 0.0;
-  } else {
-    csum = Saturation[0];
   }
 
-  z = rtP_tv.r_power_sat * csum;
-  if (-Saturation[1] > 130.0) {
-    modValueRev = 130.0;
-  } else if (-Saturation[1] < -130.0) {
-    modValueRev = -130.0;
+  if (Saturation[0] > csum) {
+    modValueRev = csum;
+  } else if (Saturation[0] < 0.0) {
+    modValueRev = 0.0;
   } else {
-    modValueRev = -Saturation[1];
+    modValueRev = Saturation[0];
+  }
+
+  z = rtP_tv.r_power_sat * modValueRev;
+  if (-Saturation[1] > 130.0) {
+    cumRevIndex = 130.0;
+  } else if (-Saturation[1] < -130.0) {
+    cumRevIndex = -130.0;
+  } else {
+    cumRevIndex = -Saturation[1];
   }
 
   bpIndices[0U] = plook_evenca(Saturation[5], rtP_tv.v[0], rtP_tv.v[1] -
-    rtP_tv.v[0], 50U, &u0);
-  fractions[0U] = u0;
-  bpIndices[1U] = plook_evenca(fabs(modValueRev) > rtU_tv->dphi ? modValueRev :
-    0.0, rtP_tv.s[0], rtP_tv.s[1] - rtP_tv.s[0], 52U, &u0);
-  fractions[1U] = u0;
-  modValueRev = (rtU_tv->TVS_I * intrp2d_la(bpIndices, fractions,
-    rtP_tv.yaw_table, 51U, rtConstP_tv.uDLookupTable_maxIndex) - Product_p[2]) *
+    rtP_tv.v[0], 50U, &raw_dR);
+  fractions[0U] = raw_dR;
+  bpIndices[1U] = plook_evenca(cumRevIndex, rtP_tv.s[0], rtP_tv.s[1] - rtP_tv.s
+    [0], 52U, &raw_dR);
+  fractions[1U] = raw_dR;
+  raw_dR = (rtU_tv->TVS_I * intrp2d_la(bpIndices, fractions, rtP_tv.yaw_table,
+             51U, rtConstP_tv.uDLookupTable_maxIndex) - Product_p[2]) *
     rtU_tv->TVS_P * rtP_tv.half_track[1];
-  if (modValueRev <= z) {
+  if (raw_dR <= z) {
     z = -z;
-    if (modValueRev >= z) {
-      z = modValueRev;
+    if (raw_dR >= z) {
+      z = raw_dR;
     }
   }
 
-  if (z > 0.0) {
-    rtY_tv->rTVS[0] = csum;
-    rtY_tv->rTVS[1] = csum - z;
+  cumRevIndex = fabs(cumRevIndex) > rtU_tv->dphi ? z : 0.0;
+  if (cumRevIndex > 0.0) {
+    rtY_tv->rTVS[0] = modValueRev;
+    rtY_tv->rTVS[1] = modValueRev - cumRevIndex;
   } else {
-    rtY_tv->rTVS[0] = csum - fabs(z);
-    rtY_tv->rTVS[1] = csum;
+    rtY_tv->rTVS[0] = modValueRev - fabs(cumRevIndex);
+    rtY_tv->rTVS[1] = modValueRev;
   }
 
-  rtY_tv->max_K = cumRevIndex;
+  rtY_tv->max_K = csum;
   for (i = 0; i < 16; i++) {
     LessThan[i] = (rtP_tv.ub[i] + rtP_tv.epsilon > rtU_tv->D_raw[i]);
   }
@@ -635,7 +638,7 @@ void tv_step(RT_MODEL_tv *const rtM_tv, ExtU_tv *rtU_tv, ExtY_tv *rtY_tv)
 
   modValueRev = obj_0->pModValueRev;
   z = 0.0;
-  u0 = 0.0;
+  raw_dR = 0.0;
   csum += (real_T)localProduct;
   if (modValueRev == 0.0) {
     z = csumrev_0[(int32_T)cumRevIndex - 1] + csum;
@@ -654,7 +657,7 @@ void tv_step(RT_MODEL_tv *const rtM_tv, ExtU_tv *rtU_tv, ExtY_tv *rtY_tv)
   }
 
   if (modValueRev == 0.0) {
-    u0 = z / 6.0;
+    raw_dR = z / 6.0;
   }
 
   obj_0->pCumSum = csum;
@@ -669,7 +672,7 @@ void tv_step(RT_MODEL_tv *const rtM_tv, ExtU_tv *rtU_tv, ExtY_tv *rtY_tv)
     obj_0->pModValueRev = 0.0;
   }
 
-  rtY_tv->TVS_STATE = rt_roundd(u0);
+  rtY_tv->TVS_STATE = rt_roundd(raw_dR);
   for (i = 0; i < 39; i++) {
     rtY_tv->F_TVS[i] = MatrixConcatenate[i];
   }

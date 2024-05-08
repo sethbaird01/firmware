@@ -64,14 +64,14 @@ void tv_pp(ExtU_tv *rtU_tv, GPS_Handle_t *GPS)
 
     // /* Raw Data */
     rtU_tv->D_raw[0] = 500.0/4095.0; /* Incoming is a scalar in the range [0 4095] */
-    rtU_tv->D_raw[1] = 150.0; /* Incoming is degree of CCSA  */
+    rtU_tv->D_raw[1] = 10.5; /* Incoming is degree of CCSA  */
     rtU_tv->D_raw[2] = 300.0; /* Incoming is V of terminal*/
     rtU_tv->D_raw[3] = 437.5; /* Incoming is rad/s of tire */
     rtU_tv->D_raw[4] = 437.5; /* Incoming is rad/s of tire */
     rtU_tv->D_raw[5] = (GPS->g_speed*0.001); /* Incoming data is 1000*m/s */
     rtU_tv->D_raw[6] = (GPS->gyroscope.x);  /* Incoming data is rad/s */
     rtU_tv->D_raw[7] = (GPS->gyroscope.y);  /* Incoming data is rad/s */
-    rtU_tv->D_raw[8] = (GPS->gyroscope.z); /* Incoming data is rad/s */
+    rtU_tv->D_raw[8] = 0.1; /* Incoming data is rad/s */
     rtU_tv->D_raw[9] = 0; /* Incoming is 10*A out of battery */
     rtU_tv->D_raw[10] = 40; /* Incoming is degree C */
     rtU_tv->D_raw[11] = 40; /* Incoming is degree C */
