@@ -40,16 +40,15 @@ void em_pp(ExtU_em *rtU_tm, ExtY_tv *rtY_tv)
     }
 
     /* Test Input */
-    // rtU_tm->rTVS[0] = 0.0;
-    // rtU_tm->rTVS[1] = 0.0;
+    rtU_tm->rTV[0] = rtY_tv->rTVS[0];
+    rtU_tm->rTV[1] = rtY_tv->rTVS[1];
+    rtU_tm->rEQUAL = rtY_tv->rEQUAL;
 
-    // rtU_tm->rEQUAL[0] = 0.0;
-    // rtU_tm->rEQUAL[1] = 0.0;
+    rtU_tm->D_raw[0] = 300.0;
+    rtU_tm->D_raw[1] = 437.5;
+    rtU_tm->D_raw[2] = 437.5;
 
-    // rtU_tm->TVS_STATE = 1;
-
-    // rtU_tm->w[0] = (21.79*8.75*0.01);
-    // rtU_tm->w[1] = (17.26*8.75*0.01);
-
-    // rtU_tm->V = (0.0*0.1);
+    rtU_tm->F_raw[0] = true;
+    rtU_tm->F_raw[1] = true;
+    rtU_tm->F_raw[2] = true; 
 }
