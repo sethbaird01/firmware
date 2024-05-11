@@ -5,26 +5,11 @@
 
 void em_pp(ExtU_em *rtU_tm, ExtY_tv *rtY_tv)
 {
-    /* Torque Vectoring Input */
-    // rtU_tm->rTVS[0] = rtY_tv->rTVS[0];
-    // rtU_tm->rTVS[1] = rtY_tv->rTVS[1];
-
-    // rtU_tm->rEQUAL[0] = rtY_tv->rEQUAL[0];
-    // rtU_tm->rEQUAL[1] = rtY_tv->rEQUAL[1];
-
-    // rtU_tm->w[0] = rtY_tv->w[0];
-    // rtU_tm->w[1] = rtY_tv->w[1];
-
-    // rtU_tm->V = rtY_tv->V;
-
-    // (can_data.filt_throttle_brake.throttle/4095.0);
-    // (can_data.filt_throttle_brake.throttle/4095.0);
-    // (can_data.filt_throttle_brake.throttle/4095.0);
-
     /* Throttle Map Input */
     rtU_tm->rTV[0] = rtY_tv->rTVS[0];
     rtU_tm->rTV[1] = rtY_tv->rTVS[1];
-    rtU_tm->rEQUAL = rtY_tv->rEQUAL;
+    // rtU_tm->rEQUAL = rtY_tv->rEQUAL;
+    rtU_tm->rEQUAL = (can_data.filt_throttle_brake.throttle/4095.0);
 
     rtU_tm->D_raw[0] = (can_data.orion_currents_volts.pack_voltage*0.1);
     rtU_tm->D_raw[1] = (can_data.rear_wheel_speeds.left_speed_sensor*8.75*0.01);
@@ -38,17 +23,4 @@ void em_pp(ExtU_em *rtU_tm, ExtY_tv *rtY_tv)
     if (!can_data.dashboard_tv_parameters.stale) {
         rtU_tm->F_raw[3] = (can_data.dashboard_tv_parameters.tv_enabled == 1);
     }
-
-    /* Test Input */
-    rtU_tm->rTV[0] = rtY_tv->rTVS[0];
-    rtU_tm->rTV[1] = rtY_tv->rTVS[1];
-    rtU_tm->rEQUAL = rtY_tv->rEQUAL;
-
-    rtU_tm->D_raw[0] = 300.0;
-    rtU_tm->D_raw[1] = 437.5;
-    rtU_tm->D_raw[2] = 437.5;
-
-    rtU_tm->F_raw[0] = true;
-    rtU_tm->F_raw[1] = true;
-    rtU_tm->F_raw[2] = true; 
 }
