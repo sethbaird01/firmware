@@ -405,15 +405,14 @@ void VCU_MAIN(void)
     int16_t equal_k_rl = 0;
     int16_t equal_k_rr = 0;
 
-    /* If precharging -> Accumulate acceleration vector */
+    /* If precharging and uncalibrated -> Accumulate acceleration vector */
     if ((can_data.main_hb.car_state == 1) & (ac_counter <= NUM_ELEM_ACC_CALIBRATION)) {
-        /* Accumulate acceleration vector */
         vec_mm.ax[ac_counter] = GPSHandle.acceleration.x;
         vec_mm.ay[ac_counter] = GPSHandle.acceleration.y;
         vec_mm.az[ac_counter] = GPSHandle.acceleration.z;
         ++ac_counter;
 
-        /* If length of acceleration vector == ##, compute R */
+        /* If enough data for calibration, compute R */
         if (ac_counter == NUM_ELEM_ACC_CALIBRATION) {
             ac_compute_R(vec_mm.ax, vec_mm.ay, vec_mm.az, rtU_tv.R);
             TV_Calibrated = true;

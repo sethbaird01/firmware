@@ -43,8 +43,8 @@ void tv_pp(ExtU_tv *rtU_tv, volatile GPS_Handle_t *GPS)
     /* If Can is up to date, update driver parameters */
     if (!can_data.dashboard_tv_parameters.stale) {
         rtU_tv->dphi = can_data.dashboard_tv_parameters.tv_deadband_val;
-        rtU_tv->TVS_P = (can_data.dashboard_tv_parameters.tv_p_val/10.0);
-        rtU_tv->TVS_I = (can_data.dashboard_tv_parameters.tv_intensity_val/10.0);
+        rtU_tv->TVS_P = (can_data.dashboard_tv_parameters.tv_p_val/100.0);
+        rtU_tv->TVS_I = (can_data.dashboard_tv_parameters.tv_intensity_val/100.0);
         rtU_tv->F_raw[12] = (can_data.dashboard_tv_parameters.tv_enabled == 1);
     }
 }
