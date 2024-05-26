@@ -13,13 +13,11 @@
 #define _MAIN_H_
 
 #include "common/faults/fault_nodes.h"
-#include "common/phal_F4_F7/can/can.h"
 
+/* Faults */
 #define FAULT_NODE_NAME NODE_DASHBOARD
 
-//STM32F407
-
-// Shockpot Calibration
+/* Shockpot Calibration */
 #define POT_VOLT_MAX_L 4.0f
 #define POT_VOLT_MIN_L 4090.0f
 #define POT_VOLT_MAX_R 4.0f
@@ -28,40 +26,13 @@
 #define POT_DIST_DROOP_L 55
 #define POT_DIST_DROOP_R 57
 
-typedef struct __attribute__((packed))
-{
-    // Do not modify this struct unless
-    // you modify the ADC DMA config
-    // in main.h to match
-    uint16_t t1;
-    uint16_t t2;
-    uint16_t b1;
-    uint16_t b2;
-    uint16_t shock_left;
-    uint16_t shock_right;
-    uint16_t lv_5v_sense;
-    uint16_t lv_3v3_sense;
-    uint16_t lv_12v_sense;
-    uint16_t lv_24_v_sense;
-    uint16_t load_l;
-    uint16_t load_r;
-} raw_adc_values_t;
+/* Scaling factor for converting raw load sensor ADC values to voltage */
+#define SCALE_F = (1 + (3.4/6.6))
 
-volatile extern raw_adc_values_t raw_adc_values;
+/* Core Clock Rate */
+#define TargetCoreClockrateHz 16000000
 
-typedef enum
-{
-    DASH_INPUT_NONE,
-    DASH_INPUT_ROT_ENC,
-    DASH_INPUT_UP_BUTTON,
-    DASH_INPUT_DOWN_BUTTON,
-    DASH_INPUT_SELECT_BUTTON,
-    DASH_INPUT_START_BUTTON,
-    DASH_INPUT_COUNT,
-    DASH_INPUT_INVALID,
-} dashboard_input_t;
-
-// Status LED Indicators
+/* Status LED Indicators */
 #define CONN_LED_GPIO_Port          (GPIOE)
 #define CONN_LED_Pin                (8)
 #define CONN_LED_MS_THRESH          (500)
@@ -76,7 +47,7 @@ typedef enum
 #define BMS_LED_GPIO_Port           (GPIOE)
 #define BMS_LED_Pin                 (3)
 
-// Status Inputs
+/* Status Inputs */
 #define START_BTN_GPIO_Port         (GPIOD)
 #define START_BTN_Pin               (11)
 
@@ -88,20 +59,20 @@ typedef enum
 #define DAQ_SWITCH_GPIO_Port        (GPIOD)
 #define DAQ_SWITCH_Pin              (8)
 
-// Rotary Encoder
+/* Rotary Encoder */
 #define ENC_A_GPIO_Port             (GPIOD)
 #define ENC_A_Pin                   (10)
 #define ENC_B_GPIO_Port             (GPIOD)
 #define ENC_B_Pin                   (9)
 #define ENC_NUM_STATES              (4)
 
-// CAN
+/* CAN */
 #define VCAN_RX_GPIO_Port           (GPIOD)
 #define VCAN_RX_Pin                 (0)
 #define VCAN_TX_GPIO_Port           (GPIOD)
 #define VCAN_TX_Pin                 (1)
 
-// SPI Peripherals
+/* SPI Peripherals */
 #define SPI2_SCK_GPIO_Port          (GPIOB)
 #define SPI2_SCK_Pin                (13)
 #define SPI2_MISO_GPIO_Port         (GPIOB)
@@ -114,7 +85,7 @@ typedef enum
 #define EEPROM_NSS_GPIO_Port        (GPIOB)
 #define EEPROM_NSS_Pin              (12)
 
-// Throttle
+/* Throttle */
 #define THTL_1_GPIO_Port            (GPIOA)
 #define THTL_1_Pin                  (2)
 #define THTL_1_ADC_CHNL             (2)
@@ -122,8 +93,7 @@ typedef enum
 #define THTL_2_Pin                  (3)
 #define THTL_2_ADC_CHNL             (3)
 
-
-// Aux Button inputs
+/* Aux Button Inputs */
 #define B_OK_GPIO_Port              (GPIOD)
 #define B_OK_Pin                    (13)
 #define B_DOWN_GPIO_Port            (GPIOD)
@@ -131,7 +101,7 @@ typedef enum
 #define B_UP_GPIO_Port              (GPIOD)
 #define B_UP_Pin                    (14)
 
-// Brake
+/* Brake */
 #define BRK_1_GPIO_Port             (GPIOA)
 #define BRK_1_Pin                   (0)
 #define BRK_1_ADC_CHNL              (0)
@@ -139,7 +109,7 @@ typedef enum
 #define BRK_2_Pin                   (1)
 #define BRK_2_ADC_CHNL              (1)
 
-// Shock Pots
+/* Shock Pots*/
 #define SHOCK_POT_L_GPIO_Port       (GPIOC)
 #define SHOCK_POT_L_Pin             (0)
 #define SHOCK_POT_L_ADC_CH          (10)
@@ -147,7 +117,7 @@ typedef enum
 #define SHOCK_POT_R_Pin             (1)
 #define SHOCK_POT_R_ADC_CH          (11)
 
-// Normal Force
+/* Normal Force */
 #define LOAD_FL_GPIO_Port           (GPIOB)
 #define LOAD_FL_Pin                 (0)
 #define LOAD_FL_ADC_CH              (8)
@@ -155,15 +125,15 @@ typedef enum
 #define LOAD_FR_Pin                 (1)
 #define LOAD_FR_ADC_CH              (9)
 
-// LCD
+/* LCD */
 #define LCD_UART                    (USART1)
 #define LCD_UART_TX_GPIO_Port       (GPIOA)
 #define LCD_UART_TX_Pin             (9)
 #define LCD_UART_RX_GPIO_Port       (GPIOA)
 #define LCD_UART_RX_Pin             (10)
-#define LCD_NUM_PAGES               (8) // Number encoder selectable pages
+#define LCD_NUM_PAGES               (8)
 
-// LV Status
+/* LV Status */
 #define LV_5V_V_SENSE_GPIO_Port     (GPIOC)
 #define LV_5V_V_SENSE_Pin           (2)
 #define LV_5V_V_SENSE_ADC_CHNL      (12)
@@ -179,6 +149,38 @@ typedef enum
 #define LV_24_V_FAULT_GPIO_Port     (GPIOC)
 #define LV_24_V_FAULT_Pin           (8)
 #define LV_5V_SCALE                 (0.413F)
+
+/* ADC Structure */
+typedef struct __attribute__((packed))
+{
+    /* WARNING: raw_adc_values_t must match adc_channel_config in main.c */
+    uint16_t t1;
+    uint16_t t2;
+    uint16_t b1;
+    uint16_t b2;
+    uint16_t shock_left;
+    uint16_t shock_right;
+    uint16_t lv_5v_sense;
+    uint16_t lv_3v3_sense;
+    uint16_t lv_12v_sense;
+    uint16_t lv_24_v_sense;
+    uint16_t load_l;
+    uint16_t load_r;
+} raw_adc_values_t;
+volatile extern raw_adc_values_t raw_adc_values;
+
+/* Dashboard Input Sources */
+typedef enum
+{
+    DASH_INPUT_NONE,
+    DASH_INPUT_ROT_ENC,
+    DASH_INPUT_UP_BUTTON,
+    DASH_INPUT_DOWN_BUTTON,
+    DASH_INPUT_SELECT_BUTTON,
+    DASH_INPUT_START_BUTTON,
+    DASH_INPUT_COUNT,
+    DASH_INPUT_INVALID,
+} dashboard_input_t;
 
 void canTxSendToBack(CanMsgTypeDef_t *msg);
 

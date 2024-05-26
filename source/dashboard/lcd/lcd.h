@@ -186,15 +186,18 @@ typedef struct {
   driver_select_state_t curr_select;
 } driver_config_t;
 
-typedef struct {
-  bool d_fan_selected;
-  bool d_pump_selected;
-  bool b_fan1_selected;
-  bool b_fan2_selected;
-  bool b_pump_selected;
-  uint8_t d_fan_val;
-  uint8_t b_fan_val;
+/* Settings page UI elements */
+typedef struct 
+{
+  bool d_fan_selected;    /* Drivetrain fan select     */
+  bool d_pump_selected;   /* Drivetrain pump select    */
+  bool b_fan1_selected;   /* Battery fan 1 select      */
+  bool b_fan2_selected;   /* Battery fan 2 select      */
+  bool b_pump_selected;   /* Battery pump select       */
+  uint8_t d_fan_val;      /* Drivetrain fan duty cycle */
+  uint8_t b_fan_val;      /* Battery fan duty cycle    */
   hover_state_t curr_hover;
+                          /* Current item hovered      */
 } settings_t;
 
 typedef struct {

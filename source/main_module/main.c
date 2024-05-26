@@ -261,7 +261,7 @@ int main(void){
     taskCreate(interpretLoadSensor, 15);
     taskCreate(updateSDCFaults, 300);
     taskCreate(heartBeatTask, 100);
-    taskCreate(send_shockpots, 15);
+    taskCreate(sendShockpotData, 15);
     taskCreate(parseMCDataPeriodic, MC_LOOP_DT);
     taskCreate(daqPeriodic, DAQ_UPDATE_PERIOD);
     // taskCreate(memFg, MEM_FG_TIME);

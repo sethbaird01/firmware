@@ -493,7 +493,7 @@ void parseMCDataPeriodic(void)
     }
 }
 
-void send_shockpots()
+void sendShockpotData()
 {
     uint16_t shock_l = adc_readings.shock_l;
     uint16_t shock_r = adc_readings.shock_r;
