@@ -405,7 +405,7 @@ void dashboardRotaryEncoderISR()
     /* Get direction from the state transition table */
     int8_t direction = encoder_transition_table[prev_rot_state][current_state];
 
-    if (direction != 0) 
+    if (direction != 0)
     {
         lcd_data.encoder_position += direction;
 
