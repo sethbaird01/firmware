@@ -15,11 +15,13 @@
 #include "common/faults/fault_nodes.h"
 #include "common/phal_F4_F7/can/can.h"
 
-// STM32L471RET
+/* Core Clock Rate */
+#define TargetCoreClockrateHz 96000000
 
-
+/* Faults */
 #define FAULT_NODE_NAME NODE_TORQUE_VECTOR
-// Status Indicators
+
+/* Status Indicators */
 #define ERR_LED_GPIO_Port (GPIOB)
 #define ERR_LED_Pin (5)
 #define CONN_LED_GPIO_Port (GPIOB)
@@ -28,7 +30,7 @@
 #define HEARTBEAT_GPIO_Port (GPIOB)
 #define HEARTBEAT_Pin (6)
 
-// SPI IMU
+/* SPI IMU */
 #define SPI_SCLK_GPIO_Port (GPIOA)
 #define SPI_SCLK_Pin (5)
 #define SPI_MISO_GPIO_Port (GPIOA)
@@ -43,7 +45,7 @@
 #define SPI_CS_MAG_GPIO_Port (GPIOB)
 #define SPI_CS_MAG_Pin (0)
 
-// USART GPS
+/* USART GPS */
 #define GPS_RX_GPIO_Port (GPIOC)
 #define GPS_RX_Pin (5)
 #define GPS_TX_GPIO_Port (GPIOC)
@@ -52,7 +54,7 @@
 #define GPS_RESET_GPIO_Port (GPIOC)
 #define GPS_RESET_Pin       (9)
 
-// EEPROM
+/* EEPROM */
 #define NAV_EEPROM_CS_GPIO_PORT (GPIOB)
 #define NAV_EEPROM_CS_PIN (12)
 #define NAV_WP_GPIO_PORT (GPIOB)

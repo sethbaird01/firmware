@@ -260,7 +260,7 @@ void preflightAnimation(void);
 void preflightChecks(void);
 void send_fault(uint16_t, bool);
 void usartIdleIRQ(volatile usart_init_t *huart, volatile usart_rx_buf_t *rx_buf);
-void usartReceiveCompleteCallback(usart_init_t *handle);
+void usart_recieve_complete_callback(usart_init_t *handle);
 void usartTxUpdate(void);
 float voltToForce(uint16_t load_read);
 
@@ -550,8 +550,8 @@ void usartIdleIRQ(volatile usart_init_t *huart, volatile usart_rx_buf_t *rx_buf)
 } /* usartIdleIRQ() */
 
 
-// todo I can't find where this is/was attached to anything?
-void usartReceiveCompleteCallback(usart_init_t *handle)
+//todo this is spelled wrong in the library...
+void usart_recieve_complete_callback(usart_init_t *handle)
 {
     if (handle == &huart_r)
     {
@@ -572,7 +572,7 @@ void usartReceiveCompleteCallback(usart_init_t *handle)
         usartIdleIRQ(&huart_l, &huart_l_rx_buf);
     }
 
-} /* usartReceiveCompleteCallback() */
+} /* usart_recieve_complete_callback() */
 
 
 /**
