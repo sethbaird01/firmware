@@ -8,7 +8,6 @@ void em_pp(ExtU_em *rtU_tm, ExtY_tv *rtY_tv)
     /* Throttle Map Input */
     rtU_tm->rTV[0] = rtY_tv->rTVS[0];
     rtU_tm->rTV[1] = rtY_tv->rTVS[1];
-    // rtU_tm->rEQUAL = rtY_tv->rEQUAL;
     rtU_tm->rEQUAL = (can_data.filt_throttle_brake.throttle/4095.0);
 
     rtU_tm->D_raw[0] = (can_data.orion_currents_volts.pack_voltage*0.1);
