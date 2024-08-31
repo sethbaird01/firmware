@@ -1,6 +1,6 @@
 /**
  * @file main.c
- * @author Purdue Electric Racing
+ * @author Christopher McGalliard
  * @brief Software Intro Project
  * @version 0.1
  * @date 2024-08-24
@@ -28,21 +28,23 @@
 -------------------------------------------------------- */
 GPIOInitConfig_t gpio_config[] =
 {
-    GPIO_INIT_OUTPUT(LED_GREEN_GPIO_Port, LED_GREEN_Pin, GPIO_OUTPUT_LOW_SPEED)
+    /* INITIALIZE THE LED PIN HERE! */
+
+    //"TODO: Button pin setup"
+
+    //"TODO: CAN ports."
 };
 
 /* -------------------------------------------------------
     Clock Configuration
 -------------------------------------------------------- */
-ClockRateConfig_t clock_config =
+ClockRateConfig_t clock_config = 
 {
-    .system_source              =SYSTEM_CLOCK_SRC_PLL,
-    .system_clock_target_hz     =80000000,
-    .pll_src                    =PLL_SRC_HSI16,
-    .vco_output_rate_target_hz  =160000000,
-    .ahb_clock_target_hz        =80000000,
-    .apb1_clock_target_hz       =80000000,// / 16,
-    .apb2_clock_target_hz       =80000000 / 16,
+    .system_source              =SYSTEM_CLOCK_SRC_HSI,
+    .system_clock_target_hz     =TargetCoreClockrateHz,
+    .ahb_clock_target_hz        =(TargetCoreClockrateHz / 1),
+    .apb1_clock_target_hz       =(TargetCoreClockrateHz / (1)),
+    .apb2_clock_target_hz       =(TargetCoreClockrateHz / (1)),
 };
 
 /* -------------------------------------------------------
@@ -53,10 +55,12 @@ extern uint32_t APB2ClockRateHz;
 extern uint32_t AHBClockRateHz;
 extern uint32_t PLLClockRateHz;
 
+//TODO: queue definitions
+
 /* -------------------------------------------------------
     Procedures
 -------------------------------------------------------- */
-void ledBlink(void);
+//TODO: ledBlink function header
 void HardFault_Handler(void);
 
 /**
@@ -67,6 +71,8 @@ void HardFault_Handler(void);
  */
 int main(void)
 {
+    //TODO: init queues
+
     /* HAL Initilization */
     if (0 != PHAL_configureClockRates(&clock_config))
     {
@@ -77,11 +83,18 @@ int main(void)
         HardFault_Handler();
     }
 
-    /* Initialize the scheduler */
+    //TODO: init CAN
+
+    //TODO: configure button interrupt
+    
+    /* Initialize the Scheduler */
     schedInit(APB1ClockRateHz);
 
     /* Task Creation */
-    taskCreate(ledBlink, 500);
+
+    // TODO: LED task
+    
+    //TODO: CAN background tasks
     
     /* Start all tasks */
     schedStart();
@@ -90,18 +103,7 @@ int main(void)
 
 } /* main() */
 
-
-/**
- * Procedure: ledBlink()
- * 
- * @brief led blinking function
- * 
- */
-void ledBlink()
-{
-    PHAL_toggleGPIO(LED_GREEN_GPIO_Port, LED_GREEN_Pin);
-    
-} /* ledBlink() */
+//TODO: Implement ledBlink()
 
 
 /**
@@ -114,7 +116,6 @@ void ledBlink()
  */
 void HardFault_Handler()
 {
-    PHAL_writeGPIO(LED_GREEN_GPIO_Port, LED_GREEN_Pin, 0);
     while(1)
     {
         __asm__("nop");

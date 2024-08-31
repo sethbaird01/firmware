@@ -13,7 +13,7 @@
 
 #include <stdint.h>
 #include <stdbool.h>
-#include <source/pdu/main.h>
+#include "main.h"
 
 // Static variables
 #define SHUNT_R 10000000

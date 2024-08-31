@@ -84,20 +84,32 @@ define_property(TARGET PROPERTY OUTPUT_DIR
 include(cmake/common_component.cmake)
 
 # Add Components
-add_subdirectory(source/main_module)
-add_subdirectory(source/bootloader)
-add_subdirectory(source/l4_testing)
-add_subdirectory(source/f4_testing)
-add_subdirectory(source/f7_testing)
-add_subdirectory(source/a_box)
-add_subdirectory(source/torque_vector)
-add_subdirectory(source/dashboard)
-add_subdirectory(source/pdu)
-add_subdirectory(source/daq)
 
+#TODO setup gen_config stuff to also dynamically change
+#So we can get DBCs separately
+option(BUILD_PER24 "Build components on PER24" OFF)
+if (NOT BUILD_PER24)
+    message(STATUS "Not building components on PER24")
+else()
+    message(STATUS "Building components on PER24") 
+    add_subdirectory(archive/PER24/a_box)
+    add_subdirectory(archive/PER24/torque_vector)
+    add_subdirectory(archive/PER24/dashboard)
+    add_subdirectory(archive/PER24/pdu)
+    add_subdirectory(archive/PER24/daq)
+    add_subdirectory(archive/PER24/main_module)
+    add_subdirectory(source/bootloader)
+endif()
 
-# Deprecated Components
-# add_subdirectory(source/driveline)
-# add_subdirectory(source/torque_vector_fpga)
-# add_subdirectory(source/template)
-# add_subdirectory(source/bms)
+option(BUILD_PER25 "Build components on PER25" ON)
+if (NOT BUILD_PER25)
+    message(STATUS "Not building components on PER25")
+else()
+    message(STATUS "Building components on PER25") 
+    add_subdirectory(source/software-intro)
+endif()
+
+#MISC
+#add_subdirectory(archive/MISC/f4_testing)
+#add_subdirectory(archive/MISC/l4_testing)
+#add_subdirectory(archive/MISC/f7_testing)

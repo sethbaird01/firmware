@@ -1,9 +1,9 @@
 /**
  * @file main.h
- * @author Purdue Electric Racing
+ * @author Christopher McGalliard
  * @brief  Software Intro Project
  * @version 0.1
- * @date 2024-08-18
+ * @date 2024-08-24
  *
  * @copyright Copyright (c) 2024
  *
@@ -12,8 +12,7 @@
 #ifndef MAIN_H_
 #define MAIN_H_
 
-// Status LEDs
-#define LED_GREEN_Pin (3)
-#define LED_GREEN_GPIO_Port (GPIOB)
+/* Core Clock Rate */
+#define TargetCoreClockrateHz 16000000
 
 #endif

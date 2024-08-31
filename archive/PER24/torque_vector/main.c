@@ -23,7 +23,7 @@
 #include "bmi088.h"
 #include "gps.h"
 #include "imu.h"
-#include "source/torque_vector/can/can_parse.h"
+#include "can_parse.h"
 #include "main.h"
 
 // TODO I think these MUST be in a certain order...

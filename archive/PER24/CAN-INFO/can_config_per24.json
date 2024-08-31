@@ -1,5 +1,5 @@
 {
-    "$schema":"./can_schema.json",
+    "$schema":"./can_schema_per24.json",
     "busses":[
         {
             "bus_name":"Main",
