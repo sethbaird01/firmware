@@ -135,9 +135,9 @@
             "preLaunchTask": "build",
             "runToEntryPoint": "main"
         },
-        {   "name": "software-intro",
+        {   "name": "software-intro-25",
             "cwd": "${workspaceRoot}",
-            "executable": "./output/software-intro/software-intro.elf",
+            "executable": "./output/software-intro/software-intro-25.elf",
             "request": "launch",
             "type": "cortex-debug",
             "servertype": "openocd",

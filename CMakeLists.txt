@@ -106,7 +106,7 @@ if (NOT BUILD_PER25)
     message(STATUS "Not building components on PER25")
 else()
     message(STATUS "Building components on PER25") 
-    add_subdirectory(source/software-intro)
+    add_subdirectory(source/software-intro-25)
 endif()
 
 #MISC
