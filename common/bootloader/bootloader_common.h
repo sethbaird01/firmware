@@ -21,7 +21,7 @@
 #include "stm32l4xx.h"
 #endif
 
-#include "../stacktrace/stacktrace.h"
+#include "common/stacktrace/stacktrace.h"
 
 #define BOOTLOADER_SHARED_MEMORY_MAGIC (0xABCDBEEF)
 
