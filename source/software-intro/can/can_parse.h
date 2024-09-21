@@ -62,7 +62,7 @@ typedef union {
 
 // Message Raw Structures
 /* BEGIN AUTO MESSAGE STRUCTURE */
-typedef union {
+typedef union { 
     struct {
         uint64_t test_1: 8;
         uint64_t test_2: 8;

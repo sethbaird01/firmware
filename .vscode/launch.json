@@ -225,7 +225,7 @@
             ],
             "debuggerArgs": [
                 "-d",
-                "${workspaceFolder}/source/software_intro"
+                "${workspaceFolder}/source/software-intro"
             ],
             "preLaunchTask": "build",
             "runToEntryPoint": "main"
