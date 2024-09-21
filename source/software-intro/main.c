@@ -29,7 +29,7 @@
 GPIOInitConfig_t gpio_config[] =
 {
     /* INITIALIZE THE LED PIN HERE! */
-    //"TODO: Button pin setup"
+    GPIO_INIT_OUTPUT(GPIOB, 3, GPIO_OUTPUT_LOW_SPEED)
 
     //"TODO: CAN ports."
 };
@@ -61,6 +61,8 @@ extern uint32_t PLLClockRateHz;
 -------------------------------------------------------- */
 //TODO: ledBlink function header
 void HardFault_Handler(void);
+void led_blink(void);
+// void EXTICR0_IRQHandler(void);
 
 /**
  * Procedure: main()
@@ -84,15 +86,17 @@ int main(void)
 
     //TODO: init CAN
 
-    //TODO: configure button interrupt
+    //PB[3] pin is 0001
+    // SYSCFG_EXTICR1_EXTI0_PB |= (1); //0001: PB[3] pin
+    // EXTI->IMR1 |= (1 << 3);
+    // NVID_EnableIRQ(EXTI0_IRQn);
     
     /* Initialize the Scheduler */
     schedInit(APB1ClockRateHz);
 
     /* Task Creation */
 
-    // TODO: LED task
-    
+    taskCreate(led_blink, 50);    
     //TODO: CAN background tasks
     
     /* Start all tasks */
@@ -102,7 +106,13 @@ int main(void)
 
 } /* main() */
 
-//TODO: Implement ledBlink()
+void led_blink(){
+    PHAL_toggleGPIO(GPIOB, 3);
+}
+
+// void EXTICR0_IRQHandler(){
+
+// }
 
 /**
  * Procedure: HardFault_Handler()
